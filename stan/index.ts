@@ -4,8 +4,6 @@ dotenv.config();
 import handleTasksRoute from "@routes/tasks.route";
 import ClientResponse from '@middleware/clientResponse';
 
-// import getTasksRoute from "./src/routes/tasks.route";
-
 const server = Bun.serve({
   fetch(req: Request) {
     const url = new URL(req.url);

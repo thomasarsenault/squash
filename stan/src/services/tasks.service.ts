@@ -1,4 +1,5 @@
-import { Task } from "@types";
+import { Task, TaskInput } from "@types";
+import db from "@db/supabase.manager";
 
 const tasks: any = [
   { id: 1, name: "Task 1", description: "This is task 1", status: "OPEN" },
@@ -7,16 +8,31 @@ const tasks: any = [
 ]
 
 const getTasks = async (): Promise<Task[]> => {
-  return Promise.resolve(tasks);
+  const { data, error } = await db.from('tasks').select('*');
+  
+  return data ?? [];
 }
 
-const createTask = async (task: any): Promise<Task> => {
-  return Promise.resolve(tasks[0]);
+const createTask = async (newTask: TaskInput): Promise<Task> => {
+  console.log('creating a task')
+  console.log(newTask);
+  const { data, error } = await db.from('tasks').insert(newTask).select();
+
+  if (error) {
+    throw error;
+  }
+
+  return data[0];
 }
 
 
 const deleteTask = async (taskId: string): Promise<boolean> => {
-  console.log('deleting:', taskId)
+  const { error } = await db.from('tasks').delete().eq('id', taskId);
+
+  if(error) {
+    throw error;
+  }
+
   return Promise.resolve(true);
 }
 

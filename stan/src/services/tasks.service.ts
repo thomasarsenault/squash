@@ -10,6 +10,10 @@ const tasks: any = [
 const getTasks = async (): Promise<Task[]> => {
   const { data, error } = await db.from('tasks').select('*');
   
+  if (error) {
+    throw error;
+  }
+  
   return data ?? [];
 }
 
@@ -36,9 +40,20 @@ const deleteTask = async (taskId: string): Promise<boolean> => {
   return Promise.resolve(true);
 }
 
+const updateTask = async (updatedTask: Task): Promise<Task> => {
+  const { data, error } = await db.from('tasks').update(updatedTask).eq('id', updatedTask.id).select();
+
+  if (error) {
+    throw error;
+  }
+
+  return data[0];
+}
+
 
 export default {
   getTasks,
   createTask,
-  deleteTask
+  deleteTask,
+  updateTask
 };

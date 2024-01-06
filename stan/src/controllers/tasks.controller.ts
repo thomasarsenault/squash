@@ -16,8 +16,8 @@ const createTask = async (req: Request) => {
 }
 
 const deleteTask = async (req: Request) => {
-    const queryParams = new URL(req.url).searchParams;
-    const { id } = Object.fromEntries(queryParams.entries());
+    const url = new URL(req.url);
+    const { id } = Object.fromEntries(url.searchParams.entries());
 
     const res = await taskService.deleteTask(id);
 
@@ -28,8 +28,16 @@ const deleteTask = async (req: Request) => {
     return new ClientResponse(null, { status: 204 });
 }
 
+const updateTask = async (req: Request) => {
+    const data: any = await req.json();
+    const task: Task = await taskService.updateTask(data.task);
+
+    return new ClientResponse(JSON.stringify(task), { status: 200 });
+}
+
 export default {
     getTasks,
     createTask,
-    deleteTask
+    deleteTask,
+    updateTask
 }

@@ -1,0 +1,13 @@
+.task {
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 1rem;
+    border-left: 2px solid red;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+
+    width: 100%;
+    position: relative;
+}

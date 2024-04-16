@@ -3,7 +3,10 @@ import taskService from '@services/tasks.service';
 import { Task } from '@types';
 
 const getTasks = async (req: Request) => {
-    const tasks: Task[] = await taskService.getTasks();
+    const { searchParams } = new URL(req.url);
+    const start = searchParams.get('start');
+    const end = searchParams.get('end');
+    const tasks: Task[] = await taskService.getTasks({ start, end});
 
     return new ClientResponse(JSON.stringify(tasks), { status: 200 });
 }

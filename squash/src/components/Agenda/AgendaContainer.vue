@@ -19,15 +19,14 @@ const newTaskPromptOpen = ref(false);
 
 const date = computed(() => getDateByZone(props.zone));
 
-// const openNewTaskPrompt = (zone) => {
-
-
-//   //focus the input, its an input inside of zone-input
-//   document.getElementById(`${zone}-input`)?.focus();
-//   console.log(document.getElementById(`${zone}-input`));
-//   console.log(document.getElementById(`${zone}-input`)?.querySelector('input'))
-//   newTaskPromptOpen.value = true;
-// }
+const addTask = async () => {
+  const data = await store.addTask({
+    name: newTaskText.value,
+    start: date.value,
+    end: null
+  });
+  newTaskText.value = '';
+}
 
 </script>
 
@@ -45,14 +44,7 @@ const date = computed(() => getDateByZone(props.zone));
                 class="new-task-input"
                 :value="newTaskText"
                 @input="newTaskText = $event.target.value"
-                @keydown.enter="() => {
-                    store.addTask({
-                        name: newTaskText,
-                        start: date,
-                        end: null
-                    });
-                    newTaskText = '';
-                }"
+                @keydown.enter="() => addTask()"
             />
             <div class="options">
                 <md-filled-button>
@@ -65,12 +57,31 @@ const date = computed(() => getDateByZone(props.zone));
                 <Task v-for="(task, index) in tasks" :key="index" :task="task"
                     @dragEnd="emit('dragEnd')"
                     @drag="e => emit('drag', e)"/>
+                <!-- <div class="placement-indicator-wrapper">
+                  <div id="placement-indicator" class="placement-indicator" />
+                </div> -->
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+
+/* .placement-indicator-wrapper {
+  height: 1rem;
+  width: 100%;
+  position: relative;
+
+  .placement-indicator {
+    position: absolute;
+    width: 100%;
+    height: 1rem;
+    top: 0;
+    background-color: red;
+  }
+} */
+
+
 
 .agenda-container {
   flex: 1;
@@ -79,6 +90,7 @@ const date = computed(() => getDateByZone(props.zone));
   border-radius: 16px;
   display: flex;
   flex-direction: column;
+  
   .header {
     display: flex;
     justify-content: space-between;

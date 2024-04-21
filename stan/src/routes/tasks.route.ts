@@ -13,6 +13,10 @@ const handleTasksRoute = async (req: Request): Promise<Response> => {
     return tasksController.deleteTask(req);
   } else if (url.pathname === '/tasks' && req.method === 'PUT') {
     return tasksController.updateTask(req);
+  } else if (url.pathname === '/tasks_ranks' && req.method === 'GET') {
+    return tasksController.getTaskRanks(req);
+  } else if (url.pathname === '/tasks_ranks' && req.method === 'PUT') {
+    return tasksController.updateTaskRanks(req);
   }
 
   return new ClientResponse(null, { status: 404 });

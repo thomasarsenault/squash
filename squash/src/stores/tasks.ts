@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 export const useTasksStore = defineStore('tasks', {
     state: () => ({
         tasks: {} as GroupedTasks,
+        taskRanks: {} as any,
         currentDraggedTask: null as Task | null,
     }),
     actions: {
@@ -17,14 +18,38 @@ export const useTasksStore = defineStore('tasks', {
 
                 const data = await fetch(`/api/tasks?start=${start}&end=${end}`)
                 .then(response => response.json())
-                console.log(data);
+
                 this.tasks = groupTasksByDate(data);
+
+                const dataRanks = await fetch(`/api/tasks_ranks?start=${start}&end=${end}`)
+                .then(response => response.json())
+
+                this.taskRanks = dataRanks
             } catch (error) {
                 console.error('Error fetching tasks:', error);
             }
         },
+        async updateTaskRanks(newRanks: any, key: string) {
+            console.log('updating task ranks')
+            this.taskRanks[key] = newRanks;
+            try {
+                const response = await fetch('http://localhost:3000/tasks_ranks', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ newRanks: newRanks, key: key })
+                }).then(response => response.json())
+
+                // TODO: handle it erroring out
+                return response;
+            } catch (error) {
+                console.error('Error updating task:', error);
+            }
+        },
         async addTask(newTask: Task) {
             try {
+                const date = (newTask.start ? dayjs(newTask.start) : dayjs()).format('YYYY-MM-DD');
                 const response = await fetch('http://localhost:3000/tasks', {
                     method: 'POST',
                     headers: {
@@ -35,21 +60,23 @@ export const useTasksStore = defineStore('tasks', {
                         name: newTask.name,
                         status: newTask.status || 'OPEN',
                         description: "A placeholder description",
-                        start: newTask.start || new Date(),
+                        start: date,
                       }})
                   }).then(response => response.json())
 
-                  console.log('response.data', response);
-                // this.tasks.push(response);
-                console.log(this.tasks);
                 const taskDate = dayjs(response.start).format('YYYY-MM-DD');
                 const tasksOnDate = this.tasks[taskDate] || [];
                 this.tasks[taskDate] = [...tasksOnDate, response];
+
+                await this.updateTaskRanks([...this.taskRanks[date] || [], response.id], date)
+
+                return response;
             } catch (error) {
                 console.error('Error adding task:', error);
             }
         },
-        async updateTask(updatedTask: Task) {
+        async updateTask(updatedTask: Task, newRankedAbove: number | null = null) {
+            console.log(newRankedAbove)
             try {
                 fetch('http://localhost:3000/tasks', {
                     method: 'PUT',
@@ -57,7 +84,8 @@ export const useTasksStore = defineStore('tasks', {
                         'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            task: updatedTask
+                            task: updatedTask,
+                            newRankedAbove: newRankedAbove
                         })
                 })
                 // TODO: handle it erroring out

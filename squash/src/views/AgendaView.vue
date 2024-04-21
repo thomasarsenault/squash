@@ -18,52 +18,133 @@ onMounted(async () => {
 })
 
 const hoveredZone = ref<AgendaZones | null>(null);
-
+const aboveTask = ref<Element | null>(null);
 // TODO: refactor for no constant document query, cleaner code
+// TODO: even more refactoring, i just made it way uglier
 const drag = e => {
   const zones = document.querySelectorAll('.drag-zone');
   let outside = true;
+  aboveTask.value = null;
   zones.forEach((zone) => {
-    if (e.clientX >= zone.getBoundingClientRect().left &&
-        e.clientX <= zone.getBoundingClientRect().right &&
-        e.clientY >= zone.getBoundingClientRect().top &&
-        e.clientY <= zone.getBoundingClientRect().bottom) {
+    const rect = zone.getBoundingClientRect();
+    if (e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom) {
       hoveredZone.value = zone.id as AgendaZones;
+
+      const tasks = zone.querySelectorAll('.task');
+
+      for(const task of tasks) {
+        if(task.getAttribute('data-id') === String(store.currentDraggedTask.id)) {
+          continue;
+        }
+        
+        task.classList.remove('enable-placement-indicator');
+
+        // if mouse above the task
+        if(!(e.clientY >= task.getBoundingClientRect().top + task.getBoundingClientRect().height / 2)) {
+          if(!aboveTask.value) {
+            aboveTask.value = task;
+          }
+        }
+      };
+
+      if(aboveTask.value) {
+        aboveTask.value.classList.add('enable-placement-indicator');
+      }
+
       outside = false;
     }
   });
   
   if(outside) {
+    const tasks = document.querySelectorAll('.drag-zone .task');
+    for(const task of tasks) {
+      task.classList.remove('enable-placement-indicator');
+    }
     hoveredZone.value = null;
   }
 }
 
-const dragEnd = () => {
-  if(hoveredZone.value) {
-    store.updateTask({
-      id: store.currentDraggedTask.id,
-      start: getDateByZone(hoveredZone.value),
-      end: null,
-    });
-  
+const removePlacementIndicator = () => {
+  const tasks = document.querySelectorAll('.drag-zone .task');
+  for(const task of tasks) {
+    task.classList.remove('enable-placement-indicator');
   }
-  hoveredZone.value = null;
+}
+const dragEnd = async () => {
+  if(!hoveredZone.value) {
+    removePlacementIndicator();
+    return;
+  }
+
+  const taskRanksDeepCopy = JSON.parse(JSON.stringify(store.taskRanks))
+  if(!taskRanksDeepCopy[getDateByZone(hoveredZone.value)]) {
+    taskRanksDeepCopy[getDateByZone(hoveredZone.value)] = []
+  }
+
+  const currentTaskIndex = taskRanksDeepCopy[getDateByZone(hoveredZone.value)].findIndex(taskId => taskId === store.currentDraggedTask.id)
+
+  //remove current task if its in the ranks
+  if(currentTaskIndex !== -1) {
+    taskRanksDeepCopy[getDateByZone(hoveredZone.value)].splice(currentTaskIndex, 1)
+  } else {
+    const currentTaskRanks = taskRanksDeepCopy[dayjs(store.currentDraggedTask.start).format('YYYY-MM-DD')]
+    currentTaskRanks.splice(currentTaskRanks.findIndex(taskId => taskId === store.currentDraggedTask.id), 1)
+  }
+
+  const aboveTaskIndex = taskRanksDeepCopy[getDateByZone(hoveredZone.value)].findIndex(taskId => taskId === Number(aboveTask.value?.getAttribute('data-id')))
+
+  if(aboveTaskIndex === -1) {
+    taskRanksDeepCopy[getDateByZone(hoveredZone.value)].push(store.currentDraggedTask.id)
+  } else {
+    taskRanksDeepCopy[getDateByZone(hoveredZone.value)].splice(aboveTaskIndex, 0, store.currentDraggedTask.id)
+  }
+
+  store.updateTaskRanks(taskRanksDeepCopy[getDateByZone(hoveredZone.value)], getDateByZone(hoveredZone.value))
+  if(store.currentDraggedTask.start !== getDateByZone(hoveredZone.value)) {
+    store.updateTaskRanks(taskRanksDeepCopy[dayjs(store.currentDraggedTask.start).format('YYYY-MM-DD')], dayjs(store.currentDraggedTask.start).format('YYYY-MM-DD'));
+  }
+
+  await store.updateTask({
+    id: store.currentDraggedTask.id,
+    start: getDateByZone(hoveredZone.value),
+    end: null,
+  });
+
+  removePlacementIndicator();
 }
 
+// TODO: rankRanks updates instantly, but tasks being updated is a network call
 const today = computed(() => {
-  return store.tasks[dayjs().format('YYYY-MM-DD')]
-  // return store.tasks?.filter(task => dayjs(task.start).isSame(dayjs(), 'day'));
+  const tasks = store.tasks[dayjs().format('YYYY-MM-DD')];
+
+  if(!tasks) {
+    return [];
+  }
+  
+  return (store.taskRanks[dayjs().format('YYYY-MM-DD')] || []).map(taskId => tasks.find(task => task.id === taskId))
+  // .sort((a, b) => a.rank - b.rank)
 })
 
 const tomorrow = computed(() => {
-  return store.tasks[dayjs().add(1, 'day').format('YYYY-MM-DD')]
+  const tasks = store.tasks[dayjs().add(1, 'day').format('YYYY-MM-DD')]
+  if(!tasks) {
+    return [];
+  }
 
-  // return store.tasks?.filter(task => dayjs(task.start).isSame(dayjs().add(1, 'day'), 'day'));
+  return (store.taskRanks[dayjs().add(1, 'day').format('YYYY-MM-DD')] || []).map(taskId => tasks.find(task => task.id === taskId))
 })
 
 const week = computed(() => {
-  return store.tasks[dayjs().add(7, 'day').format('YYYY-MM-DD')]
-  // return store.tasks?.filter(task => dayjs(task.start).isAfter(dayjs().add(1, 'day'), 'day'));
+  const tasks = store.tasks[dayjs().add(7, 'day').format('YYYY-MM-DD')]
+
+  if(!tasks) {
+    return [];
+  }
+
+  return (store.taskRanks[dayjs().add(7, 'day').format('YYYY-MM-DD')] || []).map(taskId => tasks.find(task => task.id === taskId))
 })
 
 </script>

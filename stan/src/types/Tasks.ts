@@ -17,4 +17,13 @@ export type TaskInput = {
     end?: Date;
 }
 
+export type TaskRanksDB = {
+    date: Date;
+    ranks: number[];
+}
+
+export type TaskRanks = {
+    [key: string]: number[];
+}
+
 type TaskStatus = 'OPEN' | 'IN_PROGRESS' | 'DONE';

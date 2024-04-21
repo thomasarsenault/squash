@@ -1,4 +1,4 @@
-import { Task, TaskInput } from "@types";
+import { Task, TaskInput, TaskRanks, TaskRanksDB } from "@types";
 import db from "@db/supabase.manager";
 import dayjs from 'dayjs';
 import { groupTasksByDate } from "@utils/tasks";
@@ -38,6 +38,20 @@ const getTasks = async (params: TaskQueryParams): Promise<Task[]> => {
 const createTask = async (newTask: TaskInput): Promise<Task> => {
   console.log('creating a task')
   console.log(newTask);
+
+  // //query the DB and find the lowest rank field based on the date of this new task
+  // const { data: dataRank, error: errorRank } = await db.from('tasks')
+  //   .select('rank')
+  //   .eq('start', newTask.start)
+  //   .order('rank', { ascending: false })
+  //   .limit(1);
+  
+  // if (errorRank) {
+  //   throw errorRank;
+  // }
+
+  // newTask.rank = dataRank[0]?.rank + 1 || 1;
+
   const { data, error } = await db.from('tasks').insert(newTask).select();
 
   if (error) {
@@ -60,6 +74,7 @@ const deleteTask = async (taskId: string): Promise<boolean> => {
 
 const updateTask = async (updatedTask: Task): Promise<Task> => {
   console.log(updatedTask);
+
   const { data, error } = await db.from('tasks').update(updatedTask).eq('id', updatedTask.id).select();
   console.log('updating task')
   if (error) {
@@ -67,12 +82,35 @@ const updateTask = async (updatedTask: Task): Promise<Task> => {
   }
 
   return data[0];
+
 }
 
+const getTaskRanks = async (params: TaskQueryParams): Promise<TaskRanksDB[]> => {
+  
+  const { data, error } = await db.from('task_ranks').select('*');
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+const updateTaskRanks = async(newRanks: any, key: string): Promise<TaskRanksDB> => {
+  const { data, error } = await db.from('task_ranks').upsert({ ranks: newRanks, date: key}, { onConflict: 'date'}).eq('date', key).select();
+  
+  if(error) {
+    throw error;
+  }
+
+  return data[0];
+}
 
 export default {
   getTasks,
   createTask,
   deleteTask,
-  updateTask
+  updateTask,
+  getTaskRanks,
+  updateTaskRanks
 };

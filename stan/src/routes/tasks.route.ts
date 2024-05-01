@@ -1,5 +1,6 @@
 import tasksController from "@controllers/tasks.controller";
 import ClientResponse from "@middleware/clientResponse";
+import authenticate from "@middleware/auth";
 
 const handleTasksRoute = async (req: Request): Promise<Response> => {
   

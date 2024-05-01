@@ -6,8 +6,8 @@ export function groupTasksByDate(tasks: Task[]) {
     return tasks.reduce((acc, task) => {
         let date;
 
-        if(task.start) {
-            date = dayjs(task.start).format('YYYY-MM-DD');
+        if(task.date) {
+            date = dayjs(task.date).format('YYYY-MM-DD');
         } else {
             date = 'backlog';
         }

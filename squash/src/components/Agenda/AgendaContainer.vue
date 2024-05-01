@@ -22,11 +22,11 @@ const date = computed(() => getDateByZone(props.zone));
 const addTask = async () => {
   const data = await store.addTask({
     name: newTaskText.value,
-    start: date.value,
-    end: null
+    date: date.value,
   });
   newTaskText.value = '';
 }
+
 
 </script>
 
@@ -40,6 +40,7 @@ const addTask = async () => {
         </div>
         <div :class="`new-task ${newTaskPromptOpen ? 'open' : ''}`">
             <md-filled-text-field
+                autofocus
                 label="New Task"
                 class="new-task-input"
                 :value="newTaskText"
@@ -127,6 +128,7 @@ const addTask = async () => {
 .drag-zone {
   border-radius: 16px;
   flex: 1;
+  min-height: 2rem;
 
   &.hovered {
     background-color: var(--md-sys-color-surface-variant);

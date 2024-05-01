@@ -4,17 +4,17 @@ export type Task = {
     modified_at: Date;
     name: string;
     description?: string;
-    status: TaskStatus;
-    start: Date;
-    end?: Date;
+    completed: boolean;
+    date: Date;
+    time: string;
 }
 
 export type TaskInput = {
     name: string;
     description?: string;
-    status: TaskStatus;
-    start?: Date;
-    end?: Date;
+    completed: boolean;
+    date: Date;
+    time: string;
 }
 
 export type TaskRanksDB = {

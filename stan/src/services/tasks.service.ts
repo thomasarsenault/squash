@@ -1,13 +1,5 @@
 import { Task, TaskInput, TaskRanks, TaskRanksDB } from "@types";
 import db from "@db/supabase.manager";
-import dayjs from 'dayjs';
-import { groupTasksByDate } from "@utils/tasks";
-
-const tasks: any = [
-  { id: 1, name: "Task 1", description: "This is task 1", status: "OPEN" },
-  { id: 2, name: "Task 2", description: "This is task 2", status: "IN_PROGRESS" },
-  { id: 3, name: "Task 3", description: "This is task 3", status: "DONE" },
-]
 
 interface TaskQueryParams {
   start: string | null;
@@ -62,8 +54,24 @@ const createTask = async (newTask: TaskInput): Promise<Task> => {
 }
 
 
-const deleteTask = async (taskId: string): Promise<boolean> => {
-  const { error } = await db.from('tasks').delete().eq('id', taskId);
+const deleteTask = async (taskId: string, date: string): Promise<boolean> => {
+  console.log('deleting task')
+  let { error } = await db.from('tasks').delete().eq('id', taskId);
+
+  // const {data, error: taskRanksError } = await db.from('task_ranks').select('*').eq('date', date)
+
+  // if(taskRanksError) {
+  //   throw error;
+  // }
+
+  // const newRanks = data[0].ranks.filter((rank: string) => rank !== taskId);
+
+  // console.log(newRanks);
+  // const { data: updatedTaskRanks, error: updateTaskRanksError } = await db.from('task_ranks').upsert({ ranks: newRanks, date: date}, { onConflict: 'date'}).eq('date', date).select();
+
+  // if(updateTaskRanksError) {
+  //   throw error;
+  // }
 
   if(error) {
     throw error;
@@ -77,10 +85,12 @@ const updateTask = async (updatedTask: Task): Promise<Task> => {
 
   const { data, error } = await db.from('tasks').update(updatedTask).eq('id', updatedTask.id).select();
   console.log('updating task')
+  console.log(updatedTask)
   if (error) {
     throw error;
   }
 
+  console.log(data[0])
   return data[0];
 
 }

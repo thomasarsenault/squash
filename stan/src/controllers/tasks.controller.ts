@@ -21,14 +21,15 @@ const createTask = async (req: Request) => {
 
 const deleteTask = async (req: Request) => {
     const url = new URL(req.url);
-    const { id } = Object.fromEntries(url.searchParams.entries());
+    const { id, date } = Object.fromEntries(url.searchParams.entries());
 
-    const res = await taskService.deleteTask(id);
+    const res = await taskService.deleteTask(id, date);
 
     if(!res) {
         return new ClientResponse(null, { status: 404 });
     }
 
+    console.log('returning new task ranks', res)
     return new ClientResponse(null, { status: 204 });
 }
 
@@ -58,7 +59,7 @@ const updateTaskRanks = async (req: Request) => {
     const data: any = await req.json();
     const taskRanks = await taskService.updateTaskRanks(data.newRanks, data.key);
 
-    return new ClientResponse(JSON.stringify(taskRanks), { status: 200 });
+    return new ClientResponse(JSON.stringify({ newTaskRanks: taskRanks}), { status: 200 });
 }
 
 export default {

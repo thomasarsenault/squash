@@ -8,6 +8,7 @@ import { getDateByZone } from '../utils/date';
 import '@material/web/button/filled-button.js';
 import '@material/web/button/filled-tonal-button.js';
 import '@material/web/textfield/filled-text-field.js';
+import EditTask from '../components/EditTask.vue';
 
 const store = useTasksStore();
 
@@ -68,6 +69,8 @@ const drag = e => {
 }
 
 const removePlacementIndicator = () => {
+  hoveredZone.value = null;
+
   const tasks = document.querySelectorAll('.drag-zone .task');
   for(const task of tasks) {
     task.classList.remove('enable-placement-indicator');
@@ -90,7 +93,7 @@ const dragEnd = async () => {
   if(currentTaskIndex !== -1) {
     taskRanksDeepCopy[getDateByZone(hoveredZone.value)].splice(currentTaskIndex, 1)
   } else {
-    const currentTaskRanks = taskRanksDeepCopy[dayjs(store.currentDraggedTask.start).format('YYYY-MM-DD')]
+    const currentTaskRanks = taskRanksDeepCopy[dayjs(store.currentDraggedTask.date).format('YYYY-MM-DD')]
     currentTaskRanks.splice(currentTaskRanks.findIndex(taskId => taskId === store.currentDraggedTask.id), 1)
   }
 
@@ -103,14 +106,13 @@ const dragEnd = async () => {
   }
 
   store.updateTaskRanks(taskRanksDeepCopy[getDateByZone(hoveredZone.value)], getDateByZone(hoveredZone.value))
-  if(store.currentDraggedTask.start !== getDateByZone(hoveredZone.value)) {
-    store.updateTaskRanks(taskRanksDeepCopy[dayjs(store.currentDraggedTask.start).format('YYYY-MM-DD')], dayjs(store.currentDraggedTask.start).format('YYYY-MM-DD'));
+  if(store.currentDraggedTask.date !== getDateByZone(hoveredZone.value)) {
+    store.updateTaskRanks(taskRanksDeepCopy[dayjs(store.currentDraggedTask.date).format('YYYY-MM-DD')], dayjs(store.currentDraggedTask.date).format('YYYY-MM-DD'));
   }
 
   await store.updateTask({
     id: store.currentDraggedTask.id,
-    start: getDateByZone(hoveredZone.value),
-    end: null,
+    date: getDateByZone(hoveredZone.value),
   });
 
   removePlacementIndicator();
@@ -158,6 +160,7 @@ const week = computed(() => {
         <AgendaContainer :tasks="week" :zone="AgendaZones.THIS_WEEK" :hovered="hoveredZone === AgendaZones.THIS_WEEK" @dragEnd="dragEnd" @drag="drag"/>
       </div>
     </div>
+    <EditTask id="edit-task-dialog"/>
   </main>
 </template>
 
@@ -178,5 +181,9 @@ main {
   display: flex;
   flex: 1;
   gap: 1rem;
+
+  @include breakpoint('mobile') {
+    flex-direction: column;
+  }
 }
 </style>

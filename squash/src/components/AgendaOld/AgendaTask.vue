@@ -5,7 +5,6 @@ import type { Task } from '../../types';
 import { computed } from 'vue';
 import '@material/web/button/filled-button.js';
 import '@material/web/button/filled-tonal-button.js';
-
 const props = defineProps<{
   task: Task & { canExtend: boolean}
 }>()

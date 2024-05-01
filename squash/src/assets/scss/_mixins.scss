@@ -1,0 +1,14 @@
+$breakpoints: (
+  'mobile': 768px,
+  'tablet': 1024px,
+);
+
+@mixin breakpoint($name) {
+  @if map-has-key($breakpoints, $name) {
+    @media (max-width: map-get($breakpoints, $name)) {
+      @content;
+    }
+  } @else {
+    @warn "No breakpoint defined for `#{$name}`.";
+  }
+}

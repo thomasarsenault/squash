@@ -61,6 +61,7 @@
 }
 
 body {
+  display: flex;
   min-height: 100vh;
   color: var(--md-sys-color-on-surface);
   background: var(--color-background);

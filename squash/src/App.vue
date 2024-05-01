@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import '@material/web/button/text-button.js';
+
+document.addEventListener('contextmenu', e => e.preventDefault());
+
 </script>
 
 <template>
   <header>
     <div class="wrapper">
       <nav>
+        <font-awesome-icon icon="fa-solid fa-minus" size="xs" :style="{ color: 'white' }"/>
         Squash
+        <font-awesome-icon icon="fa-solid fa-minus" size="xs" :style="{ color: 'white' }"/>
         <!-- <RouterLink to="/">
           <md-text-button>
             Agenda

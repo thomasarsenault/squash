@@ -1,16 +1,16 @@
 <script setup lang="ts">
 
 import { ref } from 'vue';
+const apiUrl = import.meta.env.STAN_API_URL || '';
 
 const email = ref('');
 const password = ref('');
-
 const login = async () => {
     console.log('logging in')
     console.log(email);
     console.log(password);
 
-    const res = await fetch('http://localhost:3000/login', {
+    const res = await fetch(`${apiUrl}/api/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -24,7 +24,7 @@ const login = async () => {
     if (res.ok) {
         const { session } = await res.json(); // Assuming accessToken is sent back
         const accessToken = session.access_token;
-        
+
         console.log('got the access token', accessToken);
         localStorage.setItem('accessToken', accessToken); // Store the token
     } else {

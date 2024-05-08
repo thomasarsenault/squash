@@ -3,6 +3,9 @@ import { defineStore } from 'pinia';
 import type { Task, GroupedTasks } from '@/types';
 import { groupTasksByDate } from '@/utils/tasks';
 import dayjs from 'dayjs';
+import Stan from '../utils/stan';
+
+const apiUrl = import.meta.env.STAN_API_URL || '';
 
 const getHeaders = () => {
     const token = localStorage.getItem('accessToken');
@@ -24,38 +27,28 @@ export const useTasksStore = defineStore('tasks', {
     actions: {
         async getTasks() {
             try {
-                const token = localStorage.getItem('accessToken');
-
                 //construct URL with query parameters
                 const start = dayjs().day(1).format('YYYY-MM-DD');
                 const end = dayjs().day(7).format('YYYY-MM-DD');
 
-                const data = await fetch(`/api/tasks?start=${start}&end=${end}`, { headers: getHeaders() })
-                    .then(response => response.json())
+                const data = await Stan(`tasks?start=${start}&end=${end}`);
 
                 this.tasks = groupTasksByDate(data);
-                console.log(this.tasks)
 
-                const dataRanks = await fetch(`/api/tasks_ranks?start=${start}&end=${end}`, { headers: getHeaders() })
-                    .then(response => response.json())
-                console.log(this.taskRanks)
+                const dataRanks = await Stan(`tasks_ranks?start=${start}&end=${end}`)
+
                 this.taskRanks = dataRanks
             } catch (error) {
                 console.error('Error fetching tasks:', error);
             }
         },
         async updateTaskRanks(newRanks: any, key: string) {
-            console.log('updating task ranks')
             this.taskRanks[key] = newRanks;
             try {
-                const response = await fetch('http://localhost:3000/tasks_ranks', {
+                const response = await Stan(`tasks_ranks`, {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...getHeaders()
-                    },
                     body: JSON.stringify({ newRanks: newRanks, key: key })
-                }).then(response => response.json())
+                })
 
                 // TODO: handle it erroring out
                 return response;
@@ -66,20 +59,17 @@ export const useTasksStore = defineStore('tasks', {
         async addTask(newTask: Task) {
             try {
                 const date = (newTask.date ? dayjs(newTask.date) : dayjs()).format('YYYY-MM-DD');
-                const response = await fetch('http://localhost:3000/tasks', {
+
+                const response = await Stan(`tasks`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...getHeaders()
-                    },
                     body: JSON.stringify({
                       task: {
                         name: newTask.name,
                         completed: newTask.completed,
-                        description: "A placeholder description",
+                        description: "",
                         date: date,
                       }})
-                  }).then(response => response.json())
+                  })
 
                 const taskDate = dayjs(response.date).format('YYYY-MM-DD');
                 const tasksOnDate = this.tasks[taskDate] || [];
@@ -93,19 +83,14 @@ export const useTasksStore = defineStore('tasks', {
             }
         },
         async updateTask(updatedTask: Task, newRankedAbove: number | null = null) {
-            console.log(updatedTask);
             try {
-                fetch('http://localhost:3000/tasks', {
+                Stan(`tasks`, {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...getHeaders()
-                    },
                     body: JSON.stringify({
-                        task: updatedTask,
-                        newRankedAbove: newRankedAbove
+                      task: updatedTask,
+                      newRankedAbove: newRankedAbove
                     })
-                })
+                  })
                 // TODO: handle it erroring out
 
                 // const updatedTasks = this.tasks.map(task => {
@@ -131,18 +116,14 @@ export const useTasksStore = defineStore('tasks', {
         },
         async deleteTask(taskId: number, date: string) {
             try {
-                const response = await fetch(`http://localhost:3000/tasks?id=${taskId}&date=${date}`, {
+                const response = await Stan(`/tasks?id=${taskId}&date=${date}`, {
                     method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...getHeaders()
-                    },
-                })
+                });
 
                 this.updateTaskRanks(this.taskRanks[date].filter((rank: number) => rank !== taskId), date)
 
                 // TODO: error handling
-                console.log(response)
+                console.log('deleting response', response)
                 // this.tasks = this.tasks.filter(task => task.id !== taskId);
                 // Object.keys(this.tasks).forEach(date => {
                 //     this.tasks[date] = this.tasks[date].filter(task => task.id !== taskId);

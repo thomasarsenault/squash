@@ -126,7 +126,7 @@ const today = computed(() => {
     return [];
   }
   
-  return (store.taskRanks[dayjs().format('YYYY-MM-DD')] || []).map(taskId => tasks.find(task => task.id === taskId))
+  return (store.taskRanks[dayjs().format('YYYY-MM-DD')] || []).map(taskId => tasks.find(task => task.id === taskId) || {})
   // .sort((a, b) => a.rank - b.rank)
 })
 
@@ -136,7 +136,7 @@ const tomorrow = computed(() => {
     return [];
   }
 
-  return (store.taskRanks[dayjs().add(1, 'day').format('YYYY-MM-DD')] || []).map(taskId => tasks.find(task => task.id === taskId))
+  return (store.taskRanks[dayjs().add(1, 'day').format('YYYY-MM-DD')] || []).map(taskId => tasks.find(task => task.id === taskId) || {})
 })
 
 const week = computed(() => {
@@ -146,7 +146,7 @@ const week = computed(() => {
     return [];
   }
 
-  return (store.taskRanks[dayjs().add(7, 'day').format('YYYY-MM-DD')] || []).map(taskId => tasks.find(task => task.id === taskId))
+  return (store.taskRanks[dayjs().add(7, 'day').format('YYYY-MM-DD')] || []).map(taskId => tasks.find(task => task.id === taskId) || {})
 })
 
 </script>

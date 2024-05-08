@@ -30,7 +30,7 @@ const deleteTask = async (req: Request) => {
     }
 
     console.log('returning new task ranks', res)
-    return new ClientResponse(null, { status: 204 });
+    return new ClientResponse(JSON.stringify({ id: res }), { status: 200 });
 }
 
 const updateTask = async (req: Request) => {

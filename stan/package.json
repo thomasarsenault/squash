@@ -16,6 +16,7 @@
     "@supabase/supabase-js": "^2.39.0",
     "dayjs": "^1.11.10",
     "dotenv": "^16.3.1",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "node-cron": "^3.0.3"
   }
 }

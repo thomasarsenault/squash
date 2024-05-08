@@ -5,6 +5,9 @@ import handleTasksRoute from "@routes/tasks.route";
 import handleAuthRoute from "@routes/auth.route";
 import ClientResponse from '@middleware/clientResponse';
 import authenticate from '@middleware/auth';
+import scheduler from './src/jobs/index';
+
+scheduler();
 
 const server = Bun.serve({
   hostname: '0.0.0.0',

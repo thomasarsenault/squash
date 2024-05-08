@@ -2,7 +2,7 @@ import db from "@db/supabase.manager";
 import ClientResponse
  from "@middleware/clientResponse";
 const handleLogin = async (req: Request): Promise<Response> => {
-    const { email, password } = await req.json(); // Extract email and password from request body
+    const { email, password } = await req.json() as any; // Extract email and password from request body
 
     console.log('its in the controller')
     console.log(email);
@@ -19,7 +19,8 @@ const handleLogin = async (req: Request): Promise<Response> => {
         password: password
     });
 
-    console.log('data', data);
+    // clear the storage with GoTrueClient._removeSession()
+    const { data: clearStorageData, error: clearStorageError } = await db.auth.signInWithPassword({} as any);
 
     if (error) {
         return new ClientResponse(JSON.stringify({ error: error.message }), {

@@ -3,11 +3,10 @@ import dayjs from 'dayjs'
 import { useTasksStore } from '../stores/tasks';
 import type { Task } from '../types';
 import { computed, ref, onMounted, onUnmounted, watch } from 'vue';
-import '@material/web/button/filled-button.js';
-import '@material/web/button/outlined-button.js';
-import '@material/web/button/text-button.js';
-import '@material/web/checkbox/checkbox.js';
-import '@material/web/dialog/dialog.js';
+
+import Dialog from 'primevue/dialog';
+
+// import FloatLabel from 'primevue/floatlabel';
 
 const store = useTasksStore();
 const modal = ref<HTMLElement | null>(null);
@@ -21,7 +20,7 @@ const cancelModal = () => {
 }
 
 const deleteTask = () => {
-    store.deleteTask(editedTask.value.id, editedTask.value.date);
+    store.deleteTask(editedTask.value.id, dayjs(editedTask.value.date).format('YYYY-MM-DD'));
     cancelModal();
 }
 
@@ -50,51 +49,27 @@ watch(() => store.editModal.task, (task) => {
 </script>
 
 <template>
-    <md-dialog ref="modal" id="edit-task-modal" :open="store.editModal.isOpen">
-        <template v-if="editMode">
-            <div slot="headline">
-                <md-filled-text-field
-                    autofocus
-                    label="Name"
-                    class="text-field-edit"
-                    :value="editedTask.name"
-                    @input="editedTask.name = $event.target.value"
-                />
+    <Dialog v-model:visible="store.editModal.isOpen" header="Edit task">
+        <div v-if="editMode">
+            <InputText v-model="editedTask.name" class="text-field-edit" placeholder="Task name"/>
+            <Textarea v-model="editedTask.description" class="text-field-edit" placeholder="Task description"/>
+        </div>
+        <div v-else>
+            <p>{{ editedTask.name }}</p>
+            <p class="description">{{ editedTask.description }}</p>
+        </div>
+        <template #footer>
+            <div v-if="editMode" class="actions">
+                <Button label="Cancel" severity="secondary" @click="editMode = false"/>
+                <Button label="Save" @click="updateTask"/>
             </div>
-            <div slot="content">
-                <md-filled-text-field
-                    type="textarea"
-                    label="Description"
-                    class="text-field-edit"
-                    :value="editedTask.description"
-                    @input="editedTask.description = $event.target.value"
-                />
-            </div>
-            <div slot="actions">
-                <md-text-button @click="cancelModal">Cancel</md-text-button>
-                <md-filled-button @click="updateTask">Save</md-filled-button>
+            <div v-else class="actions">
+                <Button label="Delete" severity="danger" @click="deleteTask"/>
+                <Button label="Close" severity="secondary" @click="cancelModal"/>
+                <Button label="Edit" @click="editMode = true"/>
             </div>
         </template>
-        <template v-else>
-            <div slot="headline">
-                <h2>{{ editedTask.name }}</h2>
-            </div>
-            <div slot="content">
-                <p class="description">{{ editedTask.description }}</p>
-            </div>
-            <div slot="actions">
-                <div class="actions">
-                    <div class="left">
-                        <md-outlined-button @click="deleteTask">Delete</md-outlined-button>
-                    </div>
-                    <div class="right">
-                        <md-text-button @click="cancelModal">Close</md-text-button>
-                        <md-filled-button @click="editMode = true">Edit</md-filled-button>
-                    </div>
-                </div>
-            </div>
-        </template>
-    </md-dialog>
+    </Dialog>
 </template>
 
 <style scoped lang="scss">

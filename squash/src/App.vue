@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import '@material/web/button/text-button.js';
 
 document.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -34,7 +33,7 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 
 <style lang="scss">
 #app {
-  background-color: var(--md-sys-color-surface-container);
+  background-color: var(--surface-ground);
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -52,24 +51,9 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 
 header {
   width: 100%;
-  background-color: var(--md-sys-color-surface-container);
+  background-color: var(--primary-color);
   padding: 1rem;
+  color: white;
+  font-size: 32px;
 }
-
-// nav {
-//   display: flex;
-//   align-items: center;
-//   a {
-//     margin: 0.5rem 0;
-//     // color: var(--color-text);
-//     color: var(--md-sys-color-on-background);
-//     color: white;
-//     text-decoration: none;
-//     font-weight: 500;
-//     font-size: 1.2rem;
-//     &:hover {
-//       color: var(--md-sys-color-on-background);
-//     }
-//   }
-// }
 </style>

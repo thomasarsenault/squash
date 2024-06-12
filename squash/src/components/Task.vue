@@ -3,12 +3,11 @@ import dayjs from 'dayjs'
 import { useTasksStore } from '../stores/tasks';
 import type { Task } from '../types';
 import { computed, ref } from 'vue';
-import '@material/web/button/filled-button.js';
-import '@material/web/button/filled-tonal-button.js';
-import '@material/web/button/text-button.js';
-import '@material/web/checkbox/checkbox.js';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 import EditTask from './EditTask.vue';
+
+import Card from 'primevue/card';
+
 const props = defineProps<{
   task: Task
 }>()
@@ -27,7 +26,8 @@ const offsetX = ref(0);
 const offsetY = ref(0);
 
 const onClick = (e) => {
-    if(e.target.classList.contains('checkbox')) return;
+    console.log(e.target.classList);
+    if(e.target.classList.contains('p-checkbox-input')) return;
     if(e.button === 0) {
         console.log('opening modal')
         store.editModal.isOpen = true;
@@ -40,7 +40,8 @@ const onClick = (e) => {
 }
 
 const toggleTaskComplete = () => {
-    store.updateTask({id: props.task.id, completed: !props.task.completed});
+    // TODO: fix the checkbox updating the object before being sent to store
+    store.updateTask({id: props.task.id, completed: props.task.completed});
 }
 
 const startDrag = (e) => {
@@ -82,26 +83,21 @@ const endDrag = (e) => {
             {{ task.name || 'nah' }}
         </div>
     </div>
-    <div
-        ref="draggable"
+    <Card ref="draggable"
         :data-id="task.id"
-            :style="{ position: isDragging ? 'absolute' : 'static', top: `${y}px`, left: `${x}px` }"
+        :style="{ position: isDragging ? 'absolute' : 'static', top: `${y}px`, left: `${x}px` }"
         @mousedown="onClick"
         :class="['draggable', 'task', { 'completed': task.completed }]">
-        <div class="placement-indicator"></div>
-        <!-- <md-filled-tonal-button>
-            test
-        </md-filled-tonal-button>
-        <md-filled-button>
-            test
-        </md-filled-button> -->
-        <div class="task-container">
-            <md-checkbox @click="toggleTaskComplete" :checked="task.completed" class="checkbox"/>
+        <template #content>
+            <div class="placement-indicator"></div>
+            <div class="task-container">
+            <Checkbox @click="toggleTaskComplete" v-model="task.completed" binary/>
             <div class="name">
                 {{ task.name || 'nah' }}
             </div>
         </div>
-    </div>
+        </template>
+    </Card>
 </template>
 
 <style scoped lang="scss">
@@ -113,20 +109,23 @@ const endDrag = (e) => {
         height: 1rem;
     }
 }
+
 .task {
     border-radius: 8px;
-    background-color: var(--md-sys-color-outline);
     padding: 1rem;
     cursor: pointer;
     user-select: none;
-    color: white;
     position: relative;
     transition: background-color 0.1s ease-in-out;
+
+    :deep(.p-card-body) {
+        padding: 0;
+    }
 }
 
 .task.completed {
-    background-color: var(--md-sys-color-outline-variant);
-    color: gray;
+    background-color: var(--primary-color);
+    color: var(--primary-color-text);
 }
 
 .task-container {
@@ -142,7 +141,7 @@ const endDrag = (e) => {
             content: '';
             width: 100%;
             height: 2px;
-            background-color: var(--md-sys-color-outline);
+            background-color: var(--primary-color);
             position: absolute;
             top: -20px;
         }

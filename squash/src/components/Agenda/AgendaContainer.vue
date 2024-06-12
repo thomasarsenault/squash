@@ -34,24 +34,11 @@ const addTask = async () => {
     <div class="agenda-container">
         <div class="header">
             <div class="title">{{ zone }}</div>
-            <md-filled-tonal-button @click="newTaskPromptOpen = !newTaskPromptOpen">
-                    {{ newTaskPromptOpen ? 'Close' : 'New Task' }}
-            </md-filled-tonal-button>
+            <Button @click="newTaskPromptOpen = !newTaskPromptOpen">{{ newTaskPromptOpen ? 'Close' : 'New Task' }}</Button>
         </div>
         <div :class="`new-task ${newTaskPromptOpen ? 'open' : ''}`">
-            <md-filled-text-field
-                autofocus
-                label="New Task"
-                class="new-task-input"
-                :value="newTaskText"
-                @input="newTaskText = $event.target.value"
-                @keydown.enter="() => addTask()"
-            />
-            <div class="options">
-                <md-filled-button>
-                Add
-                </md-filled-button>
-            </div>
+            <!-- primevue text field -->
+            <InputText autofocus v-model="newTaskText" class="new-task-input" placeholder="New Task" @keydown.enter="addTask"/>
         </div>
         <div :class="`drag-zone ${hovered ? 'hovered' : ''}`" :id="zone">
             <div class="tasks">
@@ -86,7 +73,6 @@ const addTask = async () => {
 
 .agenda-container {
   flex: 1;
-  background-color: var(--md-sys-color-surface);
   padding: 1rem;
   border-radius: 16px;
   display: flex;
@@ -114,24 +100,16 @@ const addTask = async () => {
     .new-task-input {
       width: 100%;
     }
-
-    .options {
-      display: none;
-      border-radius: 16px;
-      margin: 1rem 0;
-      padding: 1rem;
-      background-color: var(--md-sys-color-surface-variant);
-    }
   }
 }
 
 .drag-zone {
-  border-radius: 16px;
+  border-radius: var(--border-radius);
   flex: 1;
   min-height: 2rem;
 
   &.hovered {
-    background-color: var(--md-sys-color-surface-variant);
+    background-color: var(--surface-section);
   }
 }
 

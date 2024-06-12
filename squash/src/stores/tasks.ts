@@ -21,7 +21,7 @@ export const useTasksStore = defineStore('tasks', {
         currentDraggedTask: null as Task | null,
         editModal: {
             isOpen: false,
-            task: null,
+            task: null as Task | null,
         }
     }),
     actions: {

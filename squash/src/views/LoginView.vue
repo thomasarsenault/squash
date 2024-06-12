@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import { ref } from 'vue';
+
 const apiUrl = import.meta.env.STAN_API_URL || '';
 
 const email = ref('');
@@ -39,7 +40,11 @@ const login = async () => {
       <div class="title">Squash</div>
       <div class="subtitle">A simple task manager</div>
       <div class="login-form">
-        <md-filled-text-field
+        <!-- with primevue -->
+        <InputText  />
+        <InputText v-model="password" placeholder="password" class="login-input" type="password" />
+        <Button @click="login">Login</Button>
+        <!-- <md-filled-text-field
           label="email"
           class="login-input"
           v-model="email"
@@ -50,7 +55,7 @@ const login = async () => {
           type="password"
           v-model="password"
         />
-        <md-filled-tonal-button @click="login">Login</md-filled-tonal-button>
+        <md-filled-tonal-button @click="login">Login</md-filled-tonal-button> -->
       </div>
     </div>
   </div>
@@ -63,11 +68,10 @@ const login = async () => {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: var(--md-sys-color-surface-container);
 }
 
 .login {
-  background-color: var(--md-sys-color-surface);
+  background-color: var(--surface-ground);
   padding: 1rem;
   border-radius: 16px;
   display: flex;

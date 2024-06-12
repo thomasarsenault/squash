@@ -5,9 +5,6 @@ import { onMounted, ref, computed } from 'vue';
 import AgendaContainer from '../components/Agenda/AgendaContainer.vue';
 import { AgendaZones } from '../utils/constants'
 import { getDateByZone } from '../utils/date';
-import '@material/web/button/filled-button.js';
-import '@material/web/button/filled-tonal-button.js';
-import '@material/web/textfield/filled-text-field.js';
 import EditTask from '../components/EditTask.vue';
 
 const store = useTasksStore();

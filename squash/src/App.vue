@@ -12,6 +12,12 @@ document.addEventListener('contextmenu', e => e.preventDefault());
         <font-awesome-icon icon="fa-solid fa-minus" size="xs" :style="{ color: 'white' }"/>
         Squash
         <font-awesome-icon icon="fa-solid fa-minus" size="xs" :style="{ color: 'white' }"/>
+        <RouterLink to="/">
+          <a>Agenda</a>
+        </RouterLink>
+        <!-- <RouterLink to="/expenses">
+          <a>Expenses</a>
+        </RouterLink> -->
         <!-- <RouterLink to="/">
           <md-text-button>
             Agenda
@@ -55,5 +61,19 @@ header {
   padding: 1rem;
   color: white;
   font-size: 32px;
+}
+nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  a {
+    font-size: 1.2rem;
+    text-decoration: none;
+    color: var(--primary-color-text);
+
+    &:hover {
+      color: var(--text-secondary-color);
+    }
+  }
 }
 </style>

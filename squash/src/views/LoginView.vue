@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import { ref } from 'vue';
+import router from '../router/index';
 
 const apiUrl = import.meta.env.STAN_API_URL || '';
 
@@ -28,6 +29,7 @@ const login = async () => {
 
         console.log('got the access token', accessToken);
         localStorage.setItem('accessToken', accessToken); // Store the token
+        router.push('/')
     } else {
         console.error('Login failed');
     }
@@ -41,7 +43,7 @@ const login = async () => {
       <div class="subtitle">A simple task manager</div>
       <div class="login-form">
         <!-- with primevue -->
-        <InputText  />
+        <InputText v-model="email" placeholder="email" class="login-input"/>
         <InputText v-model="password" placeholder="password" class="login-input" type="password" />
         <Button @click="login">Login</Button>
         <!-- <md-filled-text-field

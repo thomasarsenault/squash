@@ -5,9 +5,22 @@ import type { Task } from '../types';
 import { computed, ref, onMounted, onUnmounted, watch } from 'vue';
 
 import Dialog from 'primevue/dialog';
+import SelectButton from 'primevue/selectbutton';
 
-// import FloatLabel from 'primevue/floatlabel';
-
+const dateOptions = [
+    {
+        label: 'Today',
+        value: dayjs().format('YYYY-MM-DD')
+    },
+    {
+        label: 'Tomorrow',
+        value: dayjs().add(1, 'day').format('YYYY-MM-DD')
+    },
+    {
+        label: 'This Week',
+        value: dayjs().add(7, 'day').format('YYYY-MM-DD')
+    }
+]
 const store = useTasksStore();
 const modal = ref<HTMLElement | null>(null);
 const editedTask = ref<Task>({} as Task);
@@ -33,9 +46,24 @@ onUnmounted(() => {
     modal.value?.removeEventListener('cancel', cancelModal)
 })
 
-const updateTask = () => {
-    console.log(editedTask.value)
+const updateTask = async () => {
     store.updateTask(editedTask.value);
+
+    const newDate = dayjs(editedTask.value.date).format('YYYY-MM-DD');
+    const oldDate = store.editModal.task.date;
+
+    //TODO: god this needs to be shared logic for task ranks. shouldve waited til the end to implement re-ordering (i am an idiot)
+    if(newDate !== oldDate) {
+        const newDate = dayjs(editedTask.value.date).format('YYYY-MM-DD');
+        const oldDate = store.editModal.task.date;
+
+        const newRanks = [...store.taskRanks[newDate] || [], editedTask.value.id];
+        const oldRanks = store.taskRanks[oldDate].filter(id => id !== editedTask.value.id);
+
+        await store.updateTaskRanks(newRanks, newDate);
+        await store.updateTaskRanks(oldRanks, oldDate);
+        store.editModal.task = editedTask.value;
+    }
     editMode.value = false;
 }
 
@@ -48,14 +76,15 @@ watch(() => store.editModal.task, (task) => {
 
 </script>
 
+<!-- TODO: add wysiwyg editor -->
 <template>
-    <Dialog v-model:visible="store.editModal.isOpen" header="Edit task">
-        <div v-if="editMode">
+    <Dialog v-model:visible="store.editModal.isOpen" :header="editedTask.name" class="dialog">
+        <div v-if="editMode" class="edit">
             <InputText v-model="editedTask.name" class="text-field-edit" placeholder="Task name"/>
             <Textarea v-model="editedTask.description" class="text-field-edit" placeholder="Task description"/>
+            <SelectButton v-model="editedTask.date" :options="dateOptions" optionLabel="label" optionValue="value"/>
         </div>
-        <div v-else>
-            <p>{{ editedTask.name }}</p>
+        <div v-else class="view">
             <p class="description">{{ editedTask.description }}</p>
         </div>
         <template #footer>
@@ -65,15 +94,17 @@ watch(() => store.editModal.task, (task) => {
             </div>
             <div v-else class="actions">
                 <Button label="Delete" severity="danger" @click="deleteTask"/>
-                <Button label="Close" severity="secondary" @click="cancelModal"/>
-                <Button label="Edit" @click="editMode = true"/>
+                <div class="right">
+                    <Button label="Edit" @click="editMode = true"/>
+                    <Button label="Close" severity="secondary" @click="cancelModal"/>
+                </div>
             </div>
         </template>
     </Dialog>
 </template>
 
 <style scoped lang="scss">
-md-dialog {
+.dialog {
     margin: auto;
     width: 100%;
 
@@ -95,9 +126,28 @@ md-dialog {
         width: 100%;
 
         .right {
+            margin-left: 4rem;
             display: flex;
             gap: 0.5rem;
         }
     }
+}
+
+:deep(.p-dialog) {
+    width: 100%;
+    margin: 1rem;
+}
+.view, .edit {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.view {
+
+}
+
+.edit {
+
 }
 </style>

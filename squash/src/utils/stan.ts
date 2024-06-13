@@ -28,6 +28,8 @@
 //     } 
 // }
 
+import router from '@/router';
+
 const _getHeaders = (method: string | undefined) => {
     const token = localStorage.getItem('accessToken');
 
@@ -48,7 +50,14 @@ const Stan = async (url: string, params: Record<string, any> = {}): Promise<any>
     const apiUrl = import.meta.env.STAN_API_URL || '';
 
     return fetch(`${apiUrl}/api/${url}`, { ...params, headers: {..._getHeaders(params.method), ...params?.headers }})
-        .then((response: any) => response.json())
+        .then(async (response: any) => {
+            if(response.status === 401) {
+                console.log('redirecting to login page')
+                router.push('/login')
+            }
+            
+            return response.json();            
+        })
 } 
 
 export default Stan;

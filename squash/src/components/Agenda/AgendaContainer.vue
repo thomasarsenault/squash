@@ -27,13 +27,17 @@ const addTask = async () => {
   newTaskText.value = '';
 }
 
-
+const zoneToLabel = {
+  [AgendaZones.TODAY]: 'Today',
+  [AgendaZones.TOMORROW]: 'Tomorrow',
+  [AgendaZones.THIS_WEEK]: 'This Week',
+}
 </script>
 
 <template>
     <div class="agenda-container">
         <div class="header">
-            <div class="title">{{ zone }}</div>
+            <div class="title">{{ zoneToLabel[zone] }}</div>
             <Button @click="newTaskPromptOpen = !newTaskPromptOpen">{{ newTaskPromptOpen ? 'Close' : 'New Task' }}</Button>
         </div>
         <div :class="`new-task ${newTaskPromptOpen ? 'open' : ''}`">

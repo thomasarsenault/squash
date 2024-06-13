@@ -82,13 +82,12 @@ export const useTasksStore = defineStore('tasks', {
                 console.error('Error adding task:', error);
             }
         },
-        async updateTask(updatedTask: Task, newRankedAbove: number | null = null) {
+        async updateTask(updatedTask: Task) {
             try {
                 Stan(`tasks`, {
                     method: 'PUT',
                     body: JSON.stringify({
                       task: updatedTask,
-                      newRankedAbove: newRankedAbove
                     })
                   })
                 // TODO: handle it erroring out

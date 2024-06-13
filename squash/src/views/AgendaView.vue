@@ -122,17 +122,18 @@ const today = computed(() => {
   if(!tasks) {
     return [];
   }
-  
+
   return (store.taskRanks[dayjs().format('YYYY-MM-DD')] || []).map(taskId => tasks.find(task => task.id === taskId) || {})
   // .sort((a, b) => a.rank - b.rank)
 })
 
 const tomorrow = computed(() => {
   const tasks = store.tasks[dayjs().add(1, 'day').format('YYYY-MM-DD')]
+
   if(!tasks) {
     return [];
   }
-
+  
   return (store.taskRanks[dayjs().add(1, 'day').format('YYYY-MM-DD')] || []).map(taskId => tasks.find(task => task.id === taskId) || {})
 })
 

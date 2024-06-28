@@ -15,9 +15,9 @@ document.addEventListener('contextmenu', e => e.preventDefault());
         <RouterLink to="/">
           <a>Agenda</a>
         </RouterLink>
-        <!-- <RouterLink to="/expenses">
+        <RouterLink to="/expenses">
           <a>Expenses</a>
-        </RouterLink> -->
+        </RouterLink>
         <!-- <RouterLink to="/">
           <md-text-button>
             Agenda

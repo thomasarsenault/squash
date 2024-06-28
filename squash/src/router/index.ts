@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AgendaView from '../views/AgendaView.vue'
-import LoginView from '../views/LoginView.vue'
-
+import AgendaView from '@/views/AgendaView.vue'
+import LoginView from '@/views/LoginView.vue'
+import ExpensesView from '@/views/ExpensesView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -14,6 +14,11 @@ const router = createRouter({
       path: '/',
       name: 'agenda',
       component: AgendaView
+    },
+    {
+      path: '/expenses',
+      name: 'expenses',
+      component: ExpensesView
     },
     {
       path: '/settings',

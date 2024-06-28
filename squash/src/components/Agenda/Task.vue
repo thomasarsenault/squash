@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { useTasksStore } from '../stores/tasks';
-import type { Task } from '../types';
+import { useTasksStore } from '@/stores/tasks';
+import type { Task } from '@/types';
 import { computed, ref } from 'vue';
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 import EditTask from './EditTask.vue';
 
 import Card from 'primevue/card';

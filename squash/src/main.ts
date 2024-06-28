@@ -12,10 +12,15 @@ import { faPlus, faMinus, faPenToSquare } from '@fortawesome/free-solid-svg-icon
 
 import PrimeVue from 'primevue/config';
 import 'primevue/resources/themes/aura-light-teal/theme.css';
+import 'primeicons/primeicons.css';
 import Button from "primevue/button"
 import Textarea from 'primevue/textarea';
 import InputText from 'primevue/inputtext';
 import Checkbox from 'primevue/checkbox';
+import Card from 'primevue/card';
+import FloatLabel from 'primevue/floatlabel';
+import IconField from 'primevue/iconfield';
+import InputIcon from 'primevue/inputicon';
 
 // Icons
 library.add(faPlus)
@@ -29,6 +34,10 @@ app.component('Button', Button);
 app.component('Textarea', Textarea);
 app.component('InputText', InputText);
 app.component('Checkbox', Checkbox);
+app.component('Card', Card);
+app.component('FloatLabel', FloatLabel);
+app.component('IconField', IconField);
+app.component('InputIcon', InputIcon);
 
 app.use(createPinia())
 app.use(router)

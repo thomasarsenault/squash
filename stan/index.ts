@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import handleTasksRoute from "@routes/tasks.route";
+import handleTransactionsRoute from "@routes/transactions.route";
 import handleAuthRoute from "@routes/auth.route";
 import ClientResponse from '@middleware/clientResponse';
 import authenticate from '@middleware/auth';
@@ -25,15 +26,20 @@ const server = Bun.serve({
     } else if(url.pathname.startsWith('/login')) {
       return handleAuthRoute(req);
     }
-    // Authenticate tasks
-    const authResponse = await authenticate(req);
 
-    if (authResponse instanceof ClientResponse && authResponse.status === 401) {
-      return authResponse;
-    }
+    // // Authenticate tasks
+    // const authResponse = await authenticate(req);
+
+    // if (authResponse instanceof ClientResponse && authResponse.status === 401) {
+    //   return authResponse;
+    // }
 
     if(url.pathname.startsWith('/tasks')) {
       return handleTasksRoute(req);
+    }
+
+    if(url.pathname.startsWith('/transactions')) {
+      return handleTransactionsRoute(req);
     }
 
     return new ClientResponse(null, { status: 404 });

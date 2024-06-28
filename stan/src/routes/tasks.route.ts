@@ -1,11 +1,11 @@
 import tasksController from "@controllers/tasks.controller";
 import ClientResponse from "@middleware/clientResponse";
-import authenticate from "@middleware/auth";
 
 const handleTasksRoute = async (req: Request): Promise<Response> => {
   
   const url = new URL(req.url);
 
+  // TODO: refactor this if statement
   if(url.pathname === '/tasks' && req.method === 'GET') {
     return tasksController.getTasks(req);
   } else if (url.pathname === '/tasks' && req.method === 'POST') {

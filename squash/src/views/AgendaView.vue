@@ -5,7 +5,7 @@ import { onMounted, ref, computed } from 'vue';
 import AgendaContainer from '../components/Agenda/AgendaContainer.vue';
 import { AgendaZones } from '../utils/constants'
 import { getDateByZone } from '../utils/date';
-import EditTask from '../components/EditTask.vue';
+import EditTask from '../components/Agenda/EditTask.vue';
 
 const store = useTasksStore();
 

@@ -38,3 +38,5 @@ export default defineConfig({
     }
   }
 })
+
+// target: 'http://159.203.18.242:3000',

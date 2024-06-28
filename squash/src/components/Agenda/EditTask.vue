@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { useTasksStore } from '../stores/tasks';
-import type { Task } from '../types';
+import { useTasksStore } from '@/stores/tasks';
+import type { Task } from '@/types';
 import { computed, ref, onMounted, onUnmounted, watch } from 'vue';
 
 import Dialog from 'primevue/dialog';

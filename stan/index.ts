@@ -27,12 +27,12 @@ const server = Bun.serve({
       return handleAuthRoute(req);
     }
 
-    // // Authenticate tasks
-    // const authResponse = await authenticate(req);
+    // Authenticate tasks
+    const authResponse = await authenticate(req);
 
-    // if (authResponse instanceof ClientResponse && authResponse.status === 401) {
-    //   return authResponse;
-    // }
+    if (authResponse instanceof ClientResponse && authResponse.status === 401) {
+      return authResponse;
+    }
 
     if(url.pathname.startsWith('/tasks')) {
       return handleTasksRoute(req);

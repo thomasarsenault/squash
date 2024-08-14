@@ -5,15 +5,6 @@ import { groupTasksByDate } from '@/utils/tasks';
 import dayjs from 'dayjs';
 import Stan from '../utils/stan';
 
-const apiUrl = import.meta.env.STAN_API_URL || '';
-
-const getHeaders = () => {
-    const token = localStorage.getItem('accessToken');
-    return {
-        'Authorization': `Bearer ${token}`
-    }
-}
-
 export const useTasksStore = defineStore('tasks', {
     state: () => ({
         tasks: {} as GroupedTasks,

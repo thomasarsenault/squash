@@ -40,7 +40,7 @@ const login = async () => {
   <div class="login-container">
     <div class="login">
       <div class="title">Squash</div>
-      <div class="subtitle">A simple task manager</div>
+      <div class="subtitle">Your best friend</div>
       <div class="login-form">
         <!-- with primevue -->
         <InputText v-model="email" placeholder="email" class="login-input"/>

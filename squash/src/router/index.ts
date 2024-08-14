@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AgendaView from '@/views/AgendaView.vue'
 import LoginView from '@/views/LoginView.vue'
 import ExpensesView from '@/views/ExpensesView.vue'
+import DashboardView from '@/views/DashboardView.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -12,6 +14,11 @@ const router = createRouter({
     },
     {
       path: '/',
+      name: 'dashboard',
+      component: DashboardView
+    },
+    {
+      path: '/agenda',
       name: 'agenda',
       component: AgendaView
     },

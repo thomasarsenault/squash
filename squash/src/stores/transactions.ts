@@ -4,15 +4,6 @@ import type { Task, GroupedTasks } from '@/types';
 import dayjs from 'dayjs';
 import Stan from '../utils/stan';
 
-const apiUrl = import.meta.env.STAN_API_URL || '';
-
-const getHeaders = () => {
-    const token = localStorage.getItem('accessToken');
-    return {
-        'Authorization': `Bearer ${token}`
-    }
-}
-
 const MOCK_EXPENSES = [
     {
         id: 1,

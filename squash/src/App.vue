@@ -10,9 +10,11 @@ document.addEventListener('contextmenu', e => e.preventDefault());
     <div class="wrapper">
       <nav>
         <font-awesome-icon icon="fa-solid fa-minus" size="xs" :style="{ color: 'white' }"/>
-        Squash
+          <RouterLink to="/">
+            <a>Squash</a>
+          </RouterLink>
         <font-awesome-icon icon="fa-solid fa-minus" size="xs" :style="{ color: 'white' }"/>
-        <RouterLink to="/">
+        <RouterLink to="/agenda">
           <a>Agenda</a>
         </RouterLink>
         <RouterLink to="/expenses">

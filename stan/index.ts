@@ -4,6 +4,7 @@ dotenv.config();
 import handleTasksRoute from "@routes/tasks.route";
 import handleTransactionsRoute from "@routes/transactions.route";
 import handleAuthRoute from "@routes/auth.route";
+import handleDashboardRoute from "@routes/dashboard.route";
 import ClientResponse from '@middleware/clientResponse';
 import authenticate from '@middleware/auth';
 import scheduler from './src/jobs/index';
@@ -40,6 +41,10 @@ const server = Bun.serve({
 
     if(url.pathname.startsWith('/transactions')) {
       return handleTransactionsRoute(req);
+    }
+
+    if(url.pathname.startsWith('/dashboard')) {
+      return handleDashboardRoute(req);
     }
 
     return new ClientResponse(null, { status: 404 });

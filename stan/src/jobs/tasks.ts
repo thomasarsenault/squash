@@ -25,8 +25,8 @@ const migrateTasks = async () => {
 
 
     console.log('taskRanks', taskRanks);
-    let taskRanksToday = taskRanks.find((taskRank) => taskRank.date === today).ranks;
-    const taskRanksTomorrow = taskRanks.find((taskRank) => taskRank.date === tomorrow).ranks;
+    let taskRanksToday = taskRanks.find((taskRank) => taskRank.date === today)?.ranks || [];
+    const taskRanksTomorrow = taskRanks.find((taskRank) => taskRank.date === tomorrow)?.ranks || [];
 
     data.forEach(async (task) => {
         console.log('in loop', task.id, task.completed)

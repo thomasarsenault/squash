@@ -2,7 +2,7 @@
 import dayjs from 'dayjs'
 import { useTasksStore } from '@/stores/tasks';
 import type { Task } from '@/types';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import EditTask from './EditTask.vue';
 
 import Card from 'primevue/card';
@@ -15,8 +15,6 @@ const store = useTasksStore();
 
 const emit = defineEmits(['drag', 'dragEnd']);
 
-console.log('task', props.task)
-
 const draggable = ref(null);
 const isDragging = ref(false);
 const x = ref(0);
@@ -25,7 +23,6 @@ const offsetX = ref(0);
 const offsetY = ref(0);
 
 const onClick = (e) => {
-    console.log(e.target.classList);
     if(e.target.classList.contains('p-checkbox-input')) return;
     if(e.button === 0) {
         console.log('opening modal')
@@ -39,8 +36,7 @@ const onClick = (e) => {
 }
 
 const toggleTaskComplete = () => {
-    // TODO: fix the checkbox updating the object before being sent to store
-    store.updateTask({id: props.task.id, completed: props.task.completed});
+    store.updateTask({id: props.task.id, completed: !props.task.completed});
 }
 
 const startDrag = (e) => {
@@ -74,6 +70,8 @@ const endDrag = (e) => {
     document.removeEventListener('mouseup', endDrag);
     emit('dragEnd')
 }
+
+const isCompleted = ref(props.task.completed);
 </script>
 
 <template>
@@ -90,9 +88,9 @@ const endDrag = (e) => {
         <template #content>
             <div class="placement-indicator"></div>
             <div class="task-container">
-            <Checkbox @click="toggleTaskComplete" v-model="task.completed" binary/>
+            <Checkbox @click="toggleTaskComplete" v-model="isCompleted" binary/>
             <div class="name">
-                {{ task.name || 'nah' }}
+                {{ task.name || 'No task name' }}
             </div>
         </div>
         </template>

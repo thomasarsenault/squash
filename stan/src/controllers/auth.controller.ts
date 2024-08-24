@@ -19,7 +19,7 @@ const handleLogin = async (req: Request): Promise<Response> => {
     });
 
     // clear the storage with GoTrueClient._removeSession()
-    // const { data: clearStorageData, error: clearStorageError } = await db.auth.signInWithPassword({} as any);
+    const { data: clearStorageData, error: clearStorageError } = await db.auth.signInWithPassword({} as any);
 
     if (error) {
         return new ClientResponse(JSON.stringify({ error: error.message }), {

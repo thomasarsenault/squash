@@ -31,10 +31,10 @@
 import router from '@/router';
 
 const _getHeaders = (method: string | undefined) => {
-    const token = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem('accessToken');
 
     const headers: any = {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${accessToken}`,
     }
 
     return headers;

@@ -17,6 +17,9 @@ export const useDashboardStore = defineStore('dashboard', {
                 const today = dayjs().format('YYYY-MM-DD');
                 
                 console.log('store data', data)
+                if(data.error) {
+                    return;
+                }
                 this.weather = data.weather;
                 // this.weather = JSON.parse(test).weather;
                 this.weather.current.sunset = this.weather.days[today].sunset;

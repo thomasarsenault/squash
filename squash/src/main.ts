@@ -11,9 +11,11 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faPlus, faMinus, faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 
 import PrimeVue from 'primevue/config';
-import 'primevue/resources/themes/aura-light-teal/theme.css';
+import 'primevue/resources/themes/aura-light-purple/theme.css';
 import 'primeicons/primeicons.css';
 import Button from "primevue/button"
+import Calendar from 'primevue/calendar'
+import Dropdown from 'primevue/dropdown';
 import Textarea from 'primevue/textarea';
 import InputText from 'primevue/inputtext';
 import Checkbox from 'primevue/checkbox';
@@ -38,6 +40,8 @@ app.component('Card', Card);
 app.component('FloatLabel', FloatLabel);
 app.component('IconField', IconField);
 app.component('InputIcon', InputIcon);
+app.component('Calendar', Calendar);
+app.component('Dropdown', Dropdown);
 
 app.use(createPinia())
 app.use(router)

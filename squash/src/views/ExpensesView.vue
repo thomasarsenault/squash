@@ -4,33 +4,50 @@ import { useTasksStore } from '../stores/tasks';
 import { useTransactionStore } from '../stores/transactions';
 import { onMounted, ref, computed } from 'vue';
 import AddExpense from '../components/Expenses/AddExpense.vue';
+import EditExpense from '../components/Expenses/EditExpense.vue';
 import TransactionHistory from '../components/Expenses/TransactionHistory.vue';
+import { formatAmount } from '@/utils/helper';
 
 const store = useTransactionStore();
-
+const MONTHS = Array.from({ length: 12 }, (_, i) => ({ label: dayjs().month(i).format('MMMM'), value: i }));
 onMounted(async () => {
   store.getTransactions().then(() => {
     console.log('tasks', store.tasks);
   })
 })
 
-const totalAmountThisMonth = computed(() => {
-  return store.transactions.reduce((acc, transaction) => acc + transaction.amount, 0);
-});
-const totalTransactionsThisMonth = computed(() => {
+const selectedMonth = ref(MONTHS[dayjs().month()]);
+const selectedTransactions = computed(() => {
   return store.transactions.filter(transaction => {
-    return dayjs(transaction.date).isSame(dayjs(), 'month');
-  }).length;
+    return dayjs(transaction.date).month() === selectedMonth.value.value;
+  }) || [];
 });
+
+const totalAmountThisMonth = computed(() => {
+  return formatAmount(selectedTransactions.value.reduce((acc, transaction) => acc + transaction.amount, 0));
+});
+
+const openEditModal = (transaction) => {
+  store.editModal.transaction = transaction;
+  store.editModal.open = true;
+}
 
 </script>
 
 <template>
   <main>
     <div class="action-bar">
-      <Button label="Add Transactions" @click="() => store.addModalOpen = true"/>
+      <Button label="Add Transaction" @click="() => store.addModalOpen = true"/>
     </div>
     <div class="expenses">
+      <Card>
+        <template #title>Month</template>
+        <template #content>
+          <Dropdown v-model="selectedMonth"
+            :options="Array.from({ length: 12 }, (_, i) => ({ label: dayjs().month(i).format('MMMM'), value: i }))"
+            optionLabel="label"/>
+        </template>
+      </Card>
       <div class="top">
         <div class="statistics">
           <Card>
@@ -38,12 +55,12 @@ const totalTransactionsThisMonth = computed(() => {
             <template #content>
               <div class="stats">
                 <div class="stat">
-                  <div class="label">Total {{ dayjs().format('MMMM') }} Expenses</div>
-                  <div class="value">{{ `$${totalAmountThisMonth.toFixed(2)}` }}</div>
+                  <div class="label">Spent</div>
+                  <div class="value">{{ totalAmountThisMonth }}</div>
                 </div>
                 <div class="stat">
-                  <div class="label">Total {{ dayjs().format('MMMM') }} Transactions</div>
-                  <div class="value">{{  totalTransactionsThisMonth }}</div>
+                  <div class="label">Transactions</div>
+                  <div class="value">{{ selectedTransactions.length }}</div>
                 </div>
               </div>
             </template>
@@ -54,12 +71,13 @@ const totalTransactionsThisMonth = computed(() => {
         <Card class="table">
             <template #title>💸 Transaction History</template>
             <template #content>
-              <TransactionHistory :transactions="store.transactions" />
+              <TransactionHistory :transactions="selectedTransactions" @rowSelect="(e) => openEditModal(e)"/>
             </template>
         </Card>
       </div>
     </div>
     <AddExpense id="add-transaction-dialog"/>
+    <EditExpense id="edit-transaction-dialog"/>
   </main>
 </template>
 
@@ -90,12 +108,22 @@ main {
 
       .stats {
         display: flex;
-        flex-direction: column;
         gap: 1rem;
 
         .stat {
           display: flex;
-          gap: 1rem;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          .label {
+            font-size: 0.75rem;
+            color: var(--text-secondary-color);
+          }
+
+          .value {
+            font-size: 1.2rem;
+            font-weight: bold;
+          }
         }
       }
     }

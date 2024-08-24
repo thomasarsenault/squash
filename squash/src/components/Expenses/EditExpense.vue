@@ -1,20 +1,30 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed, watch } from 'vue';
 import InputNumber from 'primevue/inputnumber';
 import { useTransactionStore } from '@/stores/transactions';
 import dayjs from 'dayjs';
 import Dialog from 'primevue/dialog';
 
 const store = useTransactionStore();
-
+const transaction = computed(() => store.editModal.transaction);
 const date = ref(dayjs().format('MM/DD/YYYY'));
 const name = ref('');
-const category = ref('');
+const category = ref({});
 const amount = ref(null);
 
-const addExpense = () => {
-    const transaction = {
-        id: store.transactions.length + 1,
+watch(transaction, (value) => {
+    const subcategories = store.dropdownCategories.flatMap(category => category.items);
+    const subcategoryObj = subcategories.find(category => category.label === value.subcategory);
+
+    date.value = dayjs(value.date).format('MM/DD/YYYY');
+    name.value = value.name;
+    category.value = subcategoryObj;
+    amount.value = value.amount;
+})
+
+const editExpense = () => {
+    const updatedTransaction = {
+        id: transaction.value.id,
         name: name.value,
         amount: amount.value,
         date: dayjs(date.value).format('YYYY-MM-DD'),
@@ -22,18 +32,24 @@ const addExpense = () => {
         subcategory: category.value.label || 'Other',
     }
 
-    store.addTransaction(transaction);
-    store.addModalOpen = false;
+    store.updateTransaction(updatedTransaction);
+    store.editModal.open = false;
     name.value = '';
     amount.value = null;
     category.value = '';
     date.value = dayjs().format('MM/DD/YYYY');
 }
+
+const deleteTransaction = () => {
+    store.deleteTransaction(transaction.value);
+    store.editModal.open = false;
+}
+
 </script>
 
 <template>
     <div class="add-expense">
-        <Dialog v-model:visible="store.addModalOpen" header="💰 Add Transaction">
+        <Dialog v-model:visible="store.editModal.open" header="💰 Edit Transaction">
             <div class="fields">
                 <FloatLabel>
                     <Calendar id="date" v-model="date" />
@@ -60,7 +76,12 @@ const addExpense = () => {
                 </FloatLabel>
             </div>
             <template #footer>
-                <Button label="Add" @click="addExpense" />
+                <div class="actions">
+                    <Button label="Delete" severity="danger" @click="deleteTransaction" />
+                    <div class="right">
+                        <Button label="Add" @click="editExpense" />
+                    </div>
+                </div>
             </template>
         </Dialog>
     </div>
@@ -87,4 +108,15 @@ const addExpense = () => {
     }
 }
 
+.actions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .right {
+        margin-left: 4rem;
+        display: flex;
+        gap: 0.5rem;
+    }
+}
 </style>

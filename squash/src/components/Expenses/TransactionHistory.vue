@@ -4,10 +4,13 @@ import dayjs from 'dayjs';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { FilterMatchMode } from '@primevue/core/api';
+import { formatAmount } from '@/utils/helper';
 
 const props = defineProps<{
   transactions: any[]
 }>()
+
+const emit = defineEmits(['rowSelect'])
 
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -18,27 +21,31 @@ const filters = ref({
   subcategory: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
 });
 
-const formatDate = (date: string) => dayjs(date).format('ddd, MMMM DD');
-const formatAmount = (amount: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+const showFilters = ref(false);
+
+const formatDate = (date: string) => dayjs(date).format('ddd DD');
 const transactions = computed(() => props.transactions.sort((a, b) => dayjs(b.date).unix() - dayjs(a.date).unix()));
 </script>
 
 <template>
-<DataTable size="large" stripedRows
+<DataTable size="large" stripedRows removableSort
                 :value="transactions"
                 v-model:filters="filters"
-                filterDisplay="row"
-                :globalFilterFields="['date', 'name', 'amount', 'category', 'subcategory']"
+                :filterDisplay="showFilters ? 'row' : undefined"
+                selectionMode="single"
+                :metaKeySelection="false"
+                @rowSelect="(e: any) => emit('rowSelect', e.data)"
                 dataKey="id">
                 <template #header>
-                    <div class="search">
+                    <Button @click="showFilters = !showFilters" icon="pi pi-filter" />
+                    <!-- <div class="search">
                         <IconField>
                             <InputIcon>
                                 <i class="pi pi-search" />
                             </InputIcon>
                             <InputText v-model="filters['global'].value" placeholder="Keyword Search" />
                         </IconField>
-                    </div>
+                    </div> -->
               </template>
               <template #empty> No transactions found.</template>
               <Column field="date" header="Date">
@@ -57,12 +64,9 @@ const transactions = computed(() => props.transactions.sort((a, b) => dayjs(b.da
                       <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by name" />
                   </template>
                 </Column>
-                <Column field="amount" header="Amount">
+                <Column field="amount" header="Amount" sortable>
                   <template #body="{ data }">
                       {{ formatAmount(data.amount) }}
-                  </template>
-                  <template #filter="{ filterModel, filterCallback }">
-                      <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by amount" />
                   </template>
                 </Column>
                 <Column field="category" header="Category">

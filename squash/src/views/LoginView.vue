@@ -7,6 +7,7 @@ const apiUrl = import.meta.env.STAN_API_URL || '';
 
 const email = ref('');
 const password = ref('');
+
 const login = async () => {
     console.log('logging in')
     console.log(email);
@@ -26,9 +27,12 @@ const login = async () => {
     if (res.ok) {
         const { session } = await res.json(); // Assuming accessToken is sent back
         const accessToken = session.access_token;
+        const refreshToken = session.refresh_token;
 
         console.log('got the access token', accessToken);
         localStorage.setItem('accessToken', accessToken); // Store the token
+        localStorage.setItem('refreshToken', refreshToken);
+
         router.push('/')
     } else {
         console.error('Login failed');

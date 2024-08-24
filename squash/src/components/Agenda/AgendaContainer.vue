@@ -77,7 +77,7 @@ const zoneToLabel = {
 
 .agenda-container {
   flex: 1;
-  padding: 1rem;
+  padding: 0 1rem;
   border-radius: 16px;
   display: flex;
   flex-direction: column;

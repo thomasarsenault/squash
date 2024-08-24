@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import Navbar from './components/Navbar.vue';
 
 document.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -7,31 +8,7 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 
 <template>
   <header>
-    <div class="wrapper">
-      <nav>
-        <font-awesome-icon icon="fa-solid fa-minus" size="xs" :style="{ color: 'white' }"/>
-          <RouterLink to="/">
-            <a>Squash</a>
-          </RouterLink>
-        <font-awesome-icon icon="fa-solid fa-minus" size="xs" :style="{ color: 'white' }"/>
-        <RouterLink to="/agenda">
-          <a>Agenda</a>
-        </RouterLink>
-        <RouterLink to="/expenses">
-          <a>Expenses</a>
-        </RouterLink>
-        <!-- <RouterLink to="/">
-          <md-text-button>
-            Agenda
-          </md-text-button>
-        </RouterLink>
-        <RouterLink to="/settings">
-          <md-text-button>
-            Settings
-          </md-text-button>
-        </RouterLink> -->
-      </nav>
-    </div>
+    <Navbar />
   </header>
 
   <div class="container">
@@ -42,10 +19,12 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 <style lang="scss">
 #app {
   background-color: var(--surface-ground);
-  width: 100vw;
+  width: 100%;
   display: flex;
-  flex-direction: column;
-
+  
+  @include breakpoint('mobile') {
+    flex-direction: column;
+  }
 }
 </style>
 
@@ -53,29 +32,13 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 
 .container {
   margin: 1rem;
-  border-radius: 16px;
   flex: 1;
+  // this fixes Weather overflowing, if removed double check dashboard
+  overflow-x: auto;
 }
 
 header {
-  width: 100%;
-  background-color: var(--primary-color);
-  padding: 1rem;
-  color: white;
-  font-size: 32px;
-}
-nav {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  a {
-    font-size: 1.2rem;
-    text-decoration: none;
-    color: var(--primary-color-text);
-
-    &:hover {
-      color: var(--text-secondary-color);
-    }
-  }
+  font-size: 1.2rem;
+  flex: 0;
 }
 </style>

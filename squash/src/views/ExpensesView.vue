@@ -108,7 +108,7 @@ main {
 
       .stats {
         display: flex;
-        gap: 1rem;
+        gap: 3rem;
 
         .stat {
           display: flex;

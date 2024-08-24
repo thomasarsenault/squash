@@ -4,7 +4,6 @@ import ClientResponse
 const handleLogin = async (req: Request): Promise<Response> => {
     const { email, password } = await req.json() as any; // Extract email and password from request body
 
-    console.log('its in the controller')
     console.log(email);
     console.log(password);
     if (!email || !password) {
@@ -20,7 +19,7 @@ const handleLogin = async (req: Request): Promise<Response> => {
     });
 
     // clear the storage with GoTrueClient._removeSession()
-    const { data: clearStorageData, error: clearStorageError } = await db.auth.signInWithPassword({} as any);
+    // const { data: clearStorageData, error: clearStorageError } = await db.auth.signInWithPassword({} as any);
 
     if (error) {
         return new ClientResponse(JSON.stringify({ error: error.message }), {
@@ -30,7 +29,7 @@ const handleLogin = async (req: Request): Promise<Response> => {
     }
 
     console.log(JSON.stringify({ message: 'Login successful', ...data }))
-    // Optionally handle the session and user data here
+
     return new ClientResponse(JSON.stringify({ message: 'Login successful', ...data }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }

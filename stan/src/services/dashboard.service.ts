@@ -50,7 +50,6 @@ function transformWeatherData(data: any) {
   
     const times: any[] = data.hourly.time;
 
-    console.log(data.daily)
     data.daily.time.forEach((date: any, index: number) => {
         transformedData.days[date] = {};
 

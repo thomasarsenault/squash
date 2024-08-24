@@ -41,7 +41,18 @@ const deleteTransaction = async (transactionId: string): Promise<number> => {
 	return Promise.resolve(Number(transactionId));
 }
 
-const updateTransaction = async (updatedTransaction: any): Promise<Task> => { return null };
+const updateTransaction = async (updatedTransaction: any): Promise<Task> => { 
+	console.log('updating transaction')
+	console.log(updatedTransaction);
+
+	const { data, error } = await db.from('transactions').update(updatedTransaction).eq('id', updatedTransaction.id).select();
+
+	if (error) {
+		throw error;
+	}
+
+	return data[0];
+ };
 
 export default {
 	getTransactions,

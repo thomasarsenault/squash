@@ -5,7 +5,6 @@ const handleAuthRoute = async (req: Request): Promise<Response> => {
   
   const url = new URL(req.url);
 
-  console.log('gets into the auth route just fine')
   if(url.pathname === '/login' && req.method === 'POST') {
     return authController.handleLogin(req);
   }

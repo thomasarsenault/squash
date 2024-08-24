@@ -21,9 +21,9 @@ const createTransaction = async (req: Request) => {
 
 const deleteTransaction = async (req: Request) => {
     const url = new URL(req.url);
-    const { id, date } = Object.fromEntries(url.searchParams.entries());
+    const { id } = Object.fromEntries(url.searchParams.entries());
 
-    const res = await transactionsService.deleteTransaction(id, date);
+    const res = await transactionsService.deleteTransaction(id);
 
     if(!res) {
         return new ClientResponse(null, { status: 404 });

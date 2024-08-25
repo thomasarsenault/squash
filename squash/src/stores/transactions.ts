@@ -17,6 +17,16 @@ const CATEGORIES = [
         ]
     },
     {
+        name: 'House',
+        displayName: '🏠 House',
+        subcategories: [
+            'Supplies',
+            'Rent',
+            'Utilities',
+            'Home improvement'
+        ]
+    },
+    {
         name: 'Entertainment',
         displayName: '📺 Entertainment',
         subcategories: [
@@ -32,15 +42,6 @@ const CATEGORIES = [
         subcategories: [
             'Vacation',
             'Cottage'
-        ]
-    },
-    {
-        name: 'Housing',
-        displayName: '🏠 Housing',
-        subcategories: [
-            'Rent',
-            'Utilities',
-            'Home improvement'
         ]
     },
     {

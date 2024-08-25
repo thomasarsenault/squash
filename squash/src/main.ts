@@ -23,6 +23,7 @@ import Card from 'primevue/card';
 import FloatLabel from 'primevue/floatlabel';
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
+import Skeleton from 'primevue/skeleton';
 
 // Icons
 library.add(faPlus)
@@ -42,6 +43,7 @@ app.component('IconField', IconField);
 app.component('InputIcon', InputIcon);
 app.component('Calendar', Calendar);
 app.component('Dropdown', Dropdown);
+app.component('Skeleton', Skeleton);
 
 app.use(createPinia())
 app.use(router)

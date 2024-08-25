@@ -8,7 +8,8 @@ import EditTask from './EditTask.vue';
 import Card from 'primevue/card';
 
 const props = defineProps<{
-  task: Task
+  task: Task,
+  disableEditing?: boolean
 }>()
 
 const store = useTasksStore();
@@ -24,8 +25,7 @@ const offsetY = ref(0);
 
 const onClick = (e) => {
     if(e.target.classList.contains('p-checkbox-input')) return;
-    if(e.button === 0) {
-        console.log('opening modal')
+    if(e.button === 0 && !props.disableEditing) {
         store.editModal.isOpen = true;
         store.editModal.task = props.task;
         return;
@@ -40,6 +40,7 @@ const toggleTaskComplete = () => {
 }
 
 const startDrag = (e) => {
+    if(props.disableEditing) return;
     isDragging.value = true;
     x.value = e.clientX;
     y.value = e.clientY;
@@ -77,7 +78,7 @@ const isCompleted = ref(props.task.completed);
 <template>
     <div :class="`placeholder ${isDragging ? 'dragging' : ''}`">
         <div class="name">
-            {{ task.name || 'nah' }}
+            {{ task.name || '' }}
         </div>
     </div>
     <Card ref="draggable"

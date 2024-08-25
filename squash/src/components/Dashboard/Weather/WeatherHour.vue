@@ -23,14 +23,17 @@ console.log(icon.value);
 
 <template>
     <div :class="`hour ${now ? 'now' : ''}`">
-        <div class="time">{{ now ? 'Now' : dayjs(hour.time).format('HH:mm') }}</div>
+        <div class="time">{{ now ? 'Now' : dayjs(hour.time).format('h a') }}</div>
         <img :src="icon.icon" />
         <div v-if="hour.weather_code > 48" class="rain-data">
             <div class="precipitation">{{ hour.precipitation }}mm</div>
             <div class="precipitation_prob">{{ hour.precipitation_probability }}%</div>
         </div>
-        <div class="temperature">{{ hour.temperature_2m }}° <span class="feels-like">| {{ hour.apparent_temperature }}°</span></div>
-        <div class="humidity">{{ hour.relative_humidity_2m }}%</div>
+        <div class="temperature">
+            {{ hour.temperature_2m }}°
+            <!-- <span class="feels-like">| {{ hour.apparent_temperature }}°</span> -->
+        </div>
+        <!-- <div class="humidity">{{ hour.relative_humidity_2m }}%</div> -->
     </div>
 </template>
 
@@ -39,6 +42,11 @@ console.log(icon.value);
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    .time {
+        font-size: 0.8rem;
+        color: var(--text-secondary-color);
+    }
     .feels-like {
         font-size: 0.6rem;
         color: var(--text-secondary-color);
@@ -57,8 +65,8 @@ console.log(icon.value);
     }
 
     img {
-        width: 65px;
-        height: 65px;
+        width: 40px;
+        height: 40px;
     }
 }
 </style>

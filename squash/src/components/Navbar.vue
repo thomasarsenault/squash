@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-    
+import Rocket from '@/assets/rocket.svg';
+import Hamburger from '@/assets/hamburger.svg';
+
 const navItems = [
-    { name: '🌄 Dashboard', path: '/' },
+    { name: '😎 Dashboard', path: '/' },
     { name: '📝 Agenda', path: '/agenda' },
     { name: '💸 Expenses', path: '/expenses' },
 ];
@@ -16,11 +18,12 @@ const toggleMenu = () => {
 
 <template>
     <nav class="navbar">
-        <h2>🦋 Squash</h2>
+        <div class="title">
+            <img :src="Rocket" />
+            <h2>Squash</h2>
+        </div>
         <div class="hamburger" @click="toggleMenu">
-            <span></span>
-            <span></span>
-            <span></span>
+            <img :src="Hamburger" />
         </div>
         
         <ul :class="['nav-items', { 'is-open': isOpen }]">
@@ -45,10 +48,26 @@ const toggleMenu = () => {
     padding: 1rem;
     align-items: flex-start;
 
-    h2 {
-        margin: 0 0 1.5rem;
-        padding: 0;
+    .title {
+        display: flex;
+        gap: 0.5rem;
+        padding-bottom: 1.5rem;
+        align-items: center;
+        font-family: 'Karla';
+        
+        img {
+            height: 35px;
+            width: 35px;
+        }
+
+        h2 {
+            margin: 0;
+            padding: 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
     }
+
 }
 
 .nav-items {
@@ -76,19 +95,10 @@ const toggleMenu = () => {
 
 .hamburger {
     display: none;
-    cursor: pointer;
-    flex-direction: column;
-    justify-content: space-around;
-    height: 20px;
-    width: 30px;
-}
-
-.hamburger span {
-    display: block;
-    height: 2px;
-    width: 100%;
-    background-color: var(--text-secondary-color);
-    border-radius: 2px;
+    img {
+        height: 30px;
+        width: 30px;
+    }
 }
 
 @include breakpoint('mobile') {
@@ -100,8 +110,8 @@ const toggleMenu = () => {
         justify-content: space-between;
         align-items: center;
 
-        h2 {
-            margin: 0;
+        .title {
+            padding: 1rem 0 0.5rem;
         }
     }
 
@@ -119,6 +129,7 @@ const toggleMenu = () => {
         padding: 0.5rem;
         background-color: var(--surface-ground);
         z-index: 1;
+        margin-top: 1.5rem;
     }
 
     .nav-items.is-open {

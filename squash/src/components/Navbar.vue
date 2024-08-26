@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import Rocket from '@/assets/rocket.svg';
-import Menubar from 'primevue/menubar';
 
 const items = ref([
     {

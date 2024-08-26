@@ -32,10 +32,33 @@ const openEditModal = (transaction) => {
   store.editModal.open = true;
 }
 
+const items = ref([
+  {
+    label: 'Transactions',
+    icon: 'pi pi-fw pi-money-bill',
+    to: '/expenses'
+  },
+  {
+    label: 'Budget',
+    icon: 'pi pi-fw pi-chart-bar',
+    to: '/expenses/budget'
+  }
+])
+
 </script>
 
 <template>
   <main>
+    <Menubar :model="items" />
+    <!-- <Tabs value="/expenses">
+      <TabList>
+        <Tab :value="'/expenses'">
+          <RouterLink v-slot="{ href,  navigate }" to="/expenses" custom>
+            <a v-ripple @click="navigate" :href="href">Transactions</a>
+          </RouterLink>
+        </Tab>
+      </TabList>
+    </Tabs> -->
     <div class="action-bar">
       <Button label="Add Transaction" @click="() => store.addModalOpen = true"/>
     </div>
@@ -90,6 +113,11 @@ main {
   gap: 1rem;
 }
 
+.p-menubar {
+  padding: 0;
+  background: none;
+  border: none;
+}
 .expenses {
   display: flex;
   flex-direction: column;

@@ -4,7 +4,7 @@ import Rocket from '@/assets/rocket.svg';
 import Hamburger from '@/assets/hamburger.svg';
 
 const navItems = [
-    { name: '😎 Dashboard', path: '/' },
+    { name: '🌼 Dashboard', path: '/' },
     { name: '📝 Agenda', path: '/agenda' },
     { name: '💸 Expenses', path: '/expenses' },
 ];

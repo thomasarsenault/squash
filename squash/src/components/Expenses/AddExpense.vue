@@ -14,7 +14,6 @@ const amount = ref(null);
 
 const addExpense = () => {
     const transaction = {
-        id: store.transactions.length + 1,
         name: name.value,
         amount: amount.value,
         date: dayjs(date.value).format('YYYY-MM-DD'),

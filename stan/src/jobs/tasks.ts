@@ -3,8 +3,8 @@ import dayjs from 'dayjs';
 
 //moves all incompleted tasks from the previous day to today, adds them to the end of the ranks
 const migrateTasks = async () => {
-    const today = dayjs().format('YYYY-MM-DD');
-    const tomorrow = dayjs().add(1, 'day').format('YYYY-MM-DD');
+    const today = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
+    const tomorrow = dayjs().format('YYYY-MM-DD');
 
     const { data, error } = await db.from('tasks').select('*').eq('date', today);
 

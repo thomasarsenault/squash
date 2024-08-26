@@ -21,10 +21,7 @@ document.addEventListener('contextmenu', e => e.preventDefault());
   background-color: var(--surface-ground);
   width: 100%;
   display: flex;
-  
-  @include breakpoint('mobile') {
-    flex-direction: column;
-  }
+  flex-direction: column;
 }
 </style>
 

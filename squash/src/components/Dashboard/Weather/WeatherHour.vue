@@ -45,11 +45,11 @@ console.log(icon.value);
 
     .time {
         font-size: 0.8rem;
-        color: var(--text-secondary-color);
+        color: var(--p-text-muted-color);
     }
     .feels-like {
         font-size: 0.6rem;
-        color: var(--text-secondary-color);
+        color: var(--p-text-muted-color);
     }
 
     .rain-data {

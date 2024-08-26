@@ -60,7 +60,7 @@ const deleteTransaction = () => {
                     <label for="name">Name</label>
                 </FloatLabel>
                 <FloatLabel>
-                    <Dropdown id="category"
+                    <Select id="category"
                         v-model="category" 
                         :options="store.dropdownCategories"
                         optionLabel="label"

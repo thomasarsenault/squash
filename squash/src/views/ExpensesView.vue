@@ -66,7 +66,7 @@ const items = ref([
       <Card>
         <template #title>Month</template>
         <template #content>
-          <Dropdown v-model="selectedMonth"
+          <Select v-model="selectedMonth"
             :options="Array.from({ length: 12 }, (_, i) => ({ label: dayjs().month(i).format('MMMM'), value: i }))"
             optionLabel="label"/>
         </template>
@@ -145,7 +145,7 @@ main {
 
           .label {
             font-size: 0.75rem;
-            color: var(--text-secondary-color);
+            color: var(--p-text-muted-color);
           }
 
           .value {

@@ -86,7 +86,7 @@ const sunsetHour = computed(() => dayjs(store.weather.days[selectedDate.value].s
 <style lang="scss" scoped>
 .relative-time {
     font-size: 0.6rem;
-    color: var(--text-secondary-color);
+    color: var(--p-text-muted-color);
 }
 .current {
     display: flex;
@@ -116,12 +116,12 @@ const sunsetHour = computed(() => dayjs(store.weather.days[selectedDate.value].s
         gap: 0.5rem;
         .feels-like {
             font-size: 0.8rem;
-            color: var(--text-secondary-color);
+            color: var(--p-text-muted-color);
         }
 
         .humidity {
             font-size: 0.8rem;
-            color: var(--text-secondary-color);
+            color: var(--p-text-muted-color);
         }
     }
     
@@ -149,12 +149,12 @@ const sunsetHour = computed(() => dayjs(store.weather.days[selectedDate.value].s
         flex-direction: column;
         .high {
             font-size: 0.8rem;
-            color: var(--text-secondary-color);
+            color: var(--p-text-muted-color);
         }
 
         .low {
             font-size: 0.6rem;
-            color: var(--text-secondary-color);
+            color: var(--p-text-muted-color);
         }
 
         img {

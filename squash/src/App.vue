@@ -18,7 +18,7 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 
 <style lang="scss">
 #app {
-  background-color: var(--surface-ground);
+  background-color: var(--p-surface-50);
   width: 100%;
   display: flex;
   flex-direction: column;

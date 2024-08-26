@@ -108,12 +108,12 @@ const zoneToLabel = {
 }
 
 .drag-zone {
-  border-radius: var(--border-radius);
+  border-radius: var(--p-border-radius-lg);
   flex: 1;
   min-height: 2rem;
 
   &.hovered {
-    background-color: var(--surface-section);
+    background-color: var(--p-surface-100);
   }
 }
 

@@ -77,7 +77,7 @@ const login = async () => {
 }
 
 .login {
-  background-color: var(--surface-ground);
+  background-color: var(--p-surface-50);
   padding: 1rem;
   border-radius: 16px;
   display: flex;

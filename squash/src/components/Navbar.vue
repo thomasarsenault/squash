@@ -31,7 +31,7 @@ const items = ref([
         </template>
         <template #item="{ item }">
             <RouterLink v-slot="{ href, navigate }" :to="item.to" custom>
-                <a class="p-menuitem-link" :href="href" @click="navigate" v-ripple>
+                <a class="p-menubar-item-link" :href="href" @click="navigate" v-ripple>
                     <span :class="item.icon" />
                     <div class="label">{{ item.label }}</div>
                 </a>
@@ -45,6 +45,9 @@ const items = ref([
 <style scoped lang="scss">
 .p-menubar {
     justify-content: center;
+    border: none;
+    border-radius: 0;
+    box-shadow: var(--p-card-shadow);
 }
 .title {
     display: flex;
@@ -65,10 +68,6 @@ const items = ref([
         font-size: 1.5rem;
         font-weight: bold;
     }
-}
-
-.label {
-    margin-left: 4px;
 }
 
 @include breakpoint('mobile') {

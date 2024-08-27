@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import { useTasksStore } from '../stores/tasks';
-import { useTransactionStore } from '../stores/transactions';
+import { useTransactionStore } from '@/stores/transactions';
 import { onMounted, ref, computed } from 'vue';
-import AddExpense from '../components/Expenses/AddExpense.vue';
-import EditExpense from '../components/Expenses/EditExpense.vue';
-import TransactionHistory from '../components/Expenses/TransactionHistory.vue';
+import AddExpense from '@/components/Expenses/AddExpense.vue';
+import EditExpense from '@/components/Expenses/EditExpense.vue';
+import TransactionHistory from '@/components/Expenses/TransactionHistory.vue';
 import { formatAmount } from '@/utils/helper';
 
 const store = useTransactionStore();
@@ -49,14 +48,27 @@ const items = ref([
 
 <template>
   <main>
-    <Menubar :model="items" />
+    <!-- <Menubar :model="items" /> -->
     <!-- <Tabs value="/expenses">
       <TabList>
         <Tab :value="'/expenses'">
           <RouterLink v-slot="{ href,  navigate }" to="/expenses" custom>
-            <a v-ripple @click="navigate" :href="href">Transactions</a>
+            <a class="tab-link" @click="navigate" :href="href">Transactions</a>
           </RouterLink>
         </Tab>
+        <Tab :value="'/expenses/budget'">
+          <RouterLink v-slot="{ href,  navigate }" to="/expenses/budget" custom>
+            <a class="tab-link" @click="navigate" :href="href">Budget</a>
+          </RouterLink>
+        </Tab>
+      </TabList>
+    </Tabs> -->
+    <!-- <Tabs :value="0">
+      <TabList>
+        <Tab :value="0">
+            Transactions
+        </Tab>
+        <Tab :value="1">Budget</Tab>
       </TabList>
     </Tabs> -->
     <div class="action-bar">
@@ -113,11 +125,21 @@ main {
   gap: 1rem;
 }
 
-.p-menubar {
-  padding: 0;
-  background: none;
-  border: none;
-}
+// .p-menubar {
+//   padding: 0;
+//   background: none;
+//   border: none;
+// }
+
+// :deep(.p-tablist-tab-list) {
+//   background: none;
+//   border: none;
+
+//   button {
+//     font-size: 1rem;
+//   }
+// }
+
 .expenses {
   display: flex;
   flex-direction: column;

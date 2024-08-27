@@ -48,6 +48,7 @@ const items = ref([
     border: none;
     border-radius: 0;
     box-shadow: var(--p-card-shadow);
+    font-size: 1rem;
 }
 .title {
     display: flex;

@@ -78,14 +78,14 @@ watch(() => store.editModal.task, (task) => {
 
 <!-- TODO: add wysiwyg editor -->
 <template>
-    <Dialog v-model:visible="store.editModal.isOpen" :header="editedTask.name" class="dialog">
+    <Dialog v-model:visible="store.editModal.isOpen" :header="editedTask.name">
         <div v-if="editMode" class="edit">
             <InputText v-model="editedTask.name" class="text-field-edit" placeholder="Task name"/>
             <Textarea v-model="editedTask.description" class="text-field-edit" placeholder="Task description"/>
             <SelectButton v-model="editedTask.date" :options="dateOptions" optionLabel="label" optionValue="value"/>
         </div>
         <div v-else class="view">
-            <p class="description">{{ editedTask.description }}</p>
+            <p v-if="editedTask.description" class="description">{{ editedTask.description }}</p>
         </div>
         <template #footer>
             <div v-if="editMode" class="actions">
@@ -104,50 +104,30 @@ watch(() => store.editModal.task, (task) => {
 </template>
 
 <style scoped lang="scss">
-.dialog {
-    margin: auto;
+input {
+    width: 100%;
+}
+
+.text-field-edit {
+    width: 100%;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
     width: 100%;
 
-    input {
-        width: 100%;
-    }
-
-    .text-field-edit {
-        width: 100%;
-    }
-
-    .description {
-        white-space: pre;
-    }
-
-    .actions {
+    .right {
+        margin-left: 4rem;
         display: flex;
-        justify-content: space-between;
-        width: 100%;
-
-        .right {
-            margin-left: 4rem;
-            display: flex;
-            gap: 0.5rem;
-        }
+        gap: 0.5rem;
     }
 }
 
-:deep(.p-dialog) {
-    width: 100%;
-    margin: 1rem;
-}
+
 .view, .edit {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-}
-
-.view {
-
-}
-
-.edit {
-
 }
 </style>

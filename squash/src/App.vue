@@ -12,7 +12,9 @@ document.addEventListener('contextmenu', e => e.preventDefault());
   </header>
 
   <div class="container">
-    <RouterView />
+    <div class="view">
+      <RouterView />
+    </div>
   </div>
 </template>
 
@@ -28,10 +30,16 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 <style scoped lang="scss">
 
 .container {
-  margin: 1rem;
   flex: 1;
   // this fixes Weather overflowing, if removed double check dashboard
   overflow-x: auto;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+
+  .view {
+    margin: 1rem;
+  }
 }
 
 header {

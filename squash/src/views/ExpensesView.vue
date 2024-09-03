@@ -15,6 +15,8 @@ onMounted(async () => {
   })
 })
 
+const showFilters = ref(false);
+
 const selectedMonth = ref(MONTHS[dayjs().month()]);
 const selectedTransactions = computed(() => {
   return store.transactions.filter(transaction => {
@@ -104,9 +106,14 @@ const items = ref([
       </div>
       <div class="transactions">
         <Card class="table">
-            <template #title>💸 Transaction History</template>
+            <template #title>
+              <div class="title">
+                💸 Transaction History
+                <Button @click="showFilters = !showFilters" severity="secondary" icon="pi pi-filter"/>
+              </div>
+            </template>
             <template #content>
-              <TransactionHistory :transactions="selectedTransactions" @rowSelect="(e) => openEditModal(e)"/>
+              <TransactionHistory :transactions="selectedTransactions" :showFilters="showFilters" @rowSelect="(e) => openEditModal(e)"/>
             </template>
         </Card>
       </div>
@@ -159,6 +166,7 @@ main {
       .stats {
         display: flex;
         gap: 3rem;
+        margin-top: 1rem;
 
         .stat {
           display: flex;
@@ -178,5 +186,11 @@ main {
       }
     }
   }
+}
+
+.title {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 }
 </style>

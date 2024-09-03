@@ -7,7 +7,8 @@ import { FilterMatchMode } from '@primevue/core/api';
 import { formatAmount } from '@/utils/helper';
 
 const props = defineProps<{
-  transactions: any[]
+  transactions: any[],
+  showFilters: boolean
 }>()
 
 const emit = defineEmits(['rowSelect'])
@@ -20,8 +21,6 @@ const filters = ref({
   category: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
   subcategory: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
 });
-
-const showFilters = ref(false);
 
 const formatDate = (date: string) => dayjs(date).format('ddd DD');
 const transactions = computed(() => props.transactions.sort((a, b) => dayjs(b.date).unix() - dayjs(a.date).unix()));
@@ -36,21 +35,10 @@ const transactions = computed(() => props.transactions.sort((a, b) => dayjs(b.da
                 :metaKeySelection="false"
                 @rowSelect="(e: any) => emit('rowSelect', e.data)"
                 dataKey="id">
-                <template #header>
-                    <Button @click="showFilters = !showFilters" icon="pi pi-filter" />
-                    <!-- <div class="search">
-                        <IconField>
-                            <InputIcon>
-                                <i class="pi pi-search" />
-                            </InputIcon>
-                            <InputText v-model="filters['global'].value" placeholder="Keyword Search" />
-                        </IconField>
-                    </div> -->
-              </template>
               <template #empty> No transactions found.</template>
               <Column field="date" header="Date">
                   <template #body="{ data }">
-                      {{ formatDate(data.date) }}
+                    <span class="no-break">{{ formatDate(data.date) }}</span>
                   </template>
                   <template #filter="{ filterModel, filterCallback }">
                       <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by date" />
@@ -58,7 +46,7 @@ const transactions = computed(() => props.transactions.sort((a, b) => dayjs(b.da
                 </Column>
                 <Column field="name" header="Name">
                   <template #body="{ data }">
-                      {{ data.name }}
+                    <span class="no-break">{{ data.name }}</span>
                   </template>
                   <template #filter="{ filterModel, filterCallback }">
                       <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by name" />
@@ -90,10 +78,19 @@ const transactions = computed(() => props.transactions.sort((a, b) => dayjs(b.da
 
 <style scoped lang="scss">
 :deep(.p-datatable-wrapper) {
-border-radius: var(--border-radius)
+  border-radius: var(--border-radius)
+}
+
+:deep(.p-datatable-header) {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 .search {
-    display: flex;
+  display: flex;
+}
+
+.no-break {
+  white-space: nowrap;  
 }
 </style>

@@ -59,7 +59,7 @@ const transactions = computed(() => props.transactions.sort((a, b) => dayjs(b.da
                 </Column>
                 <Column field="category" header="Category">
                   <template #body="{ data }">
-                      {{ data.category }}
+                    <span class="no-break">{{ data.category }}</span>
                   </template>
                   <template #filter="{ filterModel, filterCallback }">
                       <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by category" />

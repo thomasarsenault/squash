@@ -15,6 +15,7 @@ onMounted(async () => {
   })
 })
 
+const startOfWeek = dayjs().startOf('week').add(1, 'day');
 const showFilters = ref(false);
 
 const selectedMonth = ref(MONTHS[dayjs().month()]);
@@ -26,6 +27,29 @@ const selectedTransactions = computed(() => {
 
 const totalAmountThisMonth = computed(() => {
   return formatAmount(selectedTransactions.value.reduce((acc, transaction) => acc + transaction.amount, 0));
+});
+
+const totalAmountThisWeek = computed(() => {
+  const transactionsThisWeek = store.transactions.filter(transaction => {
+    return dayjs(transaction.date).isAfter(startOfWeek.subtract(1, 'day'));
+  });
+
+  return {
+    amount: formatAmount(transactionsThisWeek.reduce((acc, transaction) => acc + transaction.amount, 0)),
+    count: transactionsThisWeek.length
+  }
+});
+
+const totalAmountLastWeek = computed(() => {
+  const transactionsLastWeek = store.transactions.filter(transaction => {
+    return dayjs(transaction.date).isAfter(startOfWeek.subtract(1, 'week').subtract(1, 'day')) && dayjs(transaction.date).isBefore(startOfWeek.add(1, 'day'));
+  });
+
+  console.log(transactionsLastWeek)
+  return {
+    amount: formatAmount(transactionsLastWeek.reduce((acc, transaction) => acc + transaction.amount, 0)),
+    count: transactionsLastWeek.length
+  }
 });
 
 const openEditModal = (transaction) => {
@@ -75,29 +99,55 @@ const items = ref([
     </Tabs> -->
     <div class="action-bar">
       <Button label="Add Transaction" @click="() => store.addModalOpen = true"/>
+      <Select v-model="selectedMonth"
+          :options="Array.from({ length: 12 }, (_, i) => ({ label: dayjs().month(i).format('MMMM'), value: i }))"
+          optionLabel="label"/>
     </div>
     <div class="expenses">
-      <Card>
-        <template #title>Month</template>
-        <template #content>
-          <Select v-model="selectedMonth"
-            :options="Array.from({ length: 12 }, (_, i) => ({ label: dayjs().month(i).format('MMMM'), value: i }))"
-            optionLabel="label"/>
-        </template>
-      </Card>
       <div class="top">
         <div class="statistics">
           <Card>
             <template #title>📊 Statistics</template>
             <template #content>
               <div class="stats">
-                <div class="stat">
-                  <div class="label">Spent</div>
-                  <div class="value">{{ totalAmountThisMonth }}</div>
+                <div v-if="selectedMonth.value === dayjs().month()" class="section">
+                  <!-- <div class="title">This Week</div> -->
+                  <div class="stat-group">
+                    <div class="stat">
+                      <div class="label">Spent this week</div>
+                      <div class="value">{{ totalAmountThisWeek.amount }}</div>
+                    </div>
+                    <div class="stat">
+                      <div class="label">Transactions</div>
+                      <div class="value">{{ totalAmountThisWeek.count }}</div>
+                    </div>
+                  </div>
                 </div>
-                <div class="stat">
-                  <div class="label">Transactions</div>
-                  <div class="value">{{ selectedTransactions.length }}</div>
+                <div v-if="selectedMonth.value === dayjs().month()" class="section">
+                  <!-- <div class="title">This Week</div> -->
+                  <div class="stat-group">
+                    <div class="stat">
+                      <div class="label">Spent last week</div>
+                      <div class="value">{{ totalAmountLastWeek.amount }}</div>
+                    </div>
+                    <div class="stat">
+                      <div class="label">Transactions</div>
+                      <div class="value">{{ totalAmountLastWeek.count }}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="section">
+                  <!-- <div class="title">This Month</div> -->
+                  <div class="stat-group">
+                    <div class="stat">
+                      <div class="label">Spent this month</div>
+                      <div class="value">{{ totalAmountThisMonth }}</div>
+                    </div>
+                    <div class="stat">
+                      <div class="label">Transactions</div>
+                      <div class="value">{{ selectedTransactions.length }}</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </template>
@@ -146,6 +196,11 @@ main {
 //     font-size: 1rem;
 //   }
 // }
+.action-bar {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
 
 .expenses {
   display: flex;
@@ -162,26 +217,58 @@ main {
       .p-card {
         height: 100%;
       }
+    }
+  }
+}
 
-      .stats {
+.stats {
+  display: flex;
+  gap: 5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+
+  @include breakpoint('mobile') {
+    gap: 2rem;
+  }
+
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    @include breakpoint('mobile') {
+      width: 100%;
+    }
+
+    .title {
+      font-size: 1rem;
+    }
+
+    .stat-group {
+      display: flex;
+      gap: 3rem;
+
+      @include breakpoint('mobile') {
+        justify-content: space-between;
+      }
+
+      .stat {
         display: flex;
-        gap: 3rem;
-        margin-top: 1rem;
+        flex-direction: column;
+        gap: 0.5rem;
 
-        .stat {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
+        @include breakpoint('mobile') {
+          align-items: center;
+        }
 
-          .label {
-            font-size: 0.75rem;
-            color: var(--p-text-muted-color);
-          }
+        .label {
+          font-size: 0.75rem;
+          color: var(--p-text-muted-color);
+        }
 
-          .value {
-            font-size: 1.2rem;
-            font-weight: bold;
-          }
+        .value {
+          font-size: 1.2rem;
+          font-weight: bold;
         }
       }
     }

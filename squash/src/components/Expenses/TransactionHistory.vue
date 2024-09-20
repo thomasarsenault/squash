@@ -5,6 +5,9 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { FilterMatchMode } from '@primevue/core/api';
 import { formatAmount } from '@/utils/helper';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+
+dayjs.extend(advancedFormat);
 
 const props = defineProps<{
   transactions: any[],
@@ -22,8 +25,17 @@ const filters = ref({
   subcategory: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
 });
 
-const formatDate = (date: string) => dayjs(date).format('ddd DD');
+const formatDate = (date: string) => dayjs(date).format('ddd, Do');
 const transactions = computed(() => props.transactions.sort((a, b) => dayjs(b.date).unix() - dayjs(a.date).unix()));
+// const filteredData = ref(transactions.value);
+
+// const totalAmount = computed(() => {
+//   return formatAmount(filteredData.value.reduce((acc, transaction) => acc + transaction.amount, 0));
+// });
+
+const onFiltered = (event: any) => {
+  // filteredData.value = event.filteredValue;
+}
 </script>
 
 <template>
@@ -34,6 +46,7 @@ const transactions = computed(() => props.transactions.sort((a, b) => dayjs(b.da
                 selectionMode="single"
                 :metaKeySelection="false"
                 @rowSelect="(e: any) => emit('rowSelect', e.data)"
+                @filter="onFiltered"
                 dataKey="id">
               <template #empty> No transactions found.</template>
               <Column field="date" header="Date">

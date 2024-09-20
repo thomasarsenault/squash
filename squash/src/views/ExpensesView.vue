@@ -19,8 +19,17 @@ const startOfWeek = dayjs().startOf('week').add(1, 'day');
 const showFilters = ref(false);
 
 const selectedMonth = ref(MONTHS[dayjs().month()]);
+
+const pendingTransactions = computed(() => {
+  return store.transactions.filter(transaction => transaction.pending);
+});
+
+const transactions = computed(() => {
+  return store.transactions.filter(transaction => !transaction.pending);
+});
+
 const selectedTransactions = computed(() => {
-  return store.transactions.filter(transaction => {
+  return transactions.value.filter(transaction => {
     return dayjs(transaction.date).month() === selectedMonth.value.value;
   }) || [];
 });
@@ -30,7 +39,7 @@ const totalAmountThisMonth = computed(() => {
 });
 
 const totalAmountThisWeek = computed(() => {
-  const transactionsThisWeek = store.transactions.filter(transaction => {
+  const transactionsThisWeek = transactions.value.filter(transaction => {
     return dayjs(transaction.date).isAfter(startOfWeek.subtract(1, 'day'));
   });
 
@@ -41,11 +50,10 @@ const totalAmountThisWeek = computed(() => {
 });
 
 const totalAmountLastWeek = computed(() => {
-  const transactionsLastWeek = store.transactions.filter(transaction => {
+  const transactionsLastWeek = transactions.value.filter(transaction => {
     return dayjs(transaction.date).isAfter(startOfWeek.subtract(1, 'week').subtract(1, 'day')) && dayjs(transaction.date).isBefore(startOfWeek.add(1, 'day'));
   });
 
-  console.log(transactionsLastWeek)
   return {
     amount: formatAmount(transactionsLastWeek.reduce((acc, transaction) => acc + transaction.amount, 0)),
     count: transactionsLastWeek.length
@@ -165,6 +173,14 @@ const items = ref([
             <template #content>
               <TransactionHistory :transactions="selectedTransactions" :showFilters="showFilters" @rowSelect="(e) => openEditModal(e)"/>
             </template>
+        </Card>
+      </div>
+      <div class="pending">
+        <Card>
+          <template #title>🕒 Pending Transactions</template>
+          <template #content>
+            <TransactionHistory :transactions="pendingTransactions" @rowSelect="(e) => openEditModal(e)"/>
+          </template>
         </Card>
       </div>
     </div>

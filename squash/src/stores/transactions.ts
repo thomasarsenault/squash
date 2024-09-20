@@ -3,72 +3,8 @@ import { defineStore } from 'pinia';
 import type { Task, GroupedTasks } from '@/types';
 import dayjs from 'dayjs';
 import Stan from '../utils/stan';
+import CATEGORIES from '@/data/transactionCategories';
 
-const CATEGORIES = [
-    {
-        name: 'Food & Drink',
-        displayName: '🥗 Food & Drink',
-        subcategories: [
-            'Groceries',
-            'Alcohol',
-            'Work lunch',
-            'Eating out',
-            'Candy',
-        ]
-    },
-    {
-        name: 'House',
-        displayName: '🏠 House',
-        subcategories: [
-            'Supplies',
-            'Rent',
-            'Utilities',
-            'Home improvement'
-        ]
-    },
-    {
-        name: 'Entertainment',
-        displayName: '📺 Entertainment',
-        subcategories: [
-            'Nights out',
-            'Media',
-            'Games',
-            'Electronics'
-        ]
-    },
-    {
-        name: 'Travel',
-        displayName: '✈️ Travel',
-        subcategories: [
-            'Vacation',
-            'Cottage'
-        ]
-    },
-    {
-        name: 'Personal development',
-        displayName: '🧠 Personal development',
-        subcategories: [
-            'Education',
-            'Tools'
-        ]
-    },
-    {
-        name: 'Transportation',
-        displayName: '🚗 Transportation',
-        subcategories: [
-            'Presto',
-            'Uber',
-            'Gas'
-        ]
-    },
-    {
-        name: 'Other',
-        displayName: '🪣 Other',
-        subcategories: [
-            'Other',
-        ]
-    }
-]
 export const useTransactionStore = defineStore('transactions', {
     state: () => ({
         transactions: [],
@@ -106,7 +42,7 @@ export const useTransactionStore = defineStore('transactions', {
                     })
                 });
 
-                (this.transactions as any).push(newTransaction);
+                (this.transactions as any).push(response);
 
                 return response;
             } catch (error) {

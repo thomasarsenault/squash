@@ -11,22 +11,28 @@ const date = ref(dayjs().format('MM/DD/YYYY'));
 const name = ref('');
 const category = ref('');
 const amount = ref(null);
+const notes = ref(null);
+const pending = ref(false);
 
 const addExpense = () => {
     const transaction = {
         name: name.value,
         amount: amount.value,
         date: dayjs(date.value).format('YYYY-MM-DD'),
+        notes: notes.value,
         category: category.value.parentCategory || 'Other',
         subcategory: category.value.label || 'Other',
+        pending: pending.value,
     }
 
     store.addTransaction(transaction);
     store.addModalOpen = false;
     name.value = '';
     amount.value = null;
+    notes.value = null;
     category.value = '';
     date.value = dayjs().format('MM/DD/YYYY');
+    pending.value = false;
 }
 </script>
 
@@ -57,9 +63,19 @@ const addExpense = () => {
                     <InputNumber id="amount" mode="currency" currency="USD" v-model="amount"/>
                     <label for="amount">Amount</label>
                 </FloatLabel>
+                <FloatLabel>
+                    <InputText id="notes" v-model="notes"/>
+                    <label for="notes">Notes</label>
+                </FloatLabel>
             </div>
             <template #footer>
-                <Button label="Add" @click="addExpense" />
+                <div class="footer">
+                    <div class="checkbox">
+                        <Checkbox id="pending" v-model="pending" :binary="true"/>
+                        <label for="pending">Pending</label>
+                    </div>
+                    <Button label="Add" @click="addExpense" />
+                </div>
             </template>
         </Dialog>
     </div>
@@ -85,5 +101,19 @@ const addExpense = () => {
         width: 100%;
     }
 }
+
+.footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .checkbox {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+}
+
 
 </style>

@@ -11,6 +11,8 @@ const date = ref(dayjs().format('MM/DD/YYYY'));
 const name = ref('');
 const category = ref({});
 const amount = ref(null);
+const notes = ref(null);
+const pending = ref(false);
 
 watch(transaction, (value) => {
     const subcategories = store.dropdownCategories.flatMap(category => category.items);
@@ -20,6 +22,8 @@ watch(transaction, (value) => {
     name.value = value.name;
     category.value = subcategoryObj;
     amount.value = value.amount;
+    notes.value = value.notes;
+    pending.value = value.pending;
 })
 
 const editExpense = () => {
@@ -27,17 +31,21 @@ const editExpense = () => {
         id: transaction.value.id,
         name: name.value,
         amount: amount.value,
+        notes: notes.value,
         date: dayjs(date.value).format('YYYY-MM-DD'),
         category: category.value.parentCategory || 'Other',
         subcategory: category.value.label || 'Other',
+        pending: pending.value,
     }
 
     store.updateTransaction(updatedTransaction);
     store.editModal.open = false;
     name.value = '';
     amount.value = null;
+    notes.value = null;
     category.value = '';
     date.value = dayjs().format('MM/DD/YYYY');
+    pending.value = false;
 }
 
 const deleteTransaction = () => {
@@ -74,12 +82,20 @@ const deleteTransaction = () => {
                     <InputNumber id="amount" mode="currency" currency="USD" v-model="amount"/>
                     <label for="amount">Amount</label>
                 </FloatLabel>
+                <FloatLabel>
+                    <InputText id="notes" v-model="notes"/>
+                    <label for="notes">Notes</label>
+                </FloatLabel>
             </div>
             <template #footer>
                 <div class="actions">
                     <Button label="Delete" severity="danger" @click="deleteTransaction" />
+                    <div class="checkbox">
+                        <Checkbox id="pending" v-model="pending" :binary="true"/>
+                        <label for="pending">Pending</label>
+                    </div>
                     <div class="right">
-                        <Button label="Add" @click="editExpense" />
+                        <Button label="Confirm" @click="editExpense" />
                     </div>
                 </div>
             </template>
@@ -117,6 +133,13 @@ const deleteTransaction = () => {
         margin-left: 4rem;
         display: flex;
         gap: 0.5rem;
+    }
+
+    .checkbox {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-left: 1rem;
     }
 }
 </style>

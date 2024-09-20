@@ -19,7 +19,9 @@ const handleLogin = async (req: Request): Promise<Response> => {
     });
 
     // clear the storage with GoTrueClient._removeSession()
-    const { data: clearStorageData, error: clearStorageError } = await db.auth.signInWithPassword({} as any);
+    // stupid workaround because the session sent to all of the next DB calls will have the wrong? auth for some reason
+    // my janky auth will just make sure its a token that decodes w/ the Supabase JWT secret
+    await db.auth.signOut({scope: 'global'})
 
     if (error) {
         return new ClientResponse(JSON.stringify({ error: error.message }), {

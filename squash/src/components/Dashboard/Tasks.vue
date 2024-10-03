@@ -49,5 +49,6 @@ const today = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-top: 1rem;
 }
 </style>

@@ -43,13 +43,20 @@ const items = ref([
   
   
 <style scoped lang="scss">
-.p-menubar {
-    justify-content: center;
-    border: none;
-    border-radius: 0;
-    box-shadow: var(--p-card-shadow);
-    font-size: 1rem;
+.menu-wrapper {
+    max-width: 1440px;
 }
+
+.p-menubar {
+    border: none;
+    width: 1440px;
+    justify-content: space-between;
+}
+
+.sub-menu {
+    background: none;
+}
+
 .title {
     display: flex;
     gap: 0.5rem;
@@ -72,9 +79,10 @@ const items = ref([
 }
 
 @include breakpoint('mobile') {
-.p-menubar {
-    justify-content: space-between;
-}
+    .p-menubar {
+        justify-content: space-between;
+    }
+
     .title {
         padding-right: 0.5rem;
     }

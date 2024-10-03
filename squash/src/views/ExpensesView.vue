@@ -81,30 +81,8 @@ const items = ref([
 </script>
 
 <template>
+  <!-- <SubMenu :items="items"/> -->
   <main>
-    <!-- <Menubar :model="items" /> -->
-    <!-- <Tabs value="/expenses">
-      <TabList>
-        <Tab :value="'/expenses'">
-          <RouterLink v-slot="{ href,  navigate }" to="/expenses" custom>
-            <a class="tab-link" @click="navigate" :href="href">Transactions</a>
-          </RouterLink>
-        </Tab>
-        <Tab :value="'/expenses/budget'">
-          <RouterLink v-slot="{ href,  navigate }" to="/expenses/budget" custom>
-            <a class="tab-link" @click="navigate" :href="href">Budget</a>
-          </RouterLink>
-        </Tab>
-      </TabList>
-    </Tabs> -->
-    <!-- <Tabs :value="0">
-      <TabList>
-        <Tab :value="0">
-            Transactions
-        </Tab>
-        <Tab :value="1">Budget</Tab>
-      </TabList>
-    </Tabs> -->
     <div class="action-bar">
       <Button label="Add Transaction" @click="() => store.addModalOpen = true"/>
       <Select v-model="selectedMonth"
@@ -179,7 +157,7 @@ const items = ref([
         <Card>
           <template #title>🕒 Pending Transactions</template>
           <template #content>
-            <TransactionHistory :transactions="pendingTransactions" @rowSelect="(e) => openEditModal(e)"/>
+            <TransactionHistory :transactions="pendingTransactions" :showFilters="false" @rowSelect="(e) => openEditModal(e)"/>
           </template>
         </Card>
       </div>

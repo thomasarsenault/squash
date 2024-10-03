@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 import Navbar from './components/Navbar.vue';
 
 document.addEventListener('contextmenu', e => e.preventDefault());
 
+
 </script>
 
 <template>
-  <header>
+  <header class="p-menubar menubar-wrapper">
     <Navbar />
   </header>
+
 
   <div class="container">
     <div class="view">
@@ -45,5 +47,10 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 header {
   font-size: 1.2rem;
   flex: 0;
+}
+
+.menubar-wrapper {
+  padding: 0;
+  justify-content: center;
 }
 </style>

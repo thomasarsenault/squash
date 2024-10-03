@@ -14,5 +14,9 @@ module.exports = {
   },
   env: {
     node: true
+  },
+  rules: {
+    'import/no-unresolved': 'off',
+    'import/extensions': 'off'
   }
 }

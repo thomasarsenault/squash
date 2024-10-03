@@ -31,13 +31,24 @@ main {
 
 .dashboard {
     .weather {
-        max-width: 400px;
+        width: 100%;
+    }
+
+    .tasks {
+        width: 440px;
+
+        @include breakpoint('mobile') {
+            width: 100%;
+        }
     }
 }
 
 .widgets {
     display: flex;
     gap: 1rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
 
     @include breakpoint('mobile') {
         flex-direction: column;

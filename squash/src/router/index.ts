@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AgendaView from '@/views/AgendaView.vue'
 import LoginView from '@/views/LoginView.vue'
 import ExpensesView from '@/views/ExpensesView.vue'
+import BudgetView from '@/views/Expenses/BudgetView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 
 const router = createRouter({
@@ -26,6 +27,11 @@ const router = createRouter({
       path: '/expenses',
       name: 'expenses',
       component: ExpensesView
+    },
+    {
+      path: '/expenses/budget',
+      name: 'expenses/budget',
+      component: BudgetView
     },
     {
       path: '/settings',

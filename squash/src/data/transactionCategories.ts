@@ -63,7 +63,8 @@ const CATEGORIES = [
             'Biking',
             'Presto',
             'Uber',
-            'Gas'
+            'Gas',
+            'Car'
         ]
     },
     {

@@ -39,7 +39,7 @@ const server = Bun.serve({
       return handleTasksRoute(req);
     }
 
-    if(url.pathname.startsWith('/transactions')) {
+    if(url.pathname.startsWith('/transactions') || url.pathname.startsWith('/expenses')) {
       return handleTransactionsRoute(req);
     }
 

@@ -1,6 +1,5 @@
 // store/tasks.js
 import { defineStore } from 'pinia';
-import type { Task, GroupedTasks } from '@/types';
 import dayjs from 'dayjs';
 import Stan from '../utils/stan';
 import CATEGORIES from '@/data/transactionCategories';
@@ -58,7 +57,7 @@ export const useTransactionStore = defineStore('transactions', {
                     })
                 });
 
-                const index = (this.transactions as any).findIndex((t: Task) => t.id === transaction.id);
+                const index = (this.transactions as any).findIndex((t: any) => t.id === transaction.id);
                 (this.transactions as any)[index] = transaction;
 
                 return response;
@@ -72,7 +71,7 @@ export const useTransactionStore = defineStore('transactions', {
                     method: 'DELETE',
                 });
 
-                const index = (this.transactions as any).findIndex((t: Task) => t.id === transaction.id);
+                const index = (this.transactions as any).findIndex((t: any) => t.id === transaction.id);
                 (this.transactions as any).splice(index, 1);
 
                 return response;

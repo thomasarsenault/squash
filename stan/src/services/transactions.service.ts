@@ -54,9 +54,61 @@ const updateTransaction = async (updatedTransaction: any): Promise<Task> => {
 	return data[0];
  };
 
+const getExpenses = async (): Promise<Task[]> => {
+	
+	const { data, error } = await db.from('expenses').select('*');
+	
+	if(error) {
+		throw error;
+	}
+
+	return data;
+}
+
+const createExpense = async (newExpense: any): Promise<Task> => {
+	console.log('creating an expense')
+	console.log(newExpense);
+
+	const { data, error } = await db.from('expenses').insert(newExpense).select();
+
+	if (error) {
+		throw error;
+	}
+
+	return data[0];
+}
+
+const deleteExpense = async (expenseId: string): Promise<number> => {
+	console.log('deleting expense')
+	let { error } = await db.from('expenses').delete().eq('id', expenseId);
+
+	if(error) {
+		throw error;
+	}
+
+	return Promise.resolve(Number(expenseId));
+}
+
+const updateExpense = async (updatedExpense: any): Promise<Task> => { 
+	console.log('updating expense')
+	console.log(updatedExpense);
+
+	const { data, error } = await db.from('expenses').update(updatedExpense).eq('id', updatedExpense.id).select();
+
+	if (error) {
+		throw error;
+	}
+
+	return data[0];
+ };
+
 export default {
 	getTransactions,
 	createTransaction,
 	deleteTransaction,
-	updateTransaction
+	updateTransaction,
+	getExpenses,
+	createExpense,
+	deleteExpense,
+	updateExpense
 };

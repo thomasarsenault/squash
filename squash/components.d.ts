@@ -7,7 +7,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AddExpense: typeof import('./src/components/Expenses/AddExpense.vue')['default']
+    AddExpense: typeof import('./src/components/Finances/Expenses/AddExpense.vue')['default']
+    AddTransaction: typeof import('./src/components/Finances/AddTransaction.vue')['default']
     AgendaBacklog: typeof import('./src/components/AgendaOld/AgendaBacklog.vue')['default']
     AgendaContainer: typeof import('./src/components/Agenda/AgendaContainer.vue')['default']
     AgendaDay: typeof import('./src/components/AgendaOld/AgendaDay.vue')['default']
@@ -19,8 +20,10 @@ declare module 'vue' {
     Card: typeof import('primevue/card')['default']
     Checkbox: typeof import('primevue/checkbox')['default']
     Dropdown: typeof import('primevue/dropdown')['default']
-    EditExpense: typeof import('./src/components/Expenses/EditExpense.vue')['default']
+    EditExpense: typeof import('./src/components/Finances/Expenses/EditExpense.vue')['default']
     EditTask: typeof import('./src/components/Agenda/EditTask.vue')['default']
+    EditTransaction: typeof import('./src/components/Finances/EditTransaction.vue')['default']
+    ExpensesList: typeof import('./src/components/Finances/Expenses/ExpensesList.vue')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
     InputText: typeof import('primevue/inputtext')['default']
     Menubar: typeof import('primevue/menubar')['default']
@@ -36,7 +39,7 @@ declare module 'vue' {
     Task: typeof import('./src/components/Agenda/Task.vue')['default']
     Tasks: typeof import('./src/components/Dashboard/Tasks.vue')['default']
     Textarea: typeof import('primevue/textarea')['default']
-    TransactionHistory: typeof import('./src/components/Expenses/TransactionHistory.vue')['default']
+    TransactionHistory: typeof import('./src/components/Finances/TransactionHistory.vue')['default']
     Weather: typeof import('./src/components/Dashboard/Weather/Weather.vue')['default']
     WeatherHour: typeof import('./src/components/Dashboard/Weather/WeatherHour.vue')['default']
   }

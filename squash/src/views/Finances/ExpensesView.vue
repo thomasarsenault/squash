@@ -2,9 +2,9 @@
 import dayjs from 'dayjs';
 import { useTransactionStore } from '@/stores/transactions';
 import { onMounted, ref, computed } from 'vue';
-import AddExpense from '@/components/Expenses/AddExpense.vue';
-import EditExpense from '@/components/Expenses/EditExpense.vue';
-import TransactionHistory from '@/components/Expenses/TransactionHistory.vue';
+import AddTransaction from '@/components/Finances/AddTransaction.vue';
+import EditTransaction from '@/components/Finances/EditTransaction.vue';
+import TransactionHistory from '@/components/Finances/TransactionHistory.vue';
 import { formatAmount } from '@/utils/helper';
 
 const store = useTransactionStore();
@@ -81,7 +81,7 @@ const items = ref([
 </script>
 
 <template>
-  <!-- <SubMenu :items="items"/> -->
+  <SubMenu :items="items"/>
   <main>
     <div class="action-bar">
       <Button label="Add Transaction" @click="() => store.addModalOpen = true"/>
@@ -162,8 +162,8 @@ const items = ref([
         </Card>
       </div>
     </div>
-    <AddExpense id="add-transaction-dialog"/>
-    <EditExpense id="edit-transaction-dialog"/>
+    <AddTransaction id="add-transaction-dialog"/>
+    <EditTransaction id="edit-transaction-dialog"/>
   </main>
 </template>
 

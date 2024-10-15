@@ -17,6 +17,18 @@ const handleTransactionsRoute = async (req: Request): Promise<Response> => {
     }
   }
 
+  if(url.pathname === '/expenses') {
+    if(req.method === 'GET') {
+      return transactionsController.getExpenses(req);
+    } else if(req.method === 'POST') {
+      return transactionsController.createExpense(req);
+    } else if(req.method === 'DELETE') {
+      return transactionsController.deleteExpense(req);
+    } else if(req.method === 'PUT') {
+      return transactionsController.updateExpense(req);
+    }
+  }
+
   return new ClientResponse(null, { status: 404 });
 }
 

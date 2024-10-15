@@ -1,14 +1,28 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
 import { useTransactionStore } from '@/stores/transactions';
+import { useExpensesStore } from '@/stores/expenses';
 import { onMounted, ref, computed } from 'vue';
-import AddExpense from '@/components/Expenses/AddExpense.vue';
-import EditExpense from '@/components/Expenses/EditExpense.vue';
-import TransactionHistory from '@/components/Expenses/TransactionHistory.vue';
+import AddExpense from '@/components/Finances/Expenses/AddExpense.vue';
+import EditExpense from '@/components/Finances/Expenses/EditExpense.vue';
+import SubMenu from '@/components/SubMenu.vue';
+import ExpensesList from '@/components/Finances/Expenses/ExpensesList.vue';
 import { formatAmount } from '@/utils/helper';
-import SubMenu from '../../components/SubMenu.vue';
 
-const store = useTransactionStore();
+const store = useExpensesStore();
+
+onMounted(async () => {
+  store.getExpenses().then(() => {
+    console.log('expenses', store.expenses);
+  })
+})
+
+const openEditModal = (expense) => {
+  console.log('hello')
+  store.editModal.expense = expense;
+  store.editModal.open = true;
+}
+
 
 const items = ref([
   {
@@ -22,25 +36,42 @@ const items = ref([
     to: '/expenses/budget'
   }
 ])
+
+const total = computed(() => {
+  return formatAmount(store.expenses.reduce((acc, expense) => acc + expense.amount, 0));
+});
+
 </script>
 
 <template>
-  <!-- <SubMenu :items="items"/> -->
+  <SubMenu :items="items"/>
   <main>
     <div class="action-bar">
       <Button label="Add Expense" @click="() => store.addModalOpen = true"/>
     </div>
     <div class="expenses">
       <Card>
+        <template #title>Total</template>
+        <template #content>
+          {{ total }}
+        </template>
+      </Card>
+      <Card>
+        <template #content>
+          <ExpensesList :expenses="store.expenses" @rowSelect="(e) => openEditModal(e)"/>
+        </template>
+      </Card>
+      <!-- <Card>
         <template #title>Test</template>
         <template #content>
           <Select v-model="selectedMonth"
             :options="Array.from({ length: 12 }, (_, i) => ({ label: dayjs().month(i).format('MMMM'), value: i }))"
             optionLabel="label"/>
         </template>
-      </Card>
+      </Card> -->
     </div>
-    <AddExpense id="add-transaction-dialog"/>
+    <AddExpense id="add-expense-dialog"/>
+    <EditExpense id="edit-expense-dialog"/>
   </main>
 </template>
 

@@ -47,7 +47,7 @@ const _getHeaders = (method: string | undefined) => {
 
     //make network request
 const Stan = async (url: string, params: Record<string, any> = {}): Promise<any> => {
-    const apiUrl = import.meta.env.STAN_API_URL || '';
+    const apiUrl = import.meta.env.VITE_STAN_API_URL || '';
 
     return fetch(`${apiUrl}/api/${url}`, { ...params, headers: {..._getHeaders(params.method), ...params?.headers }})
         .then(async (response: any) => {

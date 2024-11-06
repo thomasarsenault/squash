@@ -24,7 +24,6 @@ const endOfWeek = startOfWeek.add(1, 'week').subtract(1, 'day');
 
 const transactions = computed(() => {
     return store.transactions.filter((transaction: any) => {
-        console.log(transaction);
         return !transaction.pending
             && dayjs(transaction.date).isSameOrAfter(startOfWeek) && dayjs(transaction.date).isSameOrBefore(endOfWeek)
     })

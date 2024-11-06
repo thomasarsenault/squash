@@ -19,7 +19,7 @@ onMounted(async () => {
   })
 })
 
-const startOfWeek = dayjs().startOf('week').subtract(1, 'week').add(1, 'day');
+const startOfWeek = dayjs().startOf('week').add(1, 'day');
 const endOfWeek = startOfWeek.add(1, 'week').subtract(1, 'day');
 
 const transactions = computed(() => {

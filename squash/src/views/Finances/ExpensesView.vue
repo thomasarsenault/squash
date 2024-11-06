@@ -71,7 +71,7 @@ const weekOptions = ref(Array.from({ length: 8 }, (_, i) => {
 		dateRange: [startOfWeek, endOfWeek]
 	}
 }));
-const selectedWeekDateRange = ref(weekOptions.value[2]);
+const selectedWeekDateRange = ref(weekOptions.value[0]);
 
 const selectedTransactions = computed(() => {
 	if(selectedView.value.value === 'week') {

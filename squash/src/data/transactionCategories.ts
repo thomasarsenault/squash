@@ -2,7 +2,7 @@ const CATEGORIES = [
     {
         name: 'Food & Drink',
         displayName: '🥗 Food & Drink',
-        color: [30, 100, 85],
+        color: [300, 48, 75],
         subcategories: [
             'Groceries',
             'Alcohol',
@@ -14,7 +14,7 @@ const CATEGORIES = [
     {
         name: 'House',
         displayName: '🏠 House',
-        color: [300, 48, 86],
+        color: [30, 100, 75],
         subcategories: [
             'Supplies',
             'Rent',
@@ -26,7 +26,7 @@ const CATEGORIES = [
     {
         name: 'Entertainment',
         displayName: '📺 Entertainment',
-        color: [197, 89, 88],
+        color: [197, 89, 75],
         subcategories: [
             'Nights out',
             'Media',
@@ -37,7 +37,7 @@ const CATEGORIES = [
     {
         name: 'Personal',
         displayName: '💅 Personal',
-        color: [340, 76, 86],
+        color: [340, 76, 75],
         subcategories: [
             'Clothes',
             'Supplies',
@@ -47,7 +47,7 @@ const CATEGORIES = [
     {
         name: 'Travel',
         displayName: '✈️ Travel',
-        color: [180, 60, 85],
+        color: [180, 60, 75],
         subcategories: [
             'Vacation',
             'Cottage'
@@ -56,7 +56,7 @@ const CATEGORIES = [
     {
         name: 'Personal development',
         displayName: '🧠 Personal development',
-        color: [123, 44, 85],
+        color: [123, 44, 75],
         subcategories: [
             'Education',
             'Tools'
@@ -65,7 +65,7 @@ const CATEGORIES = [
     {
         name: 'Transportation',
         displayName: '🚗 Transportation',
-        color: [60, 100, 90],
+        color: [60, 100, 75],
         subcategories: [
             'Biking',
             'Presto',
@@ -77,7 +77,7 @@ const CATEGORIES = [
     {
         name: 'Other',
         displayName: '🪣 Other',
-        color: [0, 0, 88],
+        color: [0, 0, 75],
         subcategories: [
             'Gifts',
             'Charity',

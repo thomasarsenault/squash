@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Weather from '@/components/Dashboard/Weather/Weather.vue';
 import Tasks from '@/components/Dashboard/Tasks.vue';
+import Expenses from '@/components/Dashboard/Expenses.vue';
 </script>
 
 <!-- TODO: move cards to individual components -->
@@ -13,6 +14,9 @@ import Tasks from '@/components/Dashboard/Tasks.vue';
             </div>
             <div class="tasks">
                 <Tasks />
+            </div>
+            <div class="expenses">
+                <Expenses />
             </div>
         </div>
 
@@ -40,6 +44,11 @@ main {
         @include breakpoint('mobile') {
             width: 100%;
         }
+    }
+
+    .expenses {
+        flex-grow: 1;
+        max-width: 100%;
     }
 }
 

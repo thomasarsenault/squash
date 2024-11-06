@@ -25,6 +25,7 @@ declare module 'vue' {
     EditExpense: typeof import('./src/components/Finances/Expenses/EditExpense.vue')['default']
     EditTask: typeof import('./src/components/Agenda/EditTask.vue')['default']
     EditTransaction: typeof import('./src/components/Finances/EditTransaction.vue')['default']
+    Expenses: typeof import('./src/components/Dashboard/Expenses.vue')['default']
     ExpensesList: typeof import('./src/components/Finances/Expenses/ExpensesList.vue')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
     InputText: typeof import('primevue/inputtext')['default']

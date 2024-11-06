@@ -17,9 +17,9 @@ const store = useTransactionStore();
 const MONTHS = Array.from({ length: dayjs().month() + 1 }, (_, i) => ({ label: dayjs().month(i).format('MMMM'), value: i }));
 
 onMounted(async () => {
-  store.getTransactions().then(() => {
-    console.log('transactions', store.transactions);
-  })
+	store.getTransactions().then(() => {
+		console.log('transactions', store.transactions);
+	})
 })
 
 // const startOfWeek = dayjs().startOf('week').add(1, 'day');
@@ -28,301 +28,301 @@ const showFilters = ref(false);
 const selectedMonth = ref(MONTHS[dayjs().month()]);
 
 const pendingTransactions = computed(() => {
-  return store.transactions.filter((transaction: any) => transaction.pending);
+	return store.transactions.filter((transaction: any) => transaction.pending);
 });
 
 const transactions = computed(() => {
-  return store.transactions.filter((transaction: any) => !transaction.pending);
+	return store.transactions.filter((transaction: any) => !transaction.pending);
 });
 
 
 const openEditModal = (transaction: any) => {
-  store.editModal.transaction = transaction;
-  store.editModal.open = true;
+	store.editModal.transaction = transaction;
+	store.editModal.open = true;
 }
 
 const items = ref([
-  {
-    label: 'Transactions',
-    icon: 'pi pi-fw pi-money-bill',
-    to: '/expenses'
-  },
-  {
-    label: 'Budget',
-    icon: 'pi pi-fw pi-chart-bar',
-    to: '/expenses/budget'
-  }
+	{
+		label: 'Transactions',
+		icon: 'pi pi-fw pi-money-bill',
+		to: '/expenses'
+	},
+	{
+		label: 'Budget',
+		icon: 'pi pi-fw pi-chart-bar',
+		to: '/expenses/budget'
+	}
 ])
 
 const selectedViewOptions = ref([
-  { label: 'Week', value: 'week' },
-  { label: 'Month', value: 'month' }
+	{ label: 'Week', value: 'week' },
+	{ label: 'Month', value: 'month' }
 ]);
 const selectedView = ref(selectedViewOptions.value[0]);
 
 //last 8 weeks as selection options
 const weekOptions = ref(Array.from({ length: 8 }, (_, i) => {
-  const startOfWeek = dayjs().startOf('week').subtract(i, 'week').add(1, 'day');
-  const endOfWeek = startOfWeek.add(1, 'week').subtract(1, 'day');
+	const startOfWeek = dayjs().startOf('week').subtract(i, 'week').add(1, 'day');
+	const endOfWeek = startOfWeek.add(1, 'week').subtract(1, 'day');
 
-  return {
-    label: `${startOfWeek.format('MMMM D')} - ${endOfWeek.format('D')}`,
-    value: i,
-    dateRange: [startOfWeek, endOfWeek]
-  }
+	return {
+		label: `${startOfWeek.format('MMMM D')} - ${endOfWeek.format('D')}`,
+		value: i,
+		dateRange: [startOfWeek, endOfWeek]
+	}
 }));
 const selectedWeekDateRange = ref(weekOptions.value[2]);
 
 const selectedTransactions = computed(() => {
-  if(selectedView.value.value === 'week') {
-    return transactions.value.filter((transaction: any) => {
-      return dayjs(transaction.date).isSameOrAfter(selectedWeekDateRange.value.dateRange[0]) && dayjs(transaction.date).isSameOrBefore(selectedWeekDateRange.value.dateRange[1]);
-    }) || [];
-  }
+	if(selectedView.value.value === 'week') {
+		return transactions.value.filter((transaction: any) => {
+			return dayjs(transaction.date).isSameOrAfter(selectedWeekDateRange.value.dateRange[0]) && dayjs(transaction.date).isSameOrBefore(selectedWeekDateRange.value.dateRange[1]);
+		}) || [];
+	}
 
-  return transactions.value.filter((transaction: any) => {
-    return dayjs(transaction.date).month() === selectedMonth.value.value;
-  }) || [];
+	return transactions.value.filter((transaction: any) => {
+		return dayjs(transaction.date).month() === selectedMonth.value.value;
+	}) || [];
 });
 
 const summary = computed(() => {
-  const totalAmount = selectedTransactions.value.reduce((acc, transaction) => acc + transaction.amount, 0);
-  return {
-    totalAmount: totalAmount,
-    totalAmountFormatted: formatAmount(totalAmount),
-    count: selectedTransactions.value.length
-  }
+	const totalAmount = selectedTransactions.value.reduce((acc, transaction) => acc + transaction.amount, 0);
+	return {
+		totalAmount: totalAmount,
+		totalAmountFormatted: formatAmount(totalAmount),
+		count: selectedTransactions.value.length
+	}
 })
 
 </script>
 
 <template>
-  <SubMenu :items="items"/>
-  <main>
-    <div class="expenses">
-      <div class="top">
-        <div class="controls">
-          <div class="range">
-            <SelectButton :options="selectedViewOptions" v-model="selectedView" optionLabel="label"/>
-            <div class="selector" v-if="selectedView.value === 'week'">
-              <Button severity="secondary" label="-"
-                @click="() => selectedWeekDateRange = weekOptions[selectedWeekDateRange.value + 1]"
-                :disabled="!weekOptions[selectedWeekDateRange.value + 1]"
-                />
-              <Select v-model="selectedWeekDateRange"
-                :options="weekOptions"
-                optionLabel="label"/>
-              <Button severity="secondary" label="+"
-                @click="() => selectedWeekDateRange = weekOptions[selectedWeekDateRange.value - 1]"
-                :disabled="!weekOptions[selectedWeekDateRange.value - 1]"
-                />
-            </div>
-            <div class="selector" v-else>
-              <Button severity="secondary" label="-"
-                @click="() => selectedMonth = MONTHS[selectedMonth.value - 1]"
-                :disabled="!MONTHS[selectedMonth.value - 1]"
-                />
-              <Select v-model="selectedMonth"
-                :options="MONTHS"
-                optionLabel="label"/>
-              <Button severity="secondary" label="+"
-                @click="() => selectedMonth = MONTHS[selectedMonth.value + 1]"
-                :disabled="!MONTHS[selectedMonth.value + 1]"
-                />
-            </div>
-          </div>
-          <Button label="Add Transaction" @click="() => store.addModalOpen = true"/>
-        </div>
-        <div class="summary">
-          <Card>
-            <template #title>📊 Summary</template>
-            <template #content>
-              <div class="summary-content">
-                <div class="stats">
-                  <div class="section">
-                    <div class="stat-group">
-                      <div class="stat">
-                        <div class="label">Spent</div>
-                        <div class="value">{{ summary.totalAmountFormatted }}</div>
-                      </div>
-                      <div class="stat">
-                        <div class="label">Transactions</div>
-                        <div class="value">{{ summary.count }}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <CategoryMeterGroups
-                  :categoryList="store.categories"
-                  :transactions="selectedTransactions"
-                  :summary="summary"/>
-              </div>
-            </template>
-          </Card>
-        </div>
-      </div>
-      <div class="transactions">
-        <Card class="table">
-            <template #title>
-              <div class="title">
-                💸 Transaction History
-                <Button @click="showFilters = !showFilters" severity="secondary" icon="pi pi-filter"/>
-              </div>
-            </template>
-            <template #content>
-              <TransactionHistory :transactions="selectedTransactions" :showFilters="showFilters" @rowSelect="(e) => openEditModal(e)"/>
-            </template>
-        </Card>
-      </div>
-      <div class="pending">
-        <Card>
-          <template #title>🕒 Pending Transactions</template>
-          <template #content>
-            <TransactionHistory :transactions="pendingTransactions" @rowSelect="(e) => openEditModal(e)"/>
-          </template>
-        </Card>
-      </div>
-    </div>
-    <AddTransaction id="add-transaction-dialog"/>
-    <EditTransaction id="edit-transaction-dialog"/>
-  </main>
+	<SubMenu :items="items"/>
+	<main>
+		<div class="expenses">
+			<div class="top">
+				<div class="controls">
+					<div class="range">
+						<SelectButton :options="selectedViewOptions" v-model="selectedView" optionLabel="label"/>
+						<div class="selector" v-if="selectedView.value === 'week'">
+							<Button severity="secondary" label="-"
+								@click="() => selectedWeekDateRange = weekOptions[selectedWeekDateRange.value + 1]"
+								:disabled="!weekOptions[selectedWeekDateRange.value + 1]"
+								/>
+							<Select v-model="selectedWeekDateRange"
+								:options="weekOptions"
+								optionLabel="label"/>
+							<Button severity="secondary" label="+"
+								@click="() => selectedWeekDateRange = weekOptions[selectedWeekDateRange.value - 1]"
+								:disabled="!weekOptions[selectedWeekDateRange.value - 1]"
+								/>
+						</div>
+						<div class="selector" v-else>
+							<Button severity="secondary" label="-"
+								@click="() => selectedMonth = MONTHS[selectedMonth.value - 1]"
+								:disabled="!MONTHS[selectedMonth.value - 1]"
+								/>
+							<Select v-model="selectedMonth"
+								:options="MONTHS"
+								optionLabel="label"/>
+							<Button severity="secondary" label="+"
+								@click="() => selectedMonth = MONTHS[selectedMonth.value + 1]"
+								:disabled="!MONTHS[selectedMonth.value + 1]"
+								/>
+						</div>
+					</div>
+					<Button label="Add Transaction" @click="() => store.addModalOpen = true"/>
+				</div>
+				<div class="summary">
+					<Card>
+						<template #title>📊 Summary</template>
+						<template #content>
+							<div class="summary-content">
+								<div class="stats">
+									<div class="section">
+										<div class="stat-group">
+											<div class="stat">
+												<div class="label">Spent</div>
+												<div class="value">{{ summary.totalAmountFormatted }}</div>
+											</div>
+											<div class="stat">
+												<div class="label">Transactions</div>
+												<div class="value">{{ summary.count }}</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<CategoryMeterGroups
+									:categoryList="store.categories"
+									:transactions="selectedTransactions"
+									:summary="summary"/>
+							</div>
+						</template>
+					</Card>
+				</div>
+			</div>
+			<div class="transactions">
+				<Card class="table">
+						<template #title>
+							<div class="title">
+								💸 Transaction History
+								<Button @click="showFilters = !showFilters" severity="secondary" icon="pi pi-filter"/>
+							</div>
+						</template>
+						<template #content>
+							<TransactionHistory :transactions="selectedTransactions" :showFilters="showFilters" @rowSelect="(e) => openEditModal(e)"/>
+						</template>
+				</Card>
+			</div>
+			<div class="pending">
+				<Card>
+					<template #title>🕒 Pending Transactions</template>
+					<template #content>
+						<TransactionHistory :transactions="pendingTransactions" @rowSelect="(e) => openEditModal(e)"/>
+					</template>
+				</Card>
+			</div>
+		</div>
+		<AddTransaction id="add-transaction-dialog"/>
+		<EditTransaction id="edit-transaction-dialog"/>
+	</main>
 </template>
 
 <style scoped lang="scss">
 main {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
 }
 
 .action-bar {
-  display: flex;
-  gap: 1rem;
-  justify-content: space-between;
+	display: flex;
+	gap: 1rem;
+	justify-content: space-between;
 }
 
 .controls {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  width: 100%;
-  justify-content: space-between;
-  flex-wrap: wrap;
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+	width: 100%;
+	justify-content: space-between;
+	flex-wrap: wrap;
 
-  @include breakpoint('mobile') {
-    flex-direction: column-reverse;
-  }
+	@include breakpoint('mobile') {
+		flex-direction: column-reverse;
+	}
 
-  .range {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    flex-wrap: wrap;
+	.range {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+		flex-wrap: wrap;
 
-    @include breakpoint('mobile') {
-      justify-content: center;
-    }
-  }
+		@include breakpoint('mobile') {
+			justify-content: center;
+		}
+	}
 
-  .selector {
-    display: flex;
-    gap: 0.25rem;
+	.selector {
+		display: flex;
+		gap: 0.25rem;
 
-    .p-select {
-      width: 200px;
-    }
-  }
+		.p-select {
+			width: 200px;
+		}
+	}
 }
 
 .expenses {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
 
-  .top {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
+	.top {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
 
-    // .statistics {
-    //   flex: 1 1 auto;
-    //   .p-card {
-    //     height: 100%;
-    //   }
-    // }
-  }
+		// .statistics {
+		//   flex: 1 1 auto;
+		//   .p-card {
+		//     height: 100%;
+		//   }
+		// }
+	}
 }
 
 .summary {
-  width: 100%;
-  flex: 1 1 auto;
+	width: 100%;
+	flex: 1 1 auto;
 
-  .summary-content {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
+	.summary-content {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
 }
 
 .stats {
-  display: flex;
-  gap: 5rem;
-  margin-top: 1rem;
-  flex-wrap: wrap;
+	display: flex;
+	gap: 5rem;
+	margin-top: 1rem;
+	flex-wrap: wrap;
 
-  @include breakpoint('mobile') {
-    gap: 2rem;
-  }
+	@include breakpoint('mobile') {
+		gap: 2rem;
+	}
 
-  .section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+	.section {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
 
-    @include breakpoint('mobile') {
-      width: 100%;
-    }
+		@include breakpoint('mobile') {
+			width: 100%;
+		}
 
-    .title {
-      font-size: 1rem;
-    }
+		.title {
+			font-size: 1rem;
+		}
 
-    .stat-group {
-      display: flex;
-      gap: 3rem;
+		.stat-group {
+			display: flex;
+			gap: 3rem;
 
-      @include breakpoint('mobile') {
-        justify-content: space-between;
-      }
+			@include breakpoint('mobile') {
+				justify-content: space-between;
+			}
 
-      .stat {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+			.stat {
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
 
-        @include breakpoint('mobile') {
-          align-items: center;
-        }
+				@include breakpoint('mobile') {
+					align-items: center;
+				}
 
-        .label {
-          font-size: 0.75rem;
-          color: var(--p-text-muted-color);
-        }
+				.label {
+					font-size: 0.75rem;
+					color: var(--p-text-muted-color);
+				}
 
-        .value {
-          font-size: 1.2rem;
-          font-weight: bold;
-        }
-      }
-    }
-  }
+				.value {
+					font-size: 1.2rem;
+					font-weight: bold;
+				}
+			}
+		}
+	}
 }
 
 .title {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
 }
 </style>

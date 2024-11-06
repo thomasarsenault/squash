@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineEmits, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { formatAmount } from '@/utils/helper';
 import Color from '@/utils/color';
 import TransactionHistory from './TransactionHistory.vue';

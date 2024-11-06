@@ -7,6 +7,8 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import Components from 'unplugin-vue-components/vite';
 import { PrimeVueResolver } from '@primevue/auto-import-resolver';
 
+import { VitePWA } from 'vite-plugin-pwa';
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -20,7 +22,8 @@ export default defineConfig({
     vueJsx(),
     Components({
       resolvers: [PrimeVueResolver()]
-    })
+    }),
+    VitePWA({ registerType: 'autoUpdate' })
   ],
   resolve: {
     alias: {

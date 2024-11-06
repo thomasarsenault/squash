@@ -110,6 +110,10 @@ const categoryLabels = computed(() => {
     gap: 2rem;
 }
 
+:deep(.p-metergroup-horizontal .p-metergroup-meters) {
+	height: 16px;
+}
+
 .stats {
 	display: flex;
 	gap: 5rem;

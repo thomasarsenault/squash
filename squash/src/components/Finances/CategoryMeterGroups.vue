@@ -97,6 +97,10 @@ const categoryBarLabels = computed(() => {
 	gap: 2.5rem;
 }
 
+:deep(.p-metergroup-horizontal .p-metergroup-meters) {
+	height: 16px;
+}
+
 .p-metergroup-label {
 	.active {
 		font-weight: bold;

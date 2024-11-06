@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, useAttrs } from 'vue';
 import dayjs from 'dayjs';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
@@ -9,10 +9,14 @@ import advancedFormat from 'dayjs/plugin/advancedFormat';
 
 dayjs.extend(advancedFormat);
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   transactions: any[],
-  showFilters: boolean
-}>()
+  showFilters?: boolean
+}>(), {
+  showFilters: false
+});
+
+const attrs = useAttrs();
 
 const emit = defineEmits(['rowSelect'])
 
@@ -39,54 +43,54 @@ const onFiltered = (event: any) => {
 </script>
 
 <template>
-<DataTable size="large" stripedRows removableSort
-                :value="transactions"
-                v-model:filters="filters"
-                :filterDisplay="showFilters ? 'row' : undefined"
-                selectionMode="single"
-                :metaKeySelection="false"
-                @rowSelect="(e: any) => emit('rowSelect', e.data)"
-                @filter="onFiltered"
-                dataKey="id">
-              <template #empty> No transactions found.</template>
-              <Column field="date" header="Date">
-                  <template #body="{ data }">
-                    <span class="no-break">{{ formatDate(data.date) }}</span>
-                  </template>
-                  <template #filter="{ filterModel, filterCallback }">
-                      <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by date" />
-                  </template>
-                </Column>
-                <Column field="name" header="Name">
-                  <template #body="{ data }">
-                    <span class="no-break">{{ data.name }}</span>
-                  </template>
-                  <template #filter="{ filterModel, filterCallback }">
-                      <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by name" />
-                  </template>
-                </Column>
-                <Column field="amount" header="Amount" sortable>
-                  <template #body="{ data }">
-                      {{ formatAmount(data.amount) }}
-                  </template>
-                </Column>
-                <Column field="category" header="Category">
-                  <template #body="{ data }">
-                    <span class="no-break">{{ data.category }}</span>
-                  </template>
-                  <template #filter="{ filterModel, filterCallback }">
-                      <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by category" />
-                  </template>
-                </Column>
-                <Column field="subcategory" header="Subcategory">
-                  <template #body="{ data }">
-                      {{ data.subcategory }}
-                  </template>
-                  <template #filter="{ filterModel, filterCallback }">
-                      <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by subcategory" />
-                  </template>
-                </Column>
-              </DataTable>
+  <DataTable size="large" stripedRows removableSort v-bind="attrs"
+    :value="transactions"
+    v-model:filters="filters"
+    :filterDisplay="showFilters ? 'row' : undefined"
+    selectionMode="single"
+    :metaKeySelection="false"
+    @rowSelect="(e: any) => emit('rowSelect', e.data)"
+    @filter="onFiltered"
+    dataKey="id">
+  <template #empty> No transactions found.</template>
+  <Column field="date" header="Date">
+      <template #body="{ data }">
+        <span class="no-break">{{ formatDate(data.date) }}</span>
+      </template>
+      <template #filter="{ filterModel, filterCallback }">
+          <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by date" />
+      </template>
+    </Column>
+    <Column field="name" header="Name">
+      <template #body="{ data }">
+        <span class="no-break">{{ data.name }}</span>
+      </template>
+      <template #filter="{ filterModel, filterCallback }">
+          <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by name" />
+      </template>
+    </Column>
+    <Column field="amount" header="Amount" sortable>
+      <template #body="{ data }">
+          {{ formatAmount(data.amount) }}
+      </template>
+    </Column>
+    <Column field="category" header="Category">
+      <template #body="{ data }">
+        <span class="no-break">{{ data.category }}</span>
+      </template>
+      <template #filter="{ filterModel, filterCallback }">
+          <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by category" />
+      </template>
+    </Column>
+    <Column field="subcategory" header="Subcategory">
+      <template #body="{ data }">
+          {{ data.subcategory }}
+      </template>
+      <template #filter="{ filterModel, filterCallback }">
+          <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by subcategory" />
+      </template>
+    </Column>
+  </DataTable>
 </template>
 
 <style scoped lang="scss">

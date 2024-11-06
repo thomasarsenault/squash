@@ -6,61 +6,37 @@ import AddTransaction from '@/components/Finances/AddTransaction.vue';
 import EditTransaction from '@/components/Finances/EditTransaction.vue';
 import TransactionHistory from '@/components/Finances/TransactionHistory.vue';
 import { formatAmount } from '@/utils/helper';
+import CategoryMeterGroups from '@/components/Finances/CategoryMeterGroups.vue';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 const store = useTransactionStore();
-const MONTHS = Array.from({ length: 12 }, (_, i) => ({ label: dayjs().month(i).format('MMMM'), value: i }));
+const MONTHS = Array.from({ length: dayjs().month() + 1 }, (_, i) => ({ label: dayjs().month(i).format('MMMM'), value: i }));
+
 onMounted(async () => {
   store.getTransactions().then(() => {
-    console.log('tasks', store.tasks);
+    console.log('transactions', store.transactions);
   })
 })
 
-const startOfWeek = dayjs().startOf('week').add(1, 'day');
+// const startOfWeek = dayjs().startOf('week').add(1, 'day');
 const showFilters = ref(false);
 
 const selectedMonth = ref(MONTHS[dayjs().month()]);
 
 const pendingTransactions = computed(() => {
-  return store.transactions.filter(transaction => transaction.pending);
+  return store.transactions.filter((transaction: any) => transaction.pending);
 });
 
 const transactions = computed(() => {
-  return store.transactions.filter(transaction => !transaction.pending);
+  return store.transactions.filter((transaction: any) => !transaction.pending);
 });
 
-const selectedTransactions = computed(() => {
-  return transactions.value.filter(transaction => {
-    return dayjs(transaction.date).month() === selectedMonth.value.value;
-  }) || [];
-});
 
-const totalAmountThisMonth = computed(() => {
-  return formatAmount(selectedTransactions.value.reduce((acc, transaction) => acc + transaction.amount, 0));
-});
-
-const totalAmountThisWeek = computed(() => {
-  const transactionsThisWeek = transactions.value.filter(transaction => {
-    return dayjs(transaction.date).isAfter(startOfWeek.subtract(1, 'day'));
-  });
-
-  return {
-    amount: formatAmount(transactionsThisWeek.reduce((acc, transaction) => acc + transaction.amount, 0)),
-    count: transactionsThisWeek.length
-  }
-});
-
-const totalAmountLastWeek = computed(() => {
-  const transactionsLastWeek = transactions.value.filter(transaction => {
-    return dayjs(transaction.date).isAfter(startOfWeek.subtract(1, 'week').subtract(1, 'day')) && dayjs(transaction.date).isBefore(startOfWeek.add(1, 'day'));
-  });
-
-  return {
-    amount: formatAmount(transactionsLastWeek.reduce((acc, transaction) => acc + transaction.amount, 0)),
-    count: transactionsLastWeek.length
-  }
-});
-
-const openEditModal = (transaction) => {
+const openEditModal = (transaction: any) => {
   store.editModal.transaction = transaction;
   store.editModal.open = true;
 }
@@ -78,63 +54,108 @@ const items = ref([
   }
 ])
 
+const selectedViewOptions = ref([
+  { label: 'Week', value: 'week' },
+  { label: 'Month', value: 'month' }
+]);
+const selectedView = ref(selectedViewOptions.value[0]);
+
+//last 8 weeks as selection options
+const weekOptions = ref(Array.from({ length: 8 }, (_, i) => {
+  const startOfWeek = dayjs().startOf('week').subtract(i, 'week').add(1, 'day');
+  const endOfWeek = startOfWeek.add(1, 'week').subtract(1, 'day');
+
+  return {
+    label: `${startOfWeek.format('MMMM D')} - ${endOfWeek.format('D')}`,
+    value: i,
+    dateRange: [startOfWeek, endOfWeek]
+  }
+}));
+const selectedWeekDateRange = ref(weekOptions.value[2]);
+
+const selectedTransactions = computed(() => {
+  if(selectedView.value.value === 'week') {
+    return transactions.value.filter((transaction: any) => {
+      return dayjs(transaction.date).isSameOrAfter(selectedWeekDateRange.value.dateRange[0]) && dayjs(transaction.date).isSameOrBefore(selectedWeekDateRange.value.dateRange[1]);
+    }) || [];
+  }
+
+  return transactions.value.filter((transaction: any) => {
+    return dayjs(transaction.date).month() === selectedMonth.value.value;
+  }) || [];
+});
+
+const summary = computed(() => {
+  const totalAmount = selectedTransactions.value.reduce((acc, transaction) => acc + transaction.amount, 0);
+  return {
+    totalAmount: totalAmount,
+    totalAmountFormatted: formatAmount(totalAmount),
+    count: selectedTransactions.value.length
+  }
+})
+
 </script>
 
 <template>
   <SubMenu :items="items"/>
   <main>
-    <div class="action-bar">
-      <Button label="Add Transaction" @click="() => store.addModalOpen = true"/>
-      <Select v-model="selectedMonth"
-          :options="Array.from({ length: 12 }, (_, i) => ({ label: dayjs().month(i).format('MMMM'), value: i }))"
-          optionLabel="label"/>
-    </div>
     <div class="expenses">
       <div class="top">
-        <div class="statistics">
+        <div class="controls">
+          <div class="range">
+            <SelectButton :options="selectedViewOptions" v-model="selectedView" optionLabel="label"/>
+            <div class="selector" v-if="selectedView.value === 'week'">
+              <Button severity="secondary" label="-"
+                @click="() => selectedWeekDateRange = weekOptions[selectedWeekDateRange.value + 1]"
+                :disabled="!weekOptions[selectedWeekDateRange.value + 1]"
+                />
+              <Select v-model="selectedWeekDateRange"
+                :options="weekOptions"
+                optionLabel="label"/>
+              <Button severity="secondary" label="+"
+                @click="() => selectedWeekDateRange = weekOptions[selectedWeekDateRange.value - 1]"
+                :disabled="!weekOptions[selectedWeekDateRange.value - 1]"
+                />
+            </div>
+            <div class="selector" v-else>
+              <Button severity="secondary" label="-"
+                @click="() => selectedMonth = MONTHS[selectedMonth.value - 1]"
+                :disabled="!MONTHS[selectedMonth.value - 1]"
+                />
+              <Select v-model="selectedMonth"
+                :options="MONTHS"
+                optionLabel="label"/>
+              <Button severity="secondary" label="+"
+                @click="() => selectedMonth = MONTHS[selectedMonth.value + 1]"
+                :disabled="!MONTHS[selectedMonth.value + 1]"
+                />
+            </div>
+          </div>
+          <Button label="Add Transaction" @click="() => store.addModalOpen = true"/>
+        </div>
+        <div class="summary">
           <Card>
-            <template #title>📊 Statistics</template>
+            <template #title>📊 Summary</template>
             <template #content>
-              <div class="stats">
-                <div v-if="selectedMonth.value === dayjs().month()" class="section">
-                  <!-- <div class="title">This Week</div> -->
-                  <div class="stat-group">
-                    <div class="stat">
-                      <div class="label">Spent this week</div>
-                      <div class="value">{{ totalAmountThisWeek.amount }}</div>
-                    </div>
-                    <div class="stat">
-                      <div class="label">Transactions</div>
-                      <div class="value">{{ totalAmountThisWeek.count }}</div>
-                    </div>
-                  </div>
-                </div>
-                <div v-if="selectedMonth.value === dayjs().month()" class="section">
-                  <!-- <div class="title">This Week</div> -->
-                  <div class="stat-group">
-                    <div class="stat">
-                      <div class="label">Spent last week</div>
-                      <div class="value">{{ totalAmountLastWeek.amount }}</div>
-                    </div>
-                    <div class="stat">
-                      <div class="label">Transactions</div>
-                      <div class="value">{{ totalAmountLastWeek.count }}</div>
+              <div class="summary-content">
+                <div class="stats">
+                  <div class="section">
+                    <div class="stat-group">
+                      <div class="stat">
+                        <div class="label">Spent</div>
+                        <div class="value">{{ summary.totalAmountFormatted }}</div>
+                      </div>
+                      <div class="stat">
+                        <div class="label">Transactions</div>
+                        <div class="value">{{ summary.count }}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div class="section">
-                  <!-- <div class="title">This Month</div> -->
-                  <div class="stat-group">
-                    <div class="stat">
-                      <div class="label">Spent this month</div>
-                      <div class="value">{{ totalAmountThisMonth }}</div>
-                    </div>
-                    <div class="stat">
-                      <div class="label">Transactions</div>
-                      <div class="value">{{ selectedTransactions.length }}</div>
-                    </div>
-                  </div>
-                </div>
+                <CategoryMeterGroups
+                  :categoryList="store.categories"
+                  :transactions="selectedTransactions"
+                  :summary="summary"/>
               </div>
             </template>
           </Card>
@@ -157,7 +178,7 @@ const items = ref([
         <Card>
           <template #title>🕒 Pending Transactions</template>
           <template #content>
-            <TransactionHistory :transactions="pendingTransactions" :showFilters="false" @rowSelect="(e) => openEditModal(e)"/>
+            <TransactionHistory :transactions="pendingTransactions" @rowSelect="(e) => openEditModal(e)"/>
           </template>
         </Card>
       </div>
@@ -176,24 +197,43 @@ main {
   gap: 1rem;
 }
 
-// .p-menubar {
-//   padding: 0;
-//   background: none;
-//   border: none;
-// }
-
-// :deep(.p-tablist-tab-list) {
-//   background: none;
-//   border: none;
-
-//   button {
-//     font-size: 1rem;
-//   }
-// }
 .action-bar {
   display: flex;
   gap: 1rem;
   justify-content: space-between;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  @include breakpoint('mobile') {
+    flex-direction: column-reverse;
+  }
+
+  .range {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+
+    @include breakpoint('mobile') {
+      justify-content: center;
+    }
+  }
+
+  .selector {
+    display: flex;
+    gap: 0.25rem;
+
+    .p-select {
+      width: 200px;
+    }
+  }
 }
 
 .expenses {
@@ -206,12 +246,22 @@ main {
     flex-wrap: wrap;
     gap: 1rem;
 
-    .statistics {
-      flex: 1 1 auto;
-      .p-card {
-        height: 100%;
-      }
-    }
+    // .statistics {
+    //   flex: 1 1 auto;
+    //   .p-card {
+    //     height: 100%;
+    //   }
+    // }
+  }
+}
+
+.summary {
+  flex: 1 1 auto;
+
+  .summary-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
   }
 }
 

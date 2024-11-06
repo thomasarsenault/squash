@@ -34,6 +34,10 @@ const props = defineProps<{
 
   @include breakpoint('mobile') {
     width: 100%;
+
+    .sub-menu {
+      justify-content: center;
+    }
   }
 }
 

@@ -18,7 +18,6 @@ const isNight = computed(() => {
 });
 
 const icon = computed(() => weatherIconMapping({ code: props.hour.weather_code, isNight: isNight.value}));
-console.log(icon.value);
 </script>
 
 <template>

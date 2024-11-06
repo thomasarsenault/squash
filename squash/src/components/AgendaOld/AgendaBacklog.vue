@@ -28,7 +28,6 @@ const store = useTasksStore();
 
 const draggableItems = computed({
   get: () => {
-    console.log(store.tasks['backlog']);
     return store.tasks['backlog']},
   set: () => {}
 });

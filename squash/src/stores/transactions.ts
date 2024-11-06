@@ -12,6 +12,9 @@ export const useTransactionStore = defineStore('transactions', {
         editModal: {
             open: false,
             transaction: {}
+        },
+        metadata: {
+            startOfData: '',
         }
     }),
     actions: {
@@ -26,7 +29,11 @@ export const useTransactionStore = defineStore('transactions', {
                     throw data.error;
                 }
 
-                this.transactions = data;
+                this.transactions = data.sort((a: any, b: any) => {
+                    return dayjs(b.date).unix() - dayjs(a.date).unix();
+                });
+
+                this.metadata.startOfData = this.transactions[this.transactions.length - 1].date;
             } catch (error) {
                 console.error('Error fetching transactions:', error);
             }

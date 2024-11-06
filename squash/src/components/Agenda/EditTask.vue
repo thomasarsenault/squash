@@ -27,7 +27,6 @@ const editedTask = ref<Task>({} as Task);
 const editMode = ref(false);
 
 const cancelModal = () => {
-    console.log('cancel modal')
     store.editModal.isOpen = false;
     editMode.value = false;
 }

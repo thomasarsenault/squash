@@ -3,7 +3,7 @@
 import { ref } from 'vue';
 import router from '../router/index';
 
-const apiUrl = import.meta.env.STAN_API_URL || '';
+const apiUrl = import.meta.env.VITE_STAN_API_URL || '';
 
 const email = ref('');
 const password = ref('');

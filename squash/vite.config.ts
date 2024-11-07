@@ -30,7 +30,7 @@ export default defineConfig({
         name: 'Squash',
         short_name: 'Squash',
         description: 'Squash App',
-        theme_color: '#8b5cf6',
+        theme_color: '#ffffff',
         icons: [
           {
             src: 'web-app-manifest-192x192', // Path to your icon file

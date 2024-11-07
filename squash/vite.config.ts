@@ -23,7 +23,37 @@ export default defineConfig({
     Components({
       resolvers: [PrimeVueResolver()]
     }),
-    VitePWA({ registerType: 'autoUpdate' })
+    VitePWA({ 
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.ico'],
+      manifest: {
+        name: 'Squash',
+        short_name: 'Squash',
+        description: 'Squash App',
+        theme_color: '#8b5cf6',
+        icons: [
+          {
+            src: 'web-app-manifest-192x192', // Path to your icon file
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: 'web-app-manifest-512x512', // Path to your icon file
+            sizes: '512x512',
+            type: 'image/png',
+          },
+          {
+            src: 'web-app-manifest-512x512', // For Apple devices
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable',
+          },
+        ],
+      },
+      devOptions: {
+        enabled: true
+      },
+    })
   ],
   resolve: {
     alias: {

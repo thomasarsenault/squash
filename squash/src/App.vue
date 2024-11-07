@@ -52,5 +52,6 @@ header {
 .menubar-wrapper {
   padding: 0;
   justify-content: center;
+  border-top: none;
 }
 </style>

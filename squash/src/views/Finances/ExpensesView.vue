@@ -22,7 +22,6 @@ onMounted(async () => {
 	})
 })
 
-// const startOfWeek = dayjs().startOf('week').add(1, 'day');
 const showFilters = ref(false);
 
 const selectedMonth = ref(MONTHS[dayjs().month()]);
@@ -60,10 +59,18 @@ const selectedViewOptions = ref([
 ]);
 const selectedView = ref(selectedViewOptions.value[0]);
 
-//last 8 weeks as selection options
+// last 8 weeks as selection options
+// range from Monday to Sunday inclusive
 const weekOptions = ref(Array.from({ length: 8 }, (_, i) => {
-	const startOfWeek = dayjs().startOf('week').subtract(i, 'week').add(1, 'day');
-	const endOfWeek = startOfWeek.add(1, 'week').subtract(1, 'day');
+	const startOfWeek = dayjs()
+		.subtract(1, 'day') // offset week if on a sunday - dayjs weeks start on sundays (weird and wrong)
+		.startOf('week') // get the sunday
+		.add(1, 'day') // make it monday (the correct start to the week)
+		.subtract(i, 'week'); // go i weeks in the past
+
+	const endOfWeek = startOfWeek
+		.add(1, 'week') // next monday
+		.subtract(1, 'day'); // sunday (the end of the inclusive range)
 
 	return {
 		label: `${startOfWeek.format('MMMM D')} - ${endOfWeek.format('D')}`,
@@ -103,7 +110,7 @@ const summary = computed(() => {
 			<div class="top">
 				<div class="controls">
 					<div class="range">
-						<SelectButton :options="selectedViewOptions" v-model="selectedView" optionLabel="label"/>
+						<SelectButton :options="selectedViewOptions" v-model="selectedView" optionLabel="label" :allowEmpty="false"/>
 						<div class="selector" v-if="selectedView.value === 'week'">
 							<Button severity="secondary" label="-"
 								@click="() => selectedWeekDateRange = weekOptions[selectedWeekDateRange.value + 1]"

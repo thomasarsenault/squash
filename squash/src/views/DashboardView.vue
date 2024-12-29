@@ -2,6 +2,7 @@
 import Weather from '@/components/Dashboard/Weather/Weather.vue';
 import Tasks from '@/components/Dashboard/Tasks.vue';
 import Expenses from '@/components/Dashboard/Expenses.vue';
+import Fitness from '@/components/Dashboard/Fitness.vue';
 </script>
 
 <!-- TODO: move cards to individual components -->
@@ -15,8 +16,13 @@ import Expenses from '@/components/Dashboard/Expenses.vue';
             <div class="tasks">
                 <Tasks />
             </div>
-            <div class="expenses">
-                <Expenses />
+            <div class="group">
+                <div class="expenses">
+                    <Expenses />
+                </div>
+                <div class="fitness">
+                    <Fitness />
+                </div>
             </div>
         </div>
 
@@ -46,9 +52,12 @@ main {
         }
     }
 
-    .expenses {
+    .group {
         flex-grow: 1;
         max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
 }
 

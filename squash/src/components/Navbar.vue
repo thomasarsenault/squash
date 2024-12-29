@@ -17,6 +17,11 @@ const items = ref([
         label: 'Expenses',
         icon: 'pi pi-fw pi-money-bill',
         to: '/expenses'
+    },
+    {
+        label: 'Fitness',
+        icon: 'pi pi-fw pi-wave-pulse',
+        to: '/fitness'
     }
 ])
 </script>

@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AddExpense: typeof import('./src/components/Finances/Expenses/AddExpense.vue')['default']
     AddTransaction: typeof import('./src/components/Finances/AddTransaction.vue')['default']
+    AddWorkout: typeof import('./src/components/Fitness/AddWorkout.vue')['default']
     AgendaBacklog: typeof import('./src/components/AgendaOld/AgendaBacklog.vue')['default']
     AgendaContainer: typeof import('./src/components/Agenda/AgendaContainer.vue')['default']
     AgendaDay: typeof import('./src/components/AgendaOld/AgendaDay.vue')['default']
@@ -21,12 +22,14 @@ declare module 'vue' {
     CategoryMeterGroup: typeof import('./src/components/Finances/CategoryMeterGroup.vue')['default']
     CategoryMeterGroups: typeof import('./src/components/Finances/CategoryMeterGroups.vue')['default']
     Checkbox: typeof import('primevue/checkbox')['default']
+    DatePicker: typeof import('primevue/datepicker')['default']
     Dropdown: typeof import('primevue/dropdown')['default']
     EditExpense: typeof import('./src/components/Finances/Expenses/EditExpense.vue')['default']
     EditTask: typeof import('./src/components/Agenda/EditTask.vue')['default']
     EditTransaction: typeof import('./src/components/Finances/EditTransaction.vue')['default']
     Expenses: typeof import('./src/components/Dashboard/Expenses.vue')['default']
     ExpensesList: typeof import('./src/components/Finances/Expenses/ExpensesList.vue')['default']
+    Fitness: typeof import('./src/components/Dashboard/Fitness.vue')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
     InputText: typeof import('primevue/inputtext')['default']
     Menubar: typeof import('primevue/menubar')['default']
@@ -47,6 +50,7 @@ declare module 'vue' {
     TransactionHistory: typeof import('./src/components/Finances/TransactionHistory.vue')['default']
     Weather: typeof import('./src/components/Dashboard/Weather/Weather.vue')['default']
     WeatherHour: typeof import('./src/components/Dashboard/Weather/WeatherHour.vue')['default']
+    Workout: typeof import('./src/components/Fitness/Workout.vue')['default']
   }
   export interface ComponentCustomProperties {
     Ripple: typeof import('primevue/ripple')['default']

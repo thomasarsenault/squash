@@ -19,7 +19,10 @@ onMounted(async () => {
   })
 })
 
-const startOfWeek = dayjs().startOf('week').add(1, 'day');
+const startOfWeek = dayjs()
+		.subtract(1, 'day') // offset week if on a sunday - dayjs weeks start on sundays (weird and wrong)
+		.startOf('week') // get the sunday
+		.add(1, 'day') // make it monday (the correct start to the week)
 const endOfWeek = startOfWeek.add(1, 'week').subtract(1, 'day');
 
 const transactions = computed(() => {

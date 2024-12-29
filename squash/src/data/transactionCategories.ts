@@ -47,7 +47,7 @@ const CATEGORIES = [
     {
         name: 'Travel',
         displayName: '✈️ Travel',
-        color: [180, 60, 75],
+        color: [0, 0, 75],
         subcategories: [
             'Vacation',
             'Cottage'
@@ -77,7 +77,7 @@ const CATEGORIES = [
     {
         name: 'Other',
         displayName: '🪣 Other',
-        color: [0, 0, 75],
+        color: [180, 60, 75],
         subcategories: [
             'Gifts',
             'Charity',

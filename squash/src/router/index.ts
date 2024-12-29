@@ -4,6 +4,7 @@ import LoginView from '@/views/LoginView.vue'
 import ExpensesView from '@/views/Finances/ExpensesView.vue'
 import BudgetView from '@/views/Finances/BudgetView.vue'
 import DashboardView from '@/views/DashboardView.vue'
+import FitnessView from '@/views/FitnessView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,11 @@ const router = createRouter({
       path: '/expenses/budget',
       name: 'expenses/budget',
       component: BudgetView
+    },
+    {
+      path: '/fitness',
+      name: 'fitness',
+      component: FitnessView
     },
     {
       path: '/settings',

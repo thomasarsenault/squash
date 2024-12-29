@@ -30,31 +30,33 @@ const addTask = async () => {
 const zoneToLabel = {
   [AgendaZones.TODAY]: 'Today',
   [AgendaZones.TOMORROW]: 'Tomorrow',
-  [AgendaZones.THIS_WEEK]: 'This Week',
+  [AgendaZones.THIS_WEEK]: 'Backlog',
 }
 </script>
 
 <template>
-    <div class="agenda-container">
+  <Card class="agenda-container">
+    <template #content>
         <div class="header">
-            <div class="title">{{ zoneToLabel[zone] }}</div>
-            <Button @click="newTaskPromptOpen = !newTaskPromptOpen">{{ newTaskPromptOpen ? 'Close' : 'New Task' }}</Button>
-        </div>
-        <div :class="`new-task ${newTaskPromptOpen ? 'open' : ''}`">
-            <!-- primevue text field -->
-            <InputText autofocus v-model="newTaskText" class="new-task-input" placeholder="New Task" @keydown.enter="addTask"/>
-        </div>
-        <div :class="`drag-zone ${hovered ? 'hovered' : ''}`" :id="zone">
-            <div class="tasks">
-                <Task v-for="(task, index) in tasks" :key="index" :task="task"
-                    @dragEnd="emit('dragEnd')"
-                    @drag="e => emit('drag', e)"/>
-                <!-- <div class="placement-indicator-wrapper">
-                  <div id="placement-indicator" class="placement-indicator" />
-                </div> -->
-            </div>
-        </div>
-    </div>
+              <div class="title">{{ zoneToLabel[zone] }}</div>
+              <Button @click="newTaskPromptOpen = !newTaskPromptOpen">{{ newTaskPromptOpen ? 'Close' : 'New Task' }}</Button>
+          </div>
+          <div :class="`new-task ${newTaskPromptOpen ? 'open' : ''}`">
+              <!-- primevue text field -->
+              <InputText autofocus v-model="newTaskText" class="new-task-input" placeholder="New Task" @keydown.enter="addTask"/>
+          </div>
+          <div :class="`drag-zone ${hovered ? 'hovered' : ''}`" :id="zone">
+              <div class="tasks">
+                  <Task v-for="(task, index) in tasks" :key="index" :task="task"
+                      @dragEnd="emit('dragEnd')"
+                      @drag="e => emit('drag', e)"/>
+                  <!-- <div class="placement-indicator-wrapper">
+                    <div id="placement-indicator" class="placement-indicator" />
+                  </div> -->
+              </div>
+          </div>
+    </template>
+  </Card>
 </template>
 
 <style scoped>
@@ -77,7 +79,6 @@ const zoneToLabel = {
 
 .agenda-container {
   flex: 1;
-  padding: 0 1rem;
   border-radius: 16px;
   display: flex;
   flex-direction: column;
@@ -110,7 +111,7 @@ const zoneToLabel = {
 .drag-zone {
   border-radius: var(--p-border-radius-lg);
   flex: 1;
-  min-height: 2rem;
+  min-height: 10rem;
 
   &.hovered {
     background-color: var(--p-surface-100);

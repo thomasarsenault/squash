@@ -2,7 +2,7 @@
 import dayjs from 'dayjs'
 import { useTasksStore } from '@/stores/tasks';
 import type { Task } from '@/types';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import EditTask from './EditTask.vue';
 
 import Card from 'primevue/card';
@@ -71,8 +71,7 @@ const endDrag = (e) => {
     document.removeEventListener('mouseup', endDrag);
     emit('dragEnd')
 }
-
-const isCompleted = ref(props.task.completed);
+const isCompleted = computed(() => props.task.completed);
 </script>
 
 <template>
@@ -110,12 +109,13 @@ const isCompleted = ref(props.task.completed);
 
 .task {
     border-radius: 8px;
-    padding: 1rem;
+    padding: 0.5rem;
     cursor: pointer;
     user-select: none;
     position: relative;
     transition: background-color 0.1s ease-in-out;
 
+    box-shadow: none;
     :deep(.p-card-body) {
         padding: 0;
     }
@@ -141,7 +141,7 @@ const isCompleted = ref(props.task.completed);
             height: 2px;
             background-color: var(--p-primary-color);
             position: absolute;
-            top: -20px;
+            top: -12px;
         }
     }
 }
@@ -149,7 +149,7 @@ const isCompleted = ref(props.task.completed);
 .placeholder {
     border-radius: 8px;
     background-color: white;
-    padding: 1rem;
+    padding: 0.5rem 1rem;
     display: none;
 
     &.dragging {

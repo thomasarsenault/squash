@@ -16,7 +16,7 @@ const selectedSubcategory = ref<string>('');
 
 const filteredTransactions = computed(() => {
 	if(selectedSubcategory.value) {
-		return props.transactions.filter((t: any) => t.subcategory === selectedSubcategory.value);
+		return props.transactions.filter((t: any) => t.category === selectedCategory.value.label && t.subcategory === selectedSubcategory.value);
 	}
 
 	return props.transactions.filter((t: any) => t.category === selectedCategory.value.label);

@@ -6,11 +6,12 @@ import Column from 'primevue/column';
 import { FilterMatchMode } from '@primevue/core/api';
 import { formatAmount } from '@/utils/helper';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
+import type { Transaction } from '@/types';
 
 dayjs.extend(advancedFormat);
 
 const props = withDefaults(defineProps<{
-  transactions: any[],
+  transactions: Transaction[],
   showFilters?: boolean
 }>(), {
   showFilters: false
@@ -30,16 +31,9 @@ const filters = ref({
 });
 
 const formatDate = (date: string) => dayjs(date).format('ddd, Do');
-const transactions = computed(() => props.transactions.sort((a, b) => dayjs(b.date).unix() - dayjs(a.date).unix()));
-// const filteredData = ref(transactions.value);
 
-// const totalAmount = computed(() => {
-//   return formatAmount(filteredData.value.reduce((acc, transaction) => acc + transaction.amount, 0));
-// });
-
-const onFiltered = (event: any) => {
-  // filteredData.value = event.filteredValue;
-}
+// spread to avoid sorting prop in place
+const transactions = computed(() => [ ...props.transactions].sort((a, b) => dayjs(b.date).unix() - dayjs(a.date).unix()));
 </script>
 
 <template>
@@ -50,7 +44,6 @@ const onFiltered = (event: any) => {
     selectionMode="single"
     :metaKeySelection="false"
     @rowSelect="(e: any) => emit('rowSelect', e.data)"
-    @filter="onFiltered"
     dataKey="id">
   <template #empty> No transactions found.</template>
   <Column field="date" header="Date">

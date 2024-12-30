@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue';
 import InputNumber from 'primevue/inputnumber';
 import { useExpensesStore } from '@/stores/expenses';
 import { useTransactionStore } from '@/stores/transactions';
-import Dialog from '@/components/Dialog.vue';
+import InputDialog from '@/components/InputDialog.vue';
 
 const store = useExpensesStore();
 const transactionsStore = useTransactionStore();
@@ -55,7 +55,7 @@ const deleteExpense = () => {
 
 <template>
     <div class="add-expense">
-        <Dialog v-model:visible="store.editModal.open" header="💰 Edit Transaction">
+        <InputDialog v-model:visible="store.editModal.open" header="💰 Edit Transaction">
             <div class="fields">
                 <FloatLabel>
                     <InputNumber id="day" :min="1" :max="28" v-model="day"/>
@@ -93,7 +93,7 @@ const deleteExpense = () => {
                     </div>
                 </div>
             </template>
-        </Dialog>
+        </InputDialog>
     </div>
 </template>
 

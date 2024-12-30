@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import Navbar from './components/Navbar.vue';
+import NavBar from './components/NavBar.vue';
 
 document.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -9,7 +9,7 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 
 <template>
   <header class="p-menubar menubar-wrapper">
-    <Navbar />
+    <NavBar />
   </header>
 
 

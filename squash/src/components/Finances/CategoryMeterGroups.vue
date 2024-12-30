@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { formatAmount } from '@/utils/helper';
 import Color from '@/utils/color';
 import TransactionHistory from './TransactionHistory.vue';
@@ -45,10 +45,16 @@ const categoryBarLabels = computed(() => {
 			}
 	});
 
-	selectedCategory.value = categoryTotals[0];
-	selectedSubcategory.value = '';
 
+
+	console.log('categoryTotals', categoryTotals)
 	return categoryTotals as any;
+})
+
+// side effect ref mutation when categoryBarLabels recomputed
+watch(categoryBarLabels, (newVal) => {
+	selectedCategory.value = newVal[0];
+	selectedSubcategory.value = '';
 })
 </script>
 
@@ -57,7 +63,7 @@ const categoryBarLabels = computed(() => {
 		<MeterGroup :value="categoryBarLabels">
 			<template #label="{ value }">
 				<div class="p-metergroup-label-list p-metergroup-label-list-horizontal">
-					<div class="p-metergroup-label" v-for="val in value">
+					<div class="p-metergroup-label" v-for="val in value" :key="val.label">
 						<Button severity="secondary"
 							class="p-metergroup-label-text"
 							:class="{ active: val.label === selectedCategory.label}"
@@ -72,7 +78,7 @@ const categoryBarLabels = computed(() => {
 		<MeterGroup :value="selectedCategory?.subcategories || []">
 			<template #label="{ value }">
 				<div class="p-metergroup-label-list p-metergroup-label-list-horizontal">
-					<div class="p-metergroup-label" v-for="val in value">
+					<div class="p-metergroup-label" v-for="val in value" :key="val.label">
 						<Button severity="secondary"
 							class="p-metergroup-label-text"
 							:class="{ active: val.label === selectedSubcategory}"

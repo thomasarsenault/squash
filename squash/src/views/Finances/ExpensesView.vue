@@ -9,6 +9,7 @@ import { formatAmount } from '@/utils/helper';
 import CategoryMeterGroups from '@/components/Finances/CategoryMeterGroups.vue';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import type { Transaction } from '@/types';
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -27,15 +28,15 @@ const showFilters = ref(false);
 const selectedMonth = ref(MONTHS[dayjs().month()]);
 
 const pendingTransactions = computed(() => {
-	return store.transactions.filter((transaction: any) => transaction.pending);
+	return store.transactions.filter((transaction) => transaction.pending);
 });
 
 const transactions = computed(() => {
-	return store.transactions.filter((transaction: any) => !transaction.pending);
+	return store.transactions.filter((transaction) => !transaction.pending);
 });
 
 
-const openEditModal = (transaction: any) => {
+const openEditModal = (transaction: Transaction) => {
 	store.editModal.transaction = transaction;
 	store.editModal.open = true;
 }
@@ -82,12 +83,12 @@ const selectedWeekDateRange = ref(weekOptions.value[0]);
 
 const selectedTransactions = computed(() => {
 	if(selectedView.value.value === 'week') {
-		return transactions.value.filter((transaction: any) => {
+		return transactions.value.filter((transaction) => {
 			return dayjs(transaction.date).isSameOrAfter(selectedWeekDateRange.value.dateRange[0]) && dayjs(transaction.date).isSameOrBefore(selectedWeekDateRange.value.dateRange[1]);
 		}) || [];
 	}
 
-	return transactions.value.filter((transaction: any) => {
+	return transactions.value.filter((transaction) => {
 		return dayjs(transaction.date).month() === selectedMonth.value.value;
 	}) || [];
 });

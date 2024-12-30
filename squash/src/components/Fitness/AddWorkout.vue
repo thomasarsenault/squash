@@ -2,7 +2,7 @@
 import { ref, computed, watch } from 'vue';
 import { useFitnessStore } from '@/stores/fitness';
 import dayjs from 'dayjs';
-import Dialog from '@/components/Dialog.vue';
+import InputDialog from '@/components/InputDialog.vue';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 
@@ -81,7 +81,7 @@ watch(workout, (value) => {
 
 <template>
     <div class="add-workout">
-        <Dialog v-model:visible="store.modalOpen" :header="`💪 ${store.editModal.open ? 'Edit' : 'Add'} Workout`">
+        <InputDialog v-model:visible="store.modalOpen" :header="`💪 ${store.editModal.open ? 'Edit' : 'Add'} Workout`">
             <div class="fields">
                 <FloatLabel>
                     <Calendar id="date" v-model="date" />
@@ -141,7 +141,7 @@ watch(workout, (value) => {
                     </template>
                 </div>
             </template>
-        </Dialog>
+        </InputDialog>
     </div>
 </template>
 

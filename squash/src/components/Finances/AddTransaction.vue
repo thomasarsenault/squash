@@ -3,13 +3,14 @@ import { ref } from 'vue';
 import InputNumber from 'primevue/inputnumber';
 import { useTransactionStore } from '@/stores/transactions';
 import dayjs from 'dayjs';
-import Dialog from '@/components/Dialog.vue';
+import InputDialog from '@/components/InputDialog.vue';
+import type { CategoryDropdownItem } from '@/types';
 
 const store = useTransactionStore();
 
-const date = ref(dayjs().format('MM/DD/YYYY'));
+const date = ref(new Date());
 const name = ref('');
-const category = ref('');
+const category = ref<CategoryDropdownItem['items'][number] | null>(null);
 const amount = ref(null);
 const notes = ref(null);
 const pending = ref(false);
@@ -20,8 +21,8 @@ const addExpense = () => {
         amount: amount.value,
         date: dayjs(date.value).format('YYYY-MM-DD'),
         notes: notes.value,
-        category: category.value.parentCategory || 'Other',
-        subcategory: category.value.label || 'Other',
+        category: category.value?.parentCategory || 'Other',
+        subcategory: category.value?.label || 'Other',
         pending: pending.value,
     }
 
@@ -30,15 +31,15 @@ const addExpense = () => {
     name.value = '';
     amount.value = null;
     notes.value = null;
-    category.value = '';
-    date.value = dayjs().format('MM/DD/YYYY');
+    category.value = null;
+    date.value = new Date();
     pending.value = false;
 }
 </script>
 
 <template>
     <div class="add-expense">
-        <Dialog v-model:visible="store.addModalOpen" header="💰 Add Transaction">
+        <InputDialog v-model:visible="store.addModalOpen" header="💰 Add Transaction">
             <div class="fields">
                 <FloatLabel>
                     <Calendar id="date" v-model="date" />
@@ -77,7 +78,7 @@ const addExpense = () => {
                     <Button label="Add" @click="addExpense" />
                 </div>
             </template>
-        </Dialog>
+        </InputDialog>
     </div>
 </template>
 

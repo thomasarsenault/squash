@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import { useTransactionStore } from '@/stores/transactions';
 import { useExpensesStore } from '@/stores/expenses';
 import { onMounted, ref, computed } from 'vue';
 import AddExpense from '@/components/Finances/Expenses/AddExpense.vue';

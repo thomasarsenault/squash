@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, watch, computed, onMounted, onBeforeUnmount, ref } from 'vue';
+import { watch, computed, onMounted, onBeforeUnmount, ref } from 'vue';
 
 const props = defineProps({
     header: {
@@ -42,7 +42,7 @@ watch(isVisible, () => {
     preventScroll();
 });
 
-const onKeyDown = (e) => {
+const onKeyDown = (e: any) => {
     if (e.key === 'Escape' && isVisible.value) {
         closeDialog();
     }

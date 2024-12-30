@@ -4,7 +4,7 @@ import { useTasksStore } from '@/stores/tasks';
 import type { Task } from '@/types';
 import { computed, ref, onMounted, onUnmounted, watch } from 'vue';
 
-import Dialog from '@/components/Dialog.vue';
+import InputDialog from '@/components/InputDialog.vue';
 import SelectButton from 'primevue/selectbutton';
 
 const dateOptions = [
@@ -77,7 +77,7 @@ watch(() => store.editModal.task, (task) => {
 
 <!-- TODO: add wysiwyg editor -->
 <template>
-    <Dialog v-model:visible="store.editModal.isOpen" :header="editedTask.name">
+    <InputDialog v-model:visible="store.editModal.isOpen" :header="editedTask.name">
         <div v-if="editMode" class="edit">
             <InputText v-model="editedTask.name" class="text-field-edit" placeholder="Task name"/>
             <Textarea v-model="editedTask.description" class="text-field-edit" placeholder="Task description"/>
@@ -99,7 +99,7 @@ watch(() => store.editModal.task, (task) => {
                 </div>
             </div>
         </template>
-    </Dialog>
+    </InputDialog>
 </template>
 
 <style scoped lang="scss">

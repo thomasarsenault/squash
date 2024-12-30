@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useTransactionStore } from '@/stores/transactions';
 import dayjs from 'dayjs';
 import { getCategoryTotals } from '@/utils/expenses';
@@ -26,7 +26,7 @@ const startOfWeek = dayjs()
 const endOfWeek = startOfWeek.add(1, 'week').subtract(1, 'day');
 
 const transactions = computed(() => {
-    return store.transactions.filter((transaction: any) => {
+    return store.transactions.filter((transaction) => {
         return !transaction.pending
             && dayjs(transaction.date).isSameOrAfter(startOfWeek) && dayjs(transaction.date).isSameOrBefore(endOfWeek)
     })
@@ -45,7 +45,7 @@ const categories = computed(() => getCategoryTotals(transactions.value));
 
 const categoryLabels = computed(() => {
     return categories.value.map(category => {
-        const color = store.categories?.find((c: any) => c.name === category.name)?.color || [];
+        const color = store.categories?.find((c) => c.name === category.name)?.color || [];
 
         return {
             label: category.name,
@@ -86,9 +86,9 @@ const categoryLabels = computed(() => {
                 <MeterGroup :value="categoryLabels">
                     <template #label="{ value }">
                         <div class="p-metergroup-label-list p-metergroup-label-list-horizontal">
-                        <div class="p-metergroup-label" v-for="val in value">
-                                <span class="p-metergroup-label-marker" :style="{ backgroundColor: val.color }"/>
-                                <span class="metergroup-category-label">{{ val.label }} ({{ formatAmount(val.amount) }})</span>
+                        <div class="p-metergroup-label" v-for="val in value" :key="val.label">
+                            <span class="p-metergroup-label-marker" :style="{ backgroundColor: val.color }"/>
+                            <span class="metergroup-category-label">{{ val.label }} ({{ formatAmount(val.amount) }})</span>
                         </div>
                         </div>
                     </template>

@@ -3,9 +3,19 @@ import { defineStore } from 'pinia';
 import dayjs from 'dayjs';
 import Stan from '../utils/stan';
 import CATEGORIES from '@/data/transactionCategories';
+import type { Transaction, CategoryDropdownItem } from '@/types';
 
+interface State {
+    transactions: Transaction[],
+    categories: typeof CATEGORIES,
+    addModalOpen: boolean,
+    editModal: {
+        open: boolean,
+        transaction: Partial<Transaction>
+    },
+}
 export const useTransactionStore = defineStore('transactions', {
-    state: () => ({
+    state: (): State => ({
         transactions: [],
         categories: CATEGORIES,
         addModalOpen: false,
@@ -13,9 +23,6 @@ export const useTransactionStore = defineStore('transactions', {
             open: false,
             transaction: {}
         },
-        metadata: {
-            startOfData: '',
-        }
     }),
     actions: {
         async getTransactions() {
@@ -32,8 +39,6 @@ export const useTransactionStore = defineStore('transactions', {
                 this.transactions = data.sort((a: any, b: any) => {
                     return dayjs(b.date).unix() - dayjs(a.date).unix();
                 });
-
-                this.metadata.startOfData = this.transactions[this.transactions.length - 1].date;
             } catch (error) {
                 console.error('Error fetching transactions:', error);
             }
@@ -88,7 +93,7 @@ export const useTransactionStore = defineStore('transactions', {
         }
     },
     getters: {
-        dropdownCategories: (state) => {
+        dropdownCategories: (state): CategoryDropdownItem[] => {
             return state.categories.map((category) => {
                 return {
                     label: category.displayName,

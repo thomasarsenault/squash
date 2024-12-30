@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import Weather from '@/components/Dashboard/Weather/Weather.vue';
-import Tasks from '@/components/Dashboard/Tasks.vue';
-import Expenses from '@/components/Dashboard/Expenses.vue';
-import Fitness from '@/components/Dashboard/Fitness.vue';
+import WeatherWidget from '@/components/Dashboard/Weather/WeatherWidget.vue';
+import TasksWidget from '@/components/Dashboard/TasksWidget.vue';
+import ExpensesWidget from '@/components/Dashboard/ExpensesWidget.vue';
+import FitnessWidget from '@/components/Dashboard/FitnessWidget.vue';
 </script>
 
 <!-- TODO: move cards to individual components -->
@@ -11,17 +11,17 @@ import Fitness from '@/components/Dashboard/Fitness.vue';
     <div class="dashboard">
         <div class="widgets">
             <div class="weather">
-                <Weather />
+                <WeatherWidget />
             </div>
             <div class="tasks">
-                <Tasks />
+                <TasksWidget />
             </div>
             <div class="group">
                 <div class="expenses">
-                    <Expenses />
+                    <ExpensesWidget />
                 </div>
                 <div class="fitness">
-                    <Fitness />
+                    <FitnessWidget />
                 </div>
             </div>
         </div>

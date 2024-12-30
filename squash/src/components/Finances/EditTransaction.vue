@@ -3,22 +3,23 @@ import { ref, computed, watch } from 'vue';
 import InputNumber from 'primevue/inputnumber';
 import { useTransactionStore } from '@/stores/transactions';
 import dayjs from 'dayjs';
-import Dialog from '@/components/Dialog.vue';
+import InputDialog from '@/components/InputDialog.vue';
+import type { CategoryDropdownItem } from '@/types';
 
 const store = useTransactionStore();
 const transaction = computed(() => store.editModal.transaction);
-const date = ref(dayjs().format('MM/DD/YYYY'));
-const name = ref('');
-const category = ref({});
-const amount = ref(null);
-const notes = ref(null);
-const pending = ref(false);
+const date = ref(new Date());
+const name = ref<string | undefined>('');
+const category = ref<CategoryDropdownItem['items'][number] | null>(null);
+const amount = ref<number | null | undefined>(null);
+const notes = ref<string | null | undefined>(null);
+const pending = ref<boolean | undefined>(false);
 
 watch(transaction, (value) => {
     const subcategories = store.dropdownCategories.flatMap(category => category.items);
-    const subcategoryObj = subcategories.find(category => category.label === value.subcategory);
+    const subcategoryObj = subcategories.find(category => category?.label === value.subcategory) || null;
 
-    date.value = dayjs(value.date).format('MM/DD/YYYY');
+    date.value = dayjs(value.date).toDate();
     name.value = value.name;
     category.value = subcategoryObj;
     amount.value = value.amount;
@@ -33,8 +34,8 @@ const editExpense = () => {
         amount: amount.value,
         notes: notes.value,
         date: dayjs(date.value).format('YYYY-MM-DD'),
-        category: category.value.parentCategory || 'Other',
-        subcategory: category.value.label || 'Other',
+        category: category.value?.parentCategory || 'Other',
+        subcategory: category.value?.label || 'Other',
         pending: pending.value,
     }
 
@@ -43,8 +44,8 @@ const editExpense = () => {
     name.value = '';
     amount.value = null;
     notes.value = null;
-    category.value = '';
-    date.value = dayjs().format('MM/DD/YYYY');
+    category.value = null;
+    date.value = new Date();
     pending.value = false;
 }
 
@@ -57,7 +58,7 @@ const deleteTransaction = () => {
 
 <template>
     <div class="add-expense">
-        <Dialog v-model:visible="store.editModal.open" header="💰 Edit Transaction">
+        <InputDialog v-model:visible="store.editModal.open" header="💰 Edit Transaction">
             <div class="fields">
                 <FloatLabel>
                     <Calendar id="date" v-model="date" />
@@ -99,7 +100,7 @@ const deleteTransaction = () => {
                     </div>
                 </div>
             </template>
-        </Dialog>
+        </InputDialog>
     </div>
 </template>
 

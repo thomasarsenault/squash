@@ -4,7 +4,7 @@ import { useTasksStore } from '@/stores/tasks';
 import type { Task } from '@/types';
 import { computed, ref, onMounted, onUnmounted, watch } from 'vue';
 
-import Dialog from 'primevue/dialog';
+import Dialog from '@/components/Dialog.vue';
 import SelectButton from 'primevue/selectbutton';
 
 const dateOptions = [

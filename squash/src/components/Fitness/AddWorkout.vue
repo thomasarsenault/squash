@@ -2,9 +2,8 @@
 import { ref, computed, watch } from 'vue';
 import { useFitnessStore } from '@/stores/fitness';
 import dayjs from 'dayjs';
-import Dialog from 'primevue/dialog';
+import Dialog from '@/components/Dialog.vue';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-
 dayjs.extend(customParseFormat);
 
 const store = useFitnessStore();

@@ -23,6 +23,7 @@ declare module 'vue' {
     CategoryMeterGroups: typeof import('./src/components/Finances/CategoryMeterGroups.vue')['default']
     Checkbox: typeof import('primevue/checkbox')['default']
     DatePicker: typeof import('primevue/datepicker')['default']
+    Dialog: typeof import('./src/components/Dialog.vue')['default']
     Dropdown: typeof import('primevue/dropdown')['default']
     EditExpense: typeof import('./src/components/Finances/Expenses/EditExpense.vue')['default']
     EditTask: typeof import('./src/components/Agenda/EditTask.vue')['default']

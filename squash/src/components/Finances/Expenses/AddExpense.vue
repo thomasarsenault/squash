@@ -3,8 +3,7 @@ import { ref } from 'vue';
 import InputNumber from 'primevue/inputnumber';
 import { useExpensesStore } from '@/stores/expenses';
 import { useTransactionStore } from '@/stores/transactions';
-import dayjs from 'dayjs';
-import Dialog from 'primevue/dialog';
+import Dialog from '@/components/Dialog.vue';
 
 const store = useExpensesStore();
 const transactionsStore = useTransactionStore();

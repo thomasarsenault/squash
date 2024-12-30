@@ -46,6 +46,7 @@ const categoryBarLabels = computed(() => {
 	});
 
 	selectedCategory.value = categoryTotals[0];
+	selectedSubcategory.value = '';
 
 	return categoryTotals as any;
 })

@@ -119,11 +119,20 @@ const isCompleted = computed(() => props.task.completed);
     :deep(.p-card-body) {
         padding: 0;
     }
+    
+    :deep(.p-checkbox-box) {
+        border-color: var(--p-violet-200);
+        background: var(--p-violet-200);
+    }
+
+    :deep(.p-checkbox-checked .p-checkbox-box) {
+        border-color: var(--p-violet-400);
+        background: var(--p-violet-400);
+    }
 }
 
 .task.completed {
-    background-color: var(--p-primary-color);
-    color: var(--p-primary-contrast-color);
+    background-color: var(--p-violet-100)
 }
 
 .task-container {

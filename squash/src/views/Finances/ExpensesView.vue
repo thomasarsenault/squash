@@ -11,11 +11,19 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import type { Transaction } from '@/types';
 
+const NUM_MONTHS_TO_SHOW = 6;
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
 const store = useTransactionStore();
-const MONTHS = Array.from({ length: dayjs().month() + 1 }, (_, i) => ({ label: dayjs().month(i).format('MMMM'), value: i }));
+const MONTHS: Array<{label: string, value: number, index: number}> = [];
+
+// populate last 6 months including current one at the end of the array
+for(let i = NUM_MONTHS_TO_SHOW - 1; i >= 0; i--) {
+	const monthNumber = dayjs().month() - i;
+
+	MONTHS.push({ label: dayjs().month(monthNumber).format('MMMM'), value: monthNumber < 0 ? monthNumber + 12 : monthNumber, index: NUM_MONTHS_TO_SHOW - i - 1 })
+}
 
 onMounted(async () => {
 	store.getTransactions().then(() => {
@@ -25,7 +33,7 @@ onMounted(async () => {
 
 const showFilters = ref(false);
 
-const selectedMonth = ref(MONTHS[dayjs().month()]);
+const selectedMonth = ref(MONTHS[MONTHS.length - 1]);
 
 const pendingTransactions = computed(() => {
 	return store.transactions.filter((transaction) => transaction.pending);
@@ -127,15 +135,15 @@ const summary = computed(() => {
 						</div>
 						<div class="selector" v-else>
 							<Button severity="secondary" label="-"
-								@click="() => selectedMonth = MONTHS[selectedMonth.value - 1]"
-								:disabled="!MONTHS[selectedMonth.value - 1]"
+								@click="() => selectedMonth = MONTHS[selectedMonth.index - 1]"
+								:disabled="!MONTHS[selectedMonth.index - 1]"
 								/>
 							<Select v-model="selectedMonth"
 								:options="MONTHS"
 								optionLabel="label"/>
 							<Button severity="secondary" label="+"
-								@click="() => selectedMonth = MONTHS[selectedMonth.value + 1]"
-								:disabled="!MONTHS[selectedMonth.value + 1]"
+								@click="() => selectedMonth = MONTHS[selectedMonth.index + 1]"
+								:disabled="!MONTHS[selectedMonth.index + 1]"
 								/>
 						</div>
 					</div>

@@ -4,12 +4,14 @@ import { watch, computed, onMounted, onBeforeUnmount, ref } from 'vue';
 const props = defineProps({
     header: {
         type: String,
-        required: true,
     },
     visible: {
         type: Boolean,
         default: false,
     },
+    id: {
+        type: String,
+    }
 });
 
 const emit = defineEmits(['update:visible']);
@@ -62,7 +64,7 @@ onBeforeUnmount(() => {
 <template>
     <Teleport to="body">
         <Transition name="overlay-fade">
-            <div v-if="isVisible" class="dialog-overlay" @click.self="closeDialog">
+            <div v-if="isVisible" class="dialog-overlay" @click.self="closeDialog" :id="props.id">
                 <!-- TODO: this transition doesn't work because of the nested v-if directives, so right now it only fades -->
                 <Transition name="dialog-scale">
                     <div class="dialog-container" v-if="isVisible" ref="dialogRef">

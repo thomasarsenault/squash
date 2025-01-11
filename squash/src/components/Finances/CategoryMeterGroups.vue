@@ -15,6 +15,10 @@ const selectedCategory = ref<any>(null);
 const selectedSubcategory = ref<string>('');
 
 const filteredTransactions = computed(() => {
+	if(!selectedCategory.value) {
+		return [];
+	}
+
 	if(selectedSubcategory.value) {
 		return props.transactions.filter((t: any) => t.category === selectedCategory.value.label && t.subcategory === selectedSubcategory.value);
 	}
@@ -59,7 +63,7 @@ watch(categoryBarLabels, (newVal) => {
 </script>
 
 <template>
-	<div class="category-bars">
+	<div class="category-bars" v-if="selectedCategory">
 		<MeterGroup :value="categoryBarLabels">
 			<template #label="{ value }">
 				<div class="p-metergroup-label-list p-metergroup-label-list-horizontal">

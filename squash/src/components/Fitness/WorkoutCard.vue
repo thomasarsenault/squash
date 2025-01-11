@@ -2,10 +2,16 @@
 import { timeDifference } from '@/utils/helper';
 import dayjs from 'dayjs';
 import Card from 'primevue/card';
+import WorkoutDot from './WorkoutDot.vue';
+import { watch } from 'vue';
 
 const props = defineProps<{
     workout: any
 }>()
+
+watch(props.workout, () => {
+    console.log(props.workout)
+})
 
 </script>
 
@@ -14,7 +20,7 @@ const props = defineProps<{
         <Card>
             <template #content>
                 <div class='workout'>
-                    <div class="workout-circle" :style="{ backgroundColor: workout.color }"></div>
+                    <WorkoutDot :type="workout.type" />
                     <span class="type">{{ workout.type }}</span>
                     <span class="time">({{ workout.end ? timeDifference(workout.start, workout.end) : dayjs(workout.start, 'HH:mm:ss').format('HH:mm') }})</span>
                 </div>
@@ -34,11 +40,6 @@ const props = defineProps<{
     align-items: center;
     gap: 0.5rem;
 
-    &-circle {
-        width: 1rem;
-        height: 1rem;
-        border-radius: 50%;
-    }
     .time {
         color: var(--p-text-muted-color);
     }

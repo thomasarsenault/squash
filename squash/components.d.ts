@@ -58,6 +58,8 @@ declare module 'vue' {
     WeatherHour: typeof import('./src/components/Dashboard/Weather/WeatherHour.vue')['default']
     WeatherWidget: typeof import('./src/components/Dashboard/Weather/WeatherWidget.vue')['default']
     Workout: typeof import('./src/components/Fitness/Workout.vue')['default']
+    WorkoutCard: typeof import('./src/components/Fitness/WorkoutCard.vue')['default']
+    WorkoutDot: typeof import('./src/components/Fitness/WorkoutDot.vue')['default']
   }
   export interface ComponentCustomProperties {
     Ripple: typeof import('primevue/ripple')['default']

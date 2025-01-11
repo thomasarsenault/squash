@@ -4,7 +4,8 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { onMounted, ref, computed } from 'vue';
 import { useFitnessStore } from '@/stores/fitness';
-import Workout from '@/components/Fitness/Workout.vue';
+import WorkoutCard from '@/components/Fitness/WorkoutCard.vue';
+import type { Workout } from '@/types/Fitness';
 
 dayjs.extend(relativeTime);
 dayjs.extend(advancedFormat);
@@ -37,7 +38,7 @@ for (let i = 0; i < 5; i++) {
 }
 
 const workoutsPerDay = computed(() => {
-    const workouts = {};
+    const workouts: { [key: string]: Workout[] } = {};
 
     last5Days.forEach(day => {
         workouts[day.date] = [];
@@ -66,9 +67,9 @@ const workoutsPerDay = computed(() => {
 		</template>
 		<template #content>
             <div class="workouts">
-                <div v-for="(day, date) in workoutsPerDay" class="day">
+                <div v-for="(day, date) in workoutsPerDay" :key="date" class="day">
                     <div class='label'>{{ dayjs(date).format('dddd, Do') }}</div>
-                    <Workout v-for="workout in day" :workout="workout" />
+                    <WorkoutCard v-for="workout in day" :key="workout.id" :workout="workout" />
                 </div>
             </div>
 		</template>

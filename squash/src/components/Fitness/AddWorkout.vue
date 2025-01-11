@@ -4,6 +4,9 @@ import { useFitnessStore } from '@/stores/fitness';
 import dayjs from 'dayjs';
 import InputDialog from '@/components/InputDialog.vue';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import WorkoutDot from './WorkoutDot.vue';
+import type { Workout, WorkoutInput } from '@/types/Fitness';
+
 dayjs.extend(customParseFormat);
 
 const store = useFitnessStore();
@@ -11,26 +14,26 @@ const store = useFitnessStore();
 const workout = computed(() => store.editModal.workout);
 const editMode = computed(() => store.editModal.open)
 
-const date = ref();
-const type = ref();
-const start = ref()
-const end = ref();
+const date = ref<any>('');
+const type = ref<{ label: string, value: string }>();
+const start = ref<Date>()
+const end = ref<Date | null>();
 const notes = ref();
 
 const setDefaults = () => {
     date.value = dayjs().format('MM/DD/YYYY');
-    type.value = '';
+    type.value = undefined;
     start.value = new Date();
-    end.value = null;
-    notes.value = null;
+    end.value = undefined;
+    notes.value = undefined;
 }
 
-const getWorkoutObj = () => {
+const getWorkoutObj = (): WorkoutInput => {
     return {
         date: date.value,
-        type: type.value.value,
+        type: type.value?.value,
         start: dayjs(start.value).format('HH:mm:ss'),
-        end: end.value ? dayjs(end.value).format('HH:mm:ss') : null,
+        end: end.value ? dayjs(end.value).format('HH:mm:ss') : undefined,
         notes: notes.value
     }
 }
@@ -44,8 +47,12 @@ const addWorkout = () => {
 }
 
 const editWorkout = () => {
-    const workout = getWorkoutObj();
-    (workout as any).id = store.editModal.workout.id;
+    const workout = getWorkoutObj() as Workout;
+    if(!store.editModal.workout.id) {
+        return;
+    }
+
+    workout.id = store.editModal.workout.id;
 
     store.updateWorkout(workout);
     store.modalOpen = false;
@@ -95,17 +102,18 @@ watch(workout, (value) => {
                         scrollHeight="400px">
                         <template #value="slotProps">
                             <div v-if="slotProps.value" class="workout-option">
-                                <div class='workout-circle' :style="{ backgroundColor: slotProps.value.color }"></div>
+                                <WorkoutDot :type="slotProps.value.label" size="small"/>
+                                <!-- <div class='workout-circle' :style="{ backgroundColor: slotProps.value.color }"></div> -->
                                 <div>{{ slotProps.value.label }}</div>
                             </div>
                             <div v-else class="workout-option">
-                                <div class='workout-circle' :style="{ backgroundColor: 'lightgrey' }"></div>
+                                <WorkoutDot :type="slotProps.value.label" size="small"/>
                                 <div>Choose workout</div>
                             </div>
                         </template>
                         <template #option="slotProps">
                             <div class="workout-option">
-                                <div class='workout-circle' :style="{ backgroundColor: slotProps.option.color }"></div>
+                                <WorkoutDot :type="slotProps.option.label" size="small"/>
                                 <div>{{ slotProps.option.label }}</div>
                             </div>
                         </template>
@@ -170,11 +178,6 @@ watch(workout, (value) => {
     display: flex;
     gap: 0.5rem;
     align-items: center;
-}
-.workout-circle {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
 }
 
 .footer {

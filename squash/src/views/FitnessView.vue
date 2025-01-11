@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import AddWorkout from '@/components/Fitness/AddWorkout.vue';
 import { useFitnessStore } from '@/stores/fitness';
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, computed } from 'vue';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
-import Workout from '../components/Fitness/Workout.vue';
+import WorkoutCard from '../components/Fitness/WorkoutCard.vue';
+import type { Workout } from '@/types/Fitness';
 
 dayjs.extend(advancedFormat);
 
@@ -35,7 +36,7 @@ onMounted(async () => {
 })
 
 const workoutsPerDay = computed(() => {
-    const workouts = {};
+    const workouts:  { [key: string]: Workout[] } = {};
 
     last14Days.forEach(day => {
         workouts[day.date] = []
@@ -53,7 +54,7 @@ const workoutsPerDay = computed(() => {
 const openAddModal = () => {
   store.modalOpen = true;
   store.editModal.open = false;
-  store.editModal.workout = {};
+  store.editModal.workout = {} as Workout;
 }
 
 const openEditModal = (workout: any) => {
@@ -72,11 +73,11 @@ const currentWorkouts = computed(() => store.workouts.filter(workout => !workout
     </div>
     <div v-if="currentWorkouts && currentWorkouts.length" class="current">
         <div class="label">Current workout</div>
-        <Workout v-for="workout in currentWorkouts" :workout="workout" @click="() => openEditModal(workout)"/>
+        <WorkoutCard :key="workout.id" v-for="workout in currentWorkouts" :workout="workout" @click="() => openEditModal(workout)"/>
     </div>
-    <div v-for="(day, date) in workoutsPerDay" class="day">
+    <div v-for="(day, date) in workoutsPerDay" :key="date" class="day">
         <div class='label'>{{ dayjs(date).format('dddd, Do') }}</div>
-        <Workout v-for="workout in day" :workout="workout" @click="() => openEditModal(workout)"/>
+        <WorkoutCard v-for="workout in day" :key="workout.id" :workout="workout" @click="() => openEditModal(workout)"/>
     </div>
     <AddWorkout id="add-workout-modal" />
   </main>

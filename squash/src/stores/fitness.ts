@@ -1,15 +1,16 @@
 import { defineStore } from 'pinia';
 import Stan from '../utils/stan';
 import WORKOUT_TYPES from '@/data/workoutTypes';
+import type { Workout, WorkoutInput } from '@/types/Fitness';
 
 export const useFitnessStore = defineStore('fitness', {
     state: () => ({
-        workouts: [] as any,
+        workouts: [] as Workout[],
         workoutTypes: WORKOUT_TYPES,
         modalOpen: false,
         editModal: {
             open: false,
-            workout: {}
+            workout: {} as Workout
         }
     }),
     actions: {
@@ -21,20 +22,12 @@ export const useFitnessStore = defineStore('fitness', {
                     throw data.error;
                 }
 
-                const workoutsWithColors = data.map(workout => {
-                    const color = WORKOUT_TYPES.find(w => w.name === workout.type)?.color || '#eeeeee'
-
-                    return {
-                        ...workout,
-                        color
-                    }
-                })
-                this.workouts = workoutsWithColors;
+                this.workouts = data;
             } catch (error) {
                 console.error('Error fetching workouts:', error);
             }
         },
-        async addWorkout(newWorkout: any) {
+        async addWorkout(newWorkout: WorkoutInput) {
             try {
                 console.log(newWorkout);
                 const response = await Stan(`fitness`, {
@@ -44,16 +37,14 @@ export const useFitnessStore = defineStore('fitness', {
                     })
                 });
 
-                const color = WORKOUT_TYPES.find(w => w.name === response.type)?.color || '#ffffff';
-
-                (this.workouts as any).push({ ...response, color });
+                this.workouts.push(response);
 
                 return response;
             } catch (error) {
                 console.error('Error adding workout:', error);
             }
         },
-        async updateWorkout(workout: any) {
+        async updateWorkout(workout: Workout) {
             try {
                 const response = await Stan(`fitness`, {
                     method: 'PUT',
@@ -62,10 +53,9 @@ export const useFitnessStore = defineStore('fitness', {
                     })
                 });
 
-                const index = (this.workouts as any).findIndex((t: any) => t.id === response.id);
-                const color = WORKOUT_TYPES.find(w => w.name === response.type)?.color || '#ffffff';
+                const index = this.workouts.findIndex((t: any) => t.id === response.id);
 
-                (this.workouts as any)[index] = { ...response, color };
+                this.workouts[index] = response;
 
                 console.log('updated workout', workout)
                 return response;
@@ -73,14 +63,14 @@ export const useFitnessStore = defineStore('fitness', {
                 console.error('Error editing workout:', error);
             }
         },
-        async deleteWorkout(workout: any) {
+        async deleteWorkout(workout: Workout) {
             try {
                 const response = await Stan(`/fitness?id=${workout.id}`, {
                     method: 'DELETE',
                 });
 
-                const index = (this.workouts as any).findIndex((t: any) => t.id === workout.id);
-                (this.workouts as any).splice(index, 1);
+                const index = this.workouts.findIndex((t: any) => t.id === workout.id);
+                this.workouts.splice(index, 1);
 
                 return response;
             } catch (error) {
@@ -94,7 +84,6 @@ export const useFitnessStore = defineStore('fitness', {
                 return {
                     label: type.name,
                     value: type.name,
-                    color: type.color,
                 }
             });
         }

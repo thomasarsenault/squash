@@ -47,7 +47,7 @@ const zoneToLabel = {
           </div>
           <div :class="`drag-zone ${hovered ? 'hovered' : ''}`" :id="zone">
               <div class="tasks">
-                  <Task v-for="(task, index) in tasks" :key="index" :task="task"
+                  <Task v-for="(task, index) in tasks" :key="task.id" :task="task"
                       @dragEnd="emit('dragEnd')"
                       @drag="e => emit('drag', e)"/>
                   <!-- <div class="placement-indicator-wrapper">

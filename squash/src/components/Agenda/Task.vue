@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import dayjs from 'dayjs'
 import { useTasksStore } from '@/stores/tasks';
 import type { Task } from '@/types';
-import { computed, ref } from 'vue';
-import EditTask from './EditTask.vue';
+import { ref, watch } from 'vue';
 
 import Card from 'primevue/card';
 
@@ -33,10 +31,6 @@ const onClick = (e) => {
 
     e.preventDefault();
     startDrag(e);
-}
-
-const toggleTaskComplete = () => {
-    store.updateTask({id: props.task.id, completed: !props.task.completed});
 }
 
 const startDrag = (e) => {
@@ -71,7 +65,13 @@ const endDrag = (e) => {
     document.removeEventListener('mouseup', endDrag);
     emit('dragEnd')
 }
-const isCompleted = computed(() => props.task.completed);
+
+const isCompleted = ref(props.task.completed);
+
+watch(isCompleted, () => {
+    store.updateTask({id: props.task.id, completed: isCompleted.value});
+})
+// const isCompleted = computed(() => props.task.completed);
 </script>
 
 <template>
@@ -84,11 +84,11 @@ const isCompleted = computed(() => props.task.completed);
         :data-id="task.id"
         :style="{ position: isDragging ? 'absolute' : 'static', top: `${y}px`, left: `${x}px` }"
         @mousedown="onClick"
-        :class="['draggable', 'task', { 'completed': task.completed }]">
+        :class="['draggable', 'task', { 'completed': isCompleted }]">
         <template #content>
             <div class="placement-indicator"></div>
             <div class="task-container">
-            <Checkbox @click="toggleTaskComplete" v-model="isCompleted" binary/>
+            <Checkbox v-model="isCompleted" binary/>
             <div class="name">
                 {{ task.name || 'No task name' }}
             </div>

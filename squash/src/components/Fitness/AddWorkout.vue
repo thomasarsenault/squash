@@ -22,7 +22,7 @@ const notes = ref();
 
 const setDefaults = () => {
     date.value = dayjs().format('MM/DD/YYYY');
-    type.value = undefined;
+    type.value = { label: 'Choose workout', value: ''};
     start.value = new Date();
     end.value = undefined;
     notes.value = undefined;
@@ -90,48 +90,53 @@ watch(workout, (value) => {
     <div class="add-workout">
         <InputDialog v-model:visible="store.modalOpen" :header="`💪 ${store.editModal.open ? 'Edit' : 'Add'} Workout`">
             <div class="fields">
-                <FloatLabel>
-                    <Calendar id="date" v-model="date" />
-                    <label for="date">Date</label>
-                </FloatLabel>
-                <FloatLabel>
-                    <Select id="category"
-                        v-model="type" 
-                        :options="store.dropdownTypes"
-                        placeholder="Type"
-                        scrollHeight="400px">
-                        <template #value="slotProps">
-                            <div v-if="slotProps.value" class="workout-option">
-                                <WorkoutDot :type="slotProps.value.label" size="small"/>
-                                <!-- <div class='workout-circle' :style="{ backgroundColor: slotProps.value.color }"></div> -->
-                                <div>{{ slotProps.value.label }}</div>
-                            </div>
-                            <div v-else class="workout-option">
-                                <WorkoutDot :type="slotProps.value.label" size="small"/>
-                                <div>Choose workout</div>
-                            </div>
-                        </template>
-                        <template #option="slotProps">
-                            <div class="workout-option">
-                                <WorkoutDot :type="slotProps.option.label" size="small"/>
-                                <div>{{ slotProps.option.label }}</div>
-                            </div>
-                        </template>
-                    </Select>
-                    <label for="category">Type</label>
-                </FloatLabel>
-                <FloatLabel>
-                    <DatePicker id="start" v-model="start" timeOnly fluid />
-                    <label for="start">Start time</label>
-                </FloatLabel>
-                <FloatLabel>
-                    <DatePicker id="end" v-model="end" timeOnly />
-                    <label for="end">End time</label>
-                </FloatLabel>
-                <FloatLabel>
-                    <InputText id="notes" v-model="notes"/>
-                    <label for="notes">Notes</label>
-                </FloatLabel>
+                <div class="full">
+                    <FloatLabel variant="in">
+                        <Calendar id="date" v-model="date" />
+                        <label for="date">Date</label>
+                    </FloatLabel>
+                </div>
+                <div class="full">
+                    <FloatLabel variant="in">
+                        <Select id="category"
+                            v-model="type" 
+                            :options="store.dropdownTypes"
+                            placeholder="Type"
+                            scrollHeight="400px">
+                            <template #value="slotProps">
+                                <div v-if="slotProps.value" class="workout-option">
+                                    <WorkoutDot :type="slotProps.value.label" size="small"/>
+                                    <div>{{ slotProps.value.label }}</div>
+                                </div>
+                            </template>
+                            <template #option="slotProps">
+                                <div class="workout-option">
+                                    <WorkoutDot :type="slotProps.option.label" size="small"/>
+                                    <div>{{ slotProps.option.label }}</div>
+                                </div>
+                            </template>
+                        </Select>
+                        <label for="category">Type</label>
+                    </FloatLabel>
+                </div>
+                <div class="half">
+                    <FloatLabel variant="in">
+                        <label for="start">Start time</label>
+                        <DatePicker id="start" v-model="start" timeOnly fluid />
+                    </FloatLabel>
+                </div>
+                <div class="half">
+                    <FloatLabel variant="in">
+                        <DatePicker id="end" v-model="end" timeOnly />
+                        <label for="end">End time</label>
+                    </FloatLabel>
+                </div>
+                <div class="full">
+                    <FloatLabel variant="in">
+                        <InputText id="notes" v-model="notes"/>
+                        <label for="notes">Notes</label>
+                    </FloatLabel>
+                </div>
             </div>
             <template #footer>
                 <div class="footer">
@@ -155,13 +160,14 @@ watch(workout, (value) => {
 
 <style scoped lang="scss">
 .fields {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    gap: 2rem;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1rem;
 
+    label {
+        font-weight: normal;
+    }
     span input {
         width: 100%;
     }
@@ -171,6 +177,11 @@ watch(workout, (value) => {
 
     :deep(.p-inputwrapper) {
         width: 100%;
+    }
+
+
+    .full {
+        grid-column : 1 / -1;
     }
 }
 

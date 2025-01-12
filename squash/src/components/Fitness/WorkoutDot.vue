@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
-    type: string,
+    type?: string,
     size?: 'small'
 }>()
 
@@ -16,7 +16,7 @@ const props = defineProps<{
     width: 1rem;
     height: 1rem;
     border-radius: 50%;
-    background-color: red;
+    background-color: #bfbfbf;
 
     &.small {
         width: 0.5rem;
@@ -25,11 +25,11 @@ const props = defineProps<{
 }
 
 .Push {
-    background-color: #ee7272;
+    background-color: #ef8d8d;
 }
 
-.Pull {
-    background-color: #5ba567;
+.Pull, .Climbing {
+    background-color: rgb(201, 145, 228);
 }
 
 .Legs {
@@ -37,6 +37,6 @@ const props = defineProps<{
 }
 
 .Run, .Other {
-    background-color: gray;
+    background-color: rgb(129, 206, 134);
 }
 </style>

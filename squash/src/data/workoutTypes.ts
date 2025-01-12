@@ -32,6 +32,10 @@ const WORKOUTS = [
         type: TYPES.LEGS,
     },
     {
+        name: 'Climbing',
+        type: TYPES.PULL,
+    },
+    {
         name: 'Run',
         type: TYPES.CARDIO,
     },

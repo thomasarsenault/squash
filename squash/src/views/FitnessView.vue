@@ -4,6 +4,7 @@ import { useFitnessStore } from '@/stores/fitness';
 import { onMounted, computed } from 'vue';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
+import WorkoutCalendar from '@/components/Fitness/WorkoutCalendar.vue';
 import WorkoutCard from '../components/Fitness/WorkoutCard.vue';
 import type { Workout } from '@/types/Fitness';
 
@@ -68,16 +69,21 @@ const currentWorkouts = computed(() => store.workouts.filter(workout => !workout
 
 <template>
   <main>
-    <div>
+    <div class="actions">
         <Button label="Add Workout" @click="openAddModal"/>
     </div>
-    <div v-if="currentWorkouts && currentWorkouts.length" class="current">
-        <div class="label">Current workout</div>
-        <WorkoutCard :key="workout.id" v-for="workout in currentWorkouts" :workout="workout" @click="() => openEditModal(workout)"/>
+    <div class="calendar">
+      <WorkoutCalendar :workouts="store.workouts"/>
     </div>
-    <div v-for="(day, date) in workoutsPerDay" :key="date" class="day">
-        <div class='label'>{{ dayjs(date).format('dddd, Do') }}</div>
-        <WorkoutCard v-for="workout in day" :key="workout.id" :workout="workout" @click="() => openEditModal(workout)"/>
+    <div class="workout-list">
+      <div v-if="currentWorkouts && currentWorkouts.length" class="current">
+          <div class="label">Current workout</div>
+          <WorkoutCard :key="workout.id" v-for="workout in currentWorkouts" :workout="workout" @click="() => openEditModal(workout)"/>
+      </div>
+      <div v-for="(day, date) in workoutsPerDay" :key="date" class="day">
+          <div class='label'>{{ dayjs(date).format('dddd, Do') }}</div>
+          <WorkoutCard v-for="workout in day" :key="workout.id" :workout="workout" @click="() => openEditModal(workout)"/>
+      </div>
     </div>
     <AddWorkout id="add-workout-modal" />
   </main>
@@ -93,6 +99,15 @@ main {
   gap: 1rem;
 }
 
+.actions {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+
+.calendar {
+  width: 100%;
+}
 .current {
     display: flex;
     flex-direction: column;

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { timeDifference } from '@/utils/helper';
 import dayjs from 'dayjs';
-import Card from 'primevue/card';
 import WorkoutDot from './WorkoutDot.vue';
 import { watch } from 'vue';
 
@@ -16,30 +15,34 @@ watch(props.workout, () => {
 </script>
 
 <template>
-    <div class='workout-wrapper'>
-        <Card>
-            <template #content>
-                <div class='workout'>
-                    <WorkoutDot :type="workout.type" />
-                    <span class="type">{{ workout.type }}</span>
-                    <span class="time">({{ workout.end ? timeDifference(workout.start, workout.end) : dayjs(workout.start, 'HH:mm:ss').format('HH:mm') }})</span>
-                </div>
-            </template>
-        </Card>
-    </div>
+    <Button severity="secondary" class="workout-button">
+        <div class='workout'>
+            <div class="type">
+                <WorkoutDot :type="workout.type" />
+                <span>{{ workout.type }}</span>
+            </div>
+            <span class="time">({{ workout.end ? timeDifference(workout.start, workout.end) : dayjs(workout.start, 'HH:mm:ss').format('HH:mm') }})</span>
+        </div>
+    </Button>
 </template>
 
 <style scoped lang="scss">
-.workout-wrapper {
-    cursor: pointer;
-    user-select: none;
+.workout-button {
+    justify-content: space-between;
 }
 
 .workout {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    width: 100%;
     gap: 0.5rem;
 
+    .type {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
     .time {
         color: var(--p-text-muted-color);
     }

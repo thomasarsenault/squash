@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import type { Workout } from '@/types/Fitness';
-import { computed, defineProps } from 'vue';
+import { computed, defineProps, ref } from 'vue';
 import dayjs, { Dayjs } from 'dayjs';
 import WorkoutDot from './WorkoutDot.vue';
+import InputDialog from '../InputDialog.vue';
+import WorkoutCard from './WorkoutCard.vue';
+import { useFitnessStore } from '@/stores/fitness';
+
+const store = useFitnessStore();
 
 interface CalendarDay {
     date: Dayjs;
@@ -22,6 +27,8 @@ const props = defineProps<{
 const year = props.year ?? dayjs().year();
 const month = props.month ?? dayjs().month();
 
+const dayModalOpen = ref(false);
+const selectedDay = ref<CalendarDay | undefined>();
 
 const workoutsMap = computed((): Map<string, Workout[]> => {
     const map = new Map();
@@ -67,6 +74,32 @@ const weeks = computed(() => {
 
     return weeksArray;
 });
+
+const openDayModal = (day: CalendarDay) => {
+    dayModalOpen.value = true;
+    selectedDay.value = day;
+}
+
+const closeDayModal = () => {
+    dayModalOpen.value = false;
+    selectedDay.value = undefined;
+}
+
+const openEditModal = (workout: any) => {
+    store.editModal.workout = workout;
+    store.editModal.open = true;
+    store.modalOpen = true;
+    closeDayModal();
+}
+
+// TODO: this should auto set the date to whatever was in selectedDay.date
+const openAddModal = () => {
+	store.modalOpen = true;
+	store.editModal.open = false;
+	store.editModal.workout = {} as Workout;
+    closeDayModal();
+}
+
 </script>
 
 <template>
@@ -74,17 +107,19 @@ const weeks = computed(() => {
         <template #content>
             <div class="calendar">
                 <div class="header">
-                    <div class="day-cell" v-for="day in ['Monday', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']" :key="day">
+                    <div class="day-cell" v-for="day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']" :key="day">
                         {{ day }}
                     </div>
                 </div>
                 <div class="grid">
                     <div class="week" v-for="(week, weekIndex) in weeks" :key="weekIndex">
-                        <div class="day-cell" v-for="(day, dayIndex) in week" :key="dayIndex" :class="{ 'current-month': day.isCurrentMonth }">
+                        <div class="day-cell" v-for="(day, dayIndex) in week" :key="dayIndex"
+                            @click="() => openDayModal(day)"
+                            :class="{ 'current-month': day.isCurrentMonth }">
                             <div class="date-number">{{ day.date.date() }}</div>
-                            <div class="event-labels" v-if="day.workouts.length">
+                            <div class="workouts" v-if="day.workouts.length">
                                 <div class="workout" v-for="(workout, labelIndex) in day.workouts" :key="labelIndex">
-                                    <WorkoutDot :type="workout.type" />
+                                    <WorkoutDot :type="workout.type" size="small-on-mobile"/>
                                     <div class="type">
                                         {{ workout.type }}
                                     </div>
@@ -96,10 +131,23 @@ const weeks = computed(() => {
             </div>
         </template>
     </Card>
-
+    <InputDialog v-model:visible="dayModalOpen" :header="selectedDay?.date.format('YYYY-MM-DD')">
+        <div class="workout-dialog">
+            <WorkoutCard v-for="workout in selectedDay?.workouts" :key="workout.id"
+                :workout="workout" 
+                @click="() => openEditModal(workout)" />
+        </div>
+        <template #footer>
+                <div class="footer">
+                    <Button label="Add New" @click="openAddModal" />
+                    <Button label="Close" severity="secondary" @click="closeDayModal" />
+                </div>
+            </template>
+    </InputDialog>
 </template>
 
 <style lang="scss" scoped>
+// TODO: tweak grays and use vars
 .calendar {
     display: flex;
     flex-direction: column;
@@ -121,6 +169,10 @@ const weeks = computed(() => {
     background-color: rgb(236, 236, 236);
     border-radius: 8px;
 
+    @include breakpoint('mobile') {
+        grid-auto-rows: minmax(50px, auto);
+    }
+
     .week {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
@@ -128,33 +180,73 @@ const weeks = computed(() => {
         
         .day-cell {
             padding: 0.5rem;
-            box-sizing: border-box;
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+            width: 100%;
+            gap: 0.5rem;
+            cursor: pointer;
+
+            @include breakpoint('mobile') {
+                flex-direction: column;
+            }
 
             &.current-month {
                 background-color: #ffffff;
             }
 
             &:not(.current-month) {
-                background-color: #fbfbfb;
+                background-color: #fcfcfc;
             }
 
             .date-number {
                 font-size: 0.8rem;
                 color: #878787;
+                justify-self: flex-end;
+
+                @include breakpoint('mobile') {
+                    display: flex;
+                }
             }
         }
     }
 }
 
-.workout {
+.workouts {
     display: flex;
-    margin-top: 0.5rem;
-    gap: 0.5rem;
+    flex-direction: column;
+    gap: 0.25rem;
 
-    .type {
-	    @include breakpoint('mobile') {
-            display: none;
+    @include breakpoint('mobile') {
+        flex-direction: row;
+    }
+
+    .workout {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #878787;
+
+        .type {
+            @include breakpoint('mobile') {
+                display: none;
+            }
         }
     }
 }
+
+// dialog when you open a day
+.workout-dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
 </style>

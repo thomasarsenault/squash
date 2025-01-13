@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{
     type?: string,
-    size?: 'small'
+    size?: 'small' | 'small-on-mobile'
 }>()
 
 
@@ -13,8 +13,8 @@ const props = defineProps<{
 
 <style scoped lang="scss">
 .dot {
-    width: 1rem;
-    height: 1rem;
+    width: 0.75rem;
+    height: 0.75rem;
     border-radius: 50%;
     background-color: #bfbfbf;
 
@@ -22,8 +22,16 @@ const props = defineProps<{
         width: 0.5rem;
         height: 0.5rem;
     }
+
+    &.small-on-mobile {
+        @include breakpoint('mobile') {
+            width: 0.5rem;
+            height: 0.5rem;
+        }
+    }
 }
 
+// TODO: colors as vars
 .Push {
     background-color: #ef8d8d;
 }

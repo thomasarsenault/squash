@@ -19,6 +19,7 @@ interface CalendarDay {
 
 const props = defineProps<{
     workouts: Workout[];
+    readOnly?: boolean;
     year?: number;
     month?: number;
 }>();
@@ -76,8 +77,10 @@ const weeks = computed(() => {
 });
 
 const openDayModal = (day: CalendarDay) => {
-    dayModalOpen.value = true;
-    selectedDay.value = day;
+    if(!props.readOnly) {
+        dayModalOpen.value = true;
+        selectedDay.value = day;
+    }
 }
 
 const closeDayModal = () => {

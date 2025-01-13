@@ -4,8 +4,8 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { onMounted, ref, computed } from 'vue';
 import { useFitnessStore } from '@/stores/fitness';
-import WorkoutCard from '@/components/Fitness/WorkoutCard.vue';
 import type { Workout } from '@/types/Fitness';
+import WorkoutCalendar from '../Fitness/WorkoutCalendar.vue';
 
 dayjs.extend(relativeTime);
 dayjs.extend(advancedFormat);
@@ -66,12 +66,15 @@ const workoutsPerDay = computed(() => {
             </div>
 		</template>
 		<template #content>
-            <div class="workouts">
+            <div class="calendar">
+                <WorkoutCalendar :workouts="store.workouts" :readOnly="true"/>
+            </div>
+            <!-- <div class="workouts">
                 <div v-for="(day, date) in workoutsPerDay" :key="date" class="day">
                     <div class='label'>{{ dayjs(date).format('dddd, Do') }}</div>
                     <WorkoutCard v-for="workout in day" :key="workout.id" :workout="workout" />
                 </div>
-            </div>
+            </div> -->
 		</template>
 	</Card>
 </template>
@@ -83,35 +86,45 @@ const workoutsPerDay = computed(() => {
 	align-items: center;
 }
 
-.workouts {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1rem;
-    .day {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        :deep(.p-card) {
-            box-shadow: none;
-            padding: 0;
-        }
-
-        :deep(.p-card-body) {
-            padding: 0.5rem 0;
-        }
+.calendar {
+    :deep(.p-card) {
+        box-shadow: none;
     }
 
-    @include breakpoint('mobile') {
-        flex-direction: column;
-        gap: 1rem;
+    :deep(.p-card-body) {
+        padding: 0;
     }
-
 }
 
-.label {
-    font-size: 0.75rem;
-    color: var(--p-text-muted-color);
-}
+// .workouts {
+//     display: flex;
+//     justify-content: space-between;
+//     margin-top: 1rem;
+//     .day {
+//         display: flex;
+//         flex-direction: column;
+//         gap: 0.5rem;
+//         :deep(.p-card) {
+//             box-shadow: none;
+//             padding: 0;
+//         }
+
+//         :deep(.p-card-body) {
+//             padding: 0.5rem 0;
+//         }
+//     }
+
+//     @include breakpoint('mobile') {
+//         flex-direction: column;
+//         gap: 1rem;
+//     }
+
+// }
+
+// .label {
+//     font-size: 0.75rem;
+//     color: var(--p-text-muted-color);
+// }
 
 
 </style>

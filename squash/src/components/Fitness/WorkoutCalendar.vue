@@ -6,6 +6,9 @@ import WorkoutDot from './WorkoutDot.vue';
 import InputDialog from '../InputDialog.vue';
 import WorkoutCard from './WorkoutCard.vue';
 import { useFitnessStore } from '@/stores/fitness';
+import isoWeek from 'dayjs/plugin/isoWeek';
+
+dayjs.extend(isoWeek);
 
 const store = useFitnessStore();
 
@@ -46,29 +49,28 @@ const workoutsMap = computed((): Map<string, Workout[]> => {
 
 const weeks = computed(() => {
     const weeksArray: CalendarDay[][] = [];
-    const firstOfMonth = dayjs().year(year).month(month).date(1);
-    
-    let dayOfWeek = firstOfMonth.day();
-    dayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek;
 
-    const startDate = firstOfMonth.date(firstOfMonth.date() - (dayOfWeek - 1)).subtract(3, 'weeks')
+    const today = dayjs().subtract(2, 'day');
+
+    const startOfCurrentWeek = today.startOf('isoWeek');
+
+    const startDate = startOfCurrentWeek.subtract(5, 'weeks');
 
     // 6 rows (weeks), 7 columns (days)
     const totalDays = 42;
     const days: CalendarDay[] = [];
 
     for (let i = 0; i < totalDays; i++) {
-        const currentDate = startDate.date(startDate.date() + i);
+        const currentDate = startDate.add(i, 'day');
         const dateStr = currentDate.format('YYYY-MM-DD');
 
         days.push({
             date: currentDate,
-            isCurrentMonth: currentDate.month() === month,
+            isCurrentMonth: currentDate.month() === today.month(),
             workouts: workoutsMap.value.get(dateStr) ?? [],
         });
     }
 
-    // Split the days array into weeks (arrays of 7 days each).
     for (let i = 0; i < totalDays; i += 7) {
         weeksArray.push(days.slice(i, i + 7));
     }

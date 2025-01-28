@@ -50,7 +50,7 @@ const workoutsMap = computed((): Map<string, Workout[]> => {
 const weeks = computed(() => {
     const weeksArray: CalendarDay[][] = [];
 
-    const today = dayjs().subtract(2, 'day');
+    const today = dayjs();
 
     const startOfCurrentWeek = today.startOf('isoWeek');
 

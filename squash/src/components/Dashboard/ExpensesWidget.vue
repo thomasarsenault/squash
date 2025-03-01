@@ -7,6 +7,7 @@ import Color from '@/utils/color';
 import { formatAmount } from '@/utils/helper';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import DashboardWidget from './DashboardWidget.vue';
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -58,54 +59,37 @@ const categoryLabels = computed(() => {
 </script>
 
 <template>
-    <Card>
-        <template #title>
-            <div class="title">
-                <span>💸 Money</span>
-                <RouterLink :to="'/expenses'">
-                    <Button severity="secondary" label="View" />
-                </RouterLink>
-            </div>
-        </template>
-        <template #content>
-            <div class="expenses">
-                <div class="stats">
-                    <div class="section">
-                        <div class="stat-group">
-                            <div class="stat">
-                                <div class="label">Spent</div>
-                                <div class="value">{{ summary.totalAmountFormatted }}</div>
-                            </div>
-                            <div class="stat">
-                                <div class="label">Transactions</div>
-                                <div class="value">{{ summary.count }}</div>
-                            </div>
+    <DashboardWidget title="Money" to="/expenses" icon="money-bill">
+        <div class="expenses">
+            <div class="stats">
+                <div class="section">
+                    <div class="stat-group">
+                        <div class="stat">
+                            <div class="label">Spent</div>
+                            <div class="value">{{ summary.totalAmountFormatted }}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="label">Transactions</div>
+                            <div class="value">{{ summary.count }}</div>
                         </div>
                     </div>
                 </div>
-                <MeterGroup :value="categoryLabels">
-                    <template #label="{ value }">
-                        <div class="p-metergroup-label-list p-metergroup-label-list-horizontal">
+            </div>
+            <MeterGroup :value="categoryLabels">
+                <template #label="{ value }">
+                    <div class="p-metergroup-label-list p-metergroup-label-list-horizontal">
                         <div class="p-metergroup-label" v-for="val in value" :key="val.label">
                             <span class="p-metergroup-label-marker" :style="{ backgroundColor: val.color }"/>
                             <span class="metergroup-category-label">{{ val.label }} ({{ formatAmount(val.amount) }})</span>
                         </div>
-                        </div>
-                    </template>
-                </MeterGroup>
-            </div>
-        </template>
-    </Card>
+                    </div>
+                </template>
+            </MeterGroup>
+        </div>
+    </DashboardWidget>
 </template>
 
 <style scoped lang="scss">
-
-.title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .expenses {
     display: flex;
     flex-direction: column;
@@ -119,7 +103,6 @@ const categoryLabels = computed(() => {
 .stats {
 	display: flex;
 	gap: 5rem;
-	margin-top: 1rem;
 	flex-wrap: wrap;
 
 	@include breakpoint('mobile') {

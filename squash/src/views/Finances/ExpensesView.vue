@@ -113,45 +113,54 @@ const summary = computed(() => {
 </script>
 
 <template>
-	<SubMenu :items="items"/>
+	<!-- <SubMenu :items="items"/> -->
 	<main>
 		<div class="expenses">
 			<div class="top">
-				<div class="controls">
-					<div class="range">
-						<SelectButton :options="selectedViewOptions" v-model="selectedView" optionLabel="label" :allowEmpty="false"/>
-						<div class="selector" v-if="selectedView.value === 'week'">
-							<Button severity="secondary" label="-"
-								@click="() => selectedWeekDateRange = weekOptions[selectedWeekDateRange.value + 1]"
-								:disabled="!weekOptions[selectedWeekDateRange.value + 1]"
-								/>
-							<Select v-model="selectedWeekDateRange"
-								:options="weekOptions"
-								optionLabel="label"/>
-							<Button severity="secondary" label="+"
-								@click="() => selectedWeekDateRange = weekOptions[selectedWeekDateRange.value - 1]"
-								:disabled="!weekOptions[selectedWeekDateRange.value - 1]"
-								/>
+				<Card class="controls-wrapper">
+					<template #title><i class="pi pi-fw pi-cog"/> Controls</template>
+					<template #content>
+						<div class="controls">
+							<div class="range">
+								<div class="top-controls">
+									<SelectButton :options="selectedViewOptions" v-model="selectedView" optionLabel="label" :allowEmpty="false"/>
+									<Button id='add-transaction-mobile' severity="secondary" icon="pi pi-fw pi-plus" label=" New" @click="() => store.addModalOpen = true"/>
+								</div>
+								<div class="selector" v-if="selectedView.value === 'week'">
+									<Button severity="secondary" icon="pi pi-fw pi-arrow-left"
+										@click="() => selectedWeekDateRange = weekOptions[selectedWeekDateRange.value + 1]"
+										:disabled="!weekOptions[selectedWeekDateRange.value + 1]"
+										/>
+									<Select v-model="selectedWeekDateRange"
+										:options="weekOptions"
+										optionLabel="label"/>
+									<Button severity="secondary" icon="pi pi-fw pi-arrow-right"
+										@click="() => selectedWeekDateRange = weekOptions[selectedWeekDateRange.value - 1]"
+										:disabled="!weekOptions[selectedWeekDateRange.value - 1]"
+										/>
+								</div>
+								<div class="selector" v-else>
+									<Button severity="secondary" icon="pi pi-fw pi-arrow-left"
+										@click="() => selectedMonth = MONTHS[selectedMonth.index - 1]"
+										:disabled="!MONTHS[selectedMonth.index - 1]"
+										/>
+									<Select v-model="selectedMonth"
+										:options="MONTHS"
+										optionLabel="label"/>
+									<Button severity="secondary" icon="pi pi-fw pi-arrow-right"
+										@click="() => selectedMonth = MONTHS[selectedMonth.index + 1]"
+										:disabled="!MONTHS[selectedMonth.index + 1]"
+										/>
+								</div>
+							</div>
+							<Button id='add-transaction-desktop' severity="secondary" icon="pi pi-fw pi-plus" label="Add Transaction" @click="() => store.addModalOpen = true"/>
 						</div>
-						<div class="selector" v-else>
-							<Button severity="secondary" label="-"
-								@click="() => selectedMonth = MONTHS[selectedMonth.index - 1]"
-								:disabled="!MONTHS[selectedMonth.index - 1]"
-								/>
-							<Select v-model="selectedMonth"
-								:options="MONTHS"
-								optionLabel="label"/>
-							<Button severity="secondary" label="+"
-								@click="() => selectedMonth = MONTHS[selectedMonth.index + 1]"
-								:disabled="!MONTHS[selectedMonth.index + 1]"
-								/>
-						</div>
-					</div>
-					<Button label="Add Transaction" @click="() => store.addModalOpen = true"/>
-				</div>
+					</template>
+				</Card>
+
 				<div class="summary">
 					<Card>
-						<template #title>📊 Summary</template>
+						<template #title><i class="pi pi-fw pi-chart-bar"/> Summary</template>
 						<template #content>
 							<div class="summary-content">
 								<div class="stats">
@@ -181,7 +190,7 @@ const summary = computed(() => {
 				<Card class="table">
 						<template #title>
 							<div class="title">
-								💸 Transaction History
+								<span><i class="pi pi-fw pi-money-bill"/> Transaction History</span>
 								<Button @click="showFilters = !showFilters" severity="secondary" icon="pi pi-filter"/>
 							</div>
 						</template>
@@ -192,7 +201,7 @@ const summary = computed(() => {
 			</div>
 			<div class="pending">
 				<Card>
-					<template #title>🕒 Pending Transactions</template>
+					<template #title><i class="pi pi-fw pi-clock"/> Pending Transactions</template>
 					<template #content>
 						<TransactionHistory :transactions="pendingTransactions" @rowSelect="(e) => openEditModal(e)"/>
 					</template>
@@ -221,6 +230,7 @@ main {
 
 .controls {
 	display: flex;
+	margin-top: 1rem;
 	gap: 1rem;
 	align-items: center;
 	width: 100%;
@@ -228,9 +238,20 @@ main {
 	flex-wrap: wrap;
 
 	@include breakpoint('mobile') {
-		flex-direction: column-reverse;
+		flex-direction: column;
 	}
 
+	.top-controls {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+
+		@include breakpoint('mobile') {
+			width: 100%;
+			justify-content: space-between;
+		}
+	}
+	
 	.range {
 		display: flex;
 		gap: 1rem;
@@ -249,18 +270,45 @@ main {
 		.p-select {
 			width: 200px;
 		}
+
+		@include breakpoint('mobile') {
+			width: 100%;
+
+			.p-select {
+				width: 100%;
+			}
+		}
 	}
+
+	#add-transaction-mobile {
+		display: none;
+
+		@include breakpoint('mobile') {
+			display: block;
+		}
+	}
+
+	#add-transaction-desktop {
+		@include breakpoint('mobile') {
+			display: none;
+		}
+	}
+	
 }
 
 .expenses {
 	display: flex;
 	flex-direction: column;
-	gap: 1rem;
+	gap: 2rem;
 
 	.top {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 1rem;
+
+		.controls-wrapper {
+			width: 100%;
+		}
 
 		// .statistics {
 		//   flex: 1 1 auto;

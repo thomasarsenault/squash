@@ -126,13 +126,14 @@ watch(isCompleted, () => {
     }
 
     :deep(.p-checkbox-checked .p-checkbox-box) {
-        border-color: var(--p-violet-400);
-        background: var(--p-violet-400);
+        border-color: var(--p-violet-300);
+        background: var(--p-violet-300);
     }
 }
 
 .task.completed {
-    background-color: var(--p-violet-100)
+    background-color: var(--p-violet-50);
+    background: none;
 }
 
 .task-container {

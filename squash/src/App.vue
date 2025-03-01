@@ -22,7 +22,7 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 
 <style lang="scss">
 #app {
-  background-color: var(--p-surface-50);
+  background-color: var(--p-surface-100);
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -40,7 +40,7 @@ document.addEventListener('contextmenu', e => e.preventDefault());
   margin: 0 auto;
 
   .view {
-    margin: 1rem;
+    margin: 2rem 1rem;
   }
 }
 
@@ -53,5 +53,6 @@ header {
   padding: 0;
   justify-content: center;
   border-top: none;
+  border: none;
 }
 </style>

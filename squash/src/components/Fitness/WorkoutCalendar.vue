@@ -109,6 +109,11 @@ const openAddModal = () => {
 
 <template>
     <Card>
+        <template #title>
+            <div class="title">
+                <span><i class="pi pi-fw pi-calendar" /> {{ dayjs().month(month).format('MMMM') }}</span>
+            </div>
+        </template>
         <template #content>
             <div class="calendar">
                 <div class="header">
@@ -153,6 +158,13 @@ const openAddModal = () => {
 
 <style lang="scss" scoped>
 // TODO: tweak grays and use vars
+
+.title {
+    span {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+}
 .calendar {
     display: flex;
     flex-direction: column;
@@ -171,7 +183,7 @@ const openAddModal = () => {
     grid-auto-rows: minmax(80px, auto);
     grid-gap: 1px;
     padding: 1px;
-    background-color: rgb(236, 236, 236);
+    background-color: rgb(255, 255, 255);
     border-radius: 8px;
 
     @include breakpoint('mobile') {
@@ -205,7 +217,7 @@ const openAddModal = () => {
             }
 
             .date-number {
-                font-size: 0.8rem;
+                font-size: 0.7rem;
                 color: #878787;
                 justify-self: flex-end;
 

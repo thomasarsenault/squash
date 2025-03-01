@@ -41,10 +41,9 @@ const props = defineProps<{
   }
 }
 
-.p-menubar-item-link {
+:deep(.p-menubar-item-link) {
   border: 1px solid var(--p-menubar-border-color);
   border-radius: var(--p-menubar-border-radius);
-
   &.active {
     background-color: white;
   }

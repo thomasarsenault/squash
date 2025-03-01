@@ -31,7 +31,10 @@ const sunsetHour = computed(() => dayjs(store.weather.days[selectedDate.value].s
 <template>
     <Card>
         <template #title>
-            🌅 Weather <br /><span class="relative-time">{{ dayjs(store.weather.current?.time).fromNow() }}</span>
+            <span class="title">
+                <i class="pi pi-cloud" />Weather
+            </span>
+            <span class="relative-time">{{ dayjs(store.weather.current?.time).fromNow() }}</span>
         </template>
         <template #content v-if="Object.keys(store.weather.current).length">
             <!-- <div class="current">
@@ -88,6 +91,15 @@ const sunsetHour = computed(() => dayjs(store.weather.days[selectedDate.value].s
     font-size: 0.6rem;
     color: var(--p-text-muted-color);
 }
+
+.title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
 .current {
     display: flex;
     align-items: center;

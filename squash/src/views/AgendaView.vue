@@ -178,7 +178,7 @@ main {
 .current-tasks {
   display: flex;
   flex: 1;
-  gap: 1rem;
+  gap: 2rem;
 
   @include breakpoint('mobile') {
     flex-direction: column;

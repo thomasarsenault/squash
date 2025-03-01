@@ -5,6 +5,8 @@ import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { onMounted, ref, computed } from 'vue';
 import { useTasksStore } from '@/stores/tasks';
 import Task from '@/components/Agenda/Task.vue';
+import type { Task as TaskType } from '@/types';
+import DashboardWidget from './DashboardWidget.vue';
 
 dayjs.extend(relativeTime);
 dayjs.extend(advancedFormat);
@@ -24,7 +26,7 @@ const today = computed(() => {
 		return [];
 	}
 
-	return (store.taskRanks[dayjs().format('YYYY-MM-DD')] || []).map(taskId => tasks.find(task => task.id === taskId) || {})
+	return (store.taskRanks[dayjs().format('YYYY-MM-DD')] || []).map((taskId: number) => tasks.find((task: TaskType) => task.id === taskId) || {})
 	// .sort((a, b) => a.rank - b.rank)
 })
 
@@ -32,39 +34,18 @@ const today = computed(() => {
 </script>
 
 <template>
-	<Card>
-		<template #title>
-			<div class="title">
-                <span>📝 Today's Items</span>
-                <RouterLink :to="'/agenda'">
-                    <Button severity="secondary" label="View" />
-                </RouterLink>
-            </div>
-		</template>
-		<template #content>
-			<div class="task-list">
-				<Task v-for="task in today" :task="task" disableEditing/>
-			</div>
-		</template>
-	</Card>
+	<DashboardWidget title="Today's Items" to="/agenda" icon="check-circle">
+		<div class="task-list">
+			<Task v-for="task in today" :task="task" disableEditing/>
+		</div>
+	</DashboardWidget>
 </template>
 
 <style lang="scss" scoped>
-.title {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-
 .task-list {
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
-	margin-top: 1rem;
-	:deep(.p-card) {
-		box-shadow: none;
-		padding: 0.5rem;
-	}
 }
 
 </style>

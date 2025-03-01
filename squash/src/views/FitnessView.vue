@@ -69,14 +69,11 @@ const currentWorkouts = computed(() => store.workouts.filter(workout => !workout
 
 <template>
 	<main>
-		<div class="actions">
-				<Button label="Add Workout" @click="openAddModal"/>
-		</div>
 		<div class="content">
 			<div class="calendar">
 				<WorkoutCalendar :workouts="store.workouts"/>
 			</div>
-			<div class="workout-list">
+			<!-- <div class="workout-list">
 				<div v-if="currentWorkouts && currentWorkouts.length" class="day current">
 					<div class="label">Current workout</div>
 					<WorkoutCard :key="workout.id" v-for="workout in currentWorkouts" :workout="workout" @click="() => openEditModal(workout)"/>
@@ -85,7 +82,10 @@ const currentWorkouts = computed(() => store.workouts.filter(workout => !workout
 					<div class='label'>{{ dayjs(date).format('dddd, Do') }}</div>
 					<WorkoutCard v-for="workout in day" :key="workout.id" :workout="workout" @click="() => openEditModal(workout)"/>
 				</div>
-			</div>
+			</div> -->
+		</div>
+		<div class="actions">
+			<Button severity="secondary" label="Add Workout" @click="openAddModal"/>
 		</div>
 		<AddWorkout id="add-workout-modal" />
 	</main>
@@ -104,17 +104,17 @@ main {
 .actions {
 	width: 100%;
 	display: flex;
-	justify-content: end;
+	justify-content: center;
 }
 
 .content {
 	display: flex;
 	width: 100%;
-	gap: 2rem;
+	gap: 1rem;
 
     @include breakpoint('mobile') {
 		flex-direction: column;
-		gap: 2rem;
+		gap: 1rem;
 	}
 }
 

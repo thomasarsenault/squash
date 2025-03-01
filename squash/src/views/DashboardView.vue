@@ -57,13 +57,13 @@ main {
         max-width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 2rem;
     }
 }
 
 .widgets {
     display: flex;
-    gap: 1rem;
+    gap: 2rem;
     flex-direction: row;
     flex-wrap: wrap;
     width: 100%;

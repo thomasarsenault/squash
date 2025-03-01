@@ -39,7 +39,7 @@ const zoneToLabel = {
     <template #content>
         <div class="header">
               <div class="title">{{ zoneToLabel[zone] }}</div>
-              <Button @click="newTaskPromptOpen = !newTaskPromptOpen">{{ newTaskPromptOpen ? 'Close' : 'New Task' }}</Button>
+              <Button severity="secondary" @click="newTaskPromptOpen = !newTaskPromptOpen">{{ newTaskPromptOpen ? 'Close' : 'New Task' }}</Button>
           </div>
           <div :class="`new-task ${newTaskPromptOpen ? 'open' : ''}`">
               <!-- primevue text field -->
@@ -90,7 +90,8 @@ const zoneToLabel = {
     margin-bottom: 1rem;
 
     .title {
-      font-size: 24px;
+      font-size: 1.2rem;
+      font-weight: bold;
     }
   }
 

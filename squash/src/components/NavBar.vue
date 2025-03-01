@@ -56,6 +56,7 @@ const items = ref([
     border: none;
     width: 1440px;
     justify-content: space-between;
+    padding: 1rem;
 }
 
 .sub-menu {

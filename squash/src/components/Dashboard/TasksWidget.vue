@@ -30,13 +30,16 @@ const today = computed(() => {
 	// .sort((a, b) => a.rank - b.rank)
 })
 
-
+const loading = computed(() => !Object.keys(store.tasks).length);
 </script>
 
 <template>
 	<DashboardWidget title="Today's Items" to="/agenda" icon="check-circle">
-		<div class="task-list">
+		<div class="task-list" v-if="!loading">
 			<Task v-for="task in today" :task="task" disableEditing/>
+		</div>
+		<div class="task-list" v-else>
+			<Skeleton height="30px" width="100%" v-for="i in 3" :key="i"/>
 		</div>
 	</DashboardWidget>
 </template>

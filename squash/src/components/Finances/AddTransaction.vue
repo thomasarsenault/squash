@@ -39,7 +39,7 @@ const addExpense = () => {
 
 <template>
     <div class="add-expense">
-        <InputDialog v-model:visible="store.addModalOpen" header="💰 Add Transaction">
+        <InputDialog v-model:visible="store.addModalOpen" header="Add Transaction" :icon="'plus'">
             <div class="fields">
                 <FloatLabel>
                     <Calendar id="date" v-model="date" />

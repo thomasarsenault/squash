@@ -176,6 +176,10 @@ const openAddModal = () => {
     text-align: center;
     font-weight: 800;
     padding: 0.5rem 0;
+
+    .day-cell {
+        font-size: 0.8rem;
+    }
 }
 
 .grid {
@@ -243,6 +247,7 @@ const openAddModal = () => {
         align-items: center;
         gap: 0.5rem;
         color: #878787;
+        font-size: 0.8rem;
 
         .type {
             @include breakpoint('mobile') {

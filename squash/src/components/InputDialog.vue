@@ -11,6 +11,10 @@ const props = defineProps({
     },
     id: {
         type: String,
+    },
+    icon: {
+        type: String,
+        default: null,
     }
 });
 
@@ -69,7 +73,7 @@ onBeforeUnmount(() => {
                 <Transition name="dialog-scale">
                     <div class="dialog-container" v-if="isVisible" ref="dialogRef">
                         <div class="dialog-header">
-                            <h3>{{ header }}</h3>
+                            <h3><i v-if="icon" :class="`pi pi-${icon}`" /> {{ header }}</h3>
                             <button class="dialog-close" @click="closeDialog">&times;</button>
                         </div>
                         <div class="dialog-content">
@@ -118,6 +122,10 @@ onBeforeUnmount(() => {
 .dialog-header h3 {
     margin: 0;
     font-weight: bold;
+
+    i {
+        margin-right: 0.5rem;
+    }
 }
 
 .dialog-close {

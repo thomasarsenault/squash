@@ -41,6 +41,10 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 
   .view {
     margin: 2rem 1rem;
+
+    @include breakpoint('mobile') {
+      margin: 1rem;
+    }
   }
 }
 

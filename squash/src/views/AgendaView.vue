@@ -182,6 +182,7 @@ main {
 
   @include breakpoint('mobile') {
     flex-direction: column;
+    gap: 1rem;
   }
 }
 </style>

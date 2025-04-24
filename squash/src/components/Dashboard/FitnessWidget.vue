@@ -71,7 +71,11 @@ const workoutsPerDay = computed(() => {
     }
 
     :deep(.p-card-body) {
-        padding: 0;
+        padding: 1rem 0 0 0;
+    }
+
+    :deep(.p-card-caption) {
+        display: none;
     }
 }
 </style>

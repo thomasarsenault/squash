@@ -55,7 +55,7 @@ const deleteExpense = () => {
 
 <template>
     <div class="add-expense">
-        <InputDialog v-model:visible="store.editModal.open" header="💰 Edit Transaction">
+        <InputDialog v-model:visible="store.editModal.open" header="Edit Transaction" :icon="'pencil'">
             <div class="fields">
                 <FloatLabel>
                     <InputNumber id="day" :min="1" :max="28" v-model="day"/>

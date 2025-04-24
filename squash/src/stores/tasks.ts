@@ -47,7 +47,7 @@ export const useTasksStore = defineStore('tasks', {
                 console.error('Error updating task:', error);
             }
         },
-        async addTask(newTask: Task) {
+        async addTask(newTask: Partial<Task>) {
             try {
                 const date = (newTask.date ? dayjs(newTask.date) : dayjs()).format('YYYY-MM-DD');
 

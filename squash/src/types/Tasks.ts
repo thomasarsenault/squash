@@ -5,7 +5,7 @@ export type Task = {
     name: string;
     description?: string;
     completed: boolean;
-    date: Date;
+    date: string | Date;
     time: string;
 }
 

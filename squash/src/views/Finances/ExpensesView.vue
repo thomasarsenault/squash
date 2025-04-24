@@ -301,6 +301,10 @@ main {
 	flex-direction: column;
 	gap: 2rem;
 
+	@include breakpoint('mobile') {
+		gap: 1rem;
+	}
+
 	.top {
 		display: flex;
 		flex-wrap: wrap;

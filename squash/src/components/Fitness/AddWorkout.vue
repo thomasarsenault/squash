@@ -88,7 +88,7 @@ watch(workout, (value) => {
 
 <template>
     <div class="add-workout">
-        <InputDialog v-model:visible="store.modalOpen" :header="`💪 ${store.editModal.open ? 'Edit' : 'Add'} Workout`">
+        <InputDialog v-model:visible="store.modalOpen" :header="`${store.editModal.open ? 'Edit' : 'Add'} Workout`" :icon="store.editModal.open ? 'pencil' : 'plus'">
             <div class="fields">
                 <div class="full">
                     <FloatLabel variant="in">

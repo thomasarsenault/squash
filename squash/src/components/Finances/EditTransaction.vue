@@ -58,7 +58,7 @@ const deleteTransaction = () => {
 
 <template>
     <div class="add-expense">
-        <InputDialog v-model:visible="store.editModal.open" header="💰 Edit Transaction">
+        <InputDialog v-model:visible="store.editModal.open" header="Edit Transaction" :icon="'pencil'">
             <div class="fields">
                 <FloatLabel>
                     <Calendar id="date" v-model="date" />

@@ -3,29 +3,25 @@ import WeatherWidget from '@/components/Dashboard/Weather/WeatherWidget.vue';
 import TasksWidget from '@/components/Dashboard/TasksWidget.vue';
 import ExpensesWidget from '@/components/Dashboard/ExpensesWidget.vue';
 import FitnessWidget from '@/components/Dashboard/FitnessWidget.vue';
+
+// detect if mobile
+const isMobile = window.innerWidth < 768;
 </script>
 
-<!-- TODO: move cards to individual components -->
 <template>
   <main>
     <div class="dashboard">
         <div class="widgets">
-            <div class="weather">
+            <div class="col">
                 <WeatherWidget />
+                <TasksWidget v-if="isMobile" />
+                <ExpensesWidget />
             </div>
-            <div class="tasks">
-                <TasksWidget />
-            </div>
-            <div class="group">
-                <div class="expenses">
-                    <ExpensesWidget />
-                </div>
-                <div class="fitness">
-                    <FitnessWidget />
-                </div>
+            <div class="col">
+                <TasksWidget v-if="!isMobile" />
+                <FitnessWidget />
             </div>
         </div>
-
     </div>
   </main>
 </template>
@@ -40,36 +36,29 @@ main {
 }
 
 .dashboard {
-    .weather {
-        width: 100%;
-    }
-
-    .tasks {
-        width: 440px;
-
-        @include breakpoint('mobile') {
-            width: 100%;
-        }
-    }
-
-    .group {
-        flex-grow: 1;
-        max-width: 100%;
+    .col {
         display: flex;
         flex-direction: column;
         gap: 2rem;
+        width: calc(50% - 1rem);
+
+        @include breakpoint('mobile') {
+            width: 100%;
+            gap: 1rem;
+        }
     }
 }
 
 .widgets {
     display: flex;
-    gap: 2rem;
     flex-direction: row;
     flex-wrap: wrap;
     width: 100%;
+    gap: 2rem;
 
     @include breakpoint('mobile') {
         flex-direction: column;
+        gap: 1rem;
     }
 }
 </style>

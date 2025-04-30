@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import Rocket from '@/assets/rocket.svg';
 
 const items = ref([
     {
@@ -27,70 +26,44 @@ const items = ref([
 </script>
 
 <template>
-    <Menubar :model="items">
-        <template #start>
-            <div class="title">
-                <img :src="Rocket" />
-                <h2>Squash</h2>
-            </div>
-        </template>
-        <template #item="{ item }">
-            <RouterLink v-slot="{ href, navigate }" :to="item.to" custom>
-                <a class="p-menubar-item-link" :href="href" @click="navigate" v-ripple>
-                    <span :class="item.icon" />
-                    <div class="label">{{ item.label }}</div>
-                </a>
+    <nav class="desktop-nav">
+        <div v-for="item in items" :key="item.label">
+            <RouterLink :to="item.to" class="nav-item">
+                <i :class="item.icon"></i>
+                <span>{{ item.label }}</span>
             </RouterLink>
-        </template>
-    </Menubar>
+        </div>
+    </nav>
 </template>
   
   
   
 <style scoped lang="scss">
-.menu-wrapper {
-    max-width: 1440px;
+.desktop-nav {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 2rem;
+  background-color: white;
+  border-top: 1px solid var(--p-surface-100);
 }
 
-.p-menubar {
-    border: none;
-    width: 1440px;
-    justify-content: space-between;
-    padding: 1rem;
-}
-
-.sub-menu {
-    background: none;
-}
-
-.title {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    font-family: 'Karla';
-    padding-right: 1rem;
-    margin-bottom: 4px;
-    
-    img {
-        height: 35px;
-        width: 35px;
-    }
-
-    h2 {
-        margin: 0;
-        padding: 0;
-        font-size: 1.5rem;
-        font-weight: bold;
-    }
-}
-
-@include breakpoint('mobile') {
-    .p-menubar {
-        justify-content: space-between;
-    }
-
-    .title {
-        padding-right: 0.5rem;
-    }
+.nav-item {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--p-text-muted-color);
+  font-size: 1rem;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  
+  i {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  &.router-link-active {
+    color: var(--p-primary-color);
+  }
 }
 </style>

@@ -1,22 +1,29 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import NavBar from './components/NavBar.vue';
+import SearchBar from './components/SearchBar.vue';
+import MobileNav from './components/MobileNav.vue';
 
 document.addEventListener('contextmenu', e => e.preventDefault());
-
 
 </script>
 
 <template>
-  <header class="p-menubar menubar-wrapper">
-    <NavBar />
+  <header>
+    <SearchBar />
   </header>
-
-
-  <div class="container">
-    <div class="view">
-      <RouterView />
+  <div class="main-wrapper">
+    <div class="nav-wrapper desktop-only">
+      <NavBar />
     </div>
+    <div class="container">
+      <div class="view">
+        <RouterView />
+      </div>
+    </div>
+  </div>
+  <div class="mobile-nav mobile-only">
+    <MobileNav />
   </div>
 </template>
 
@@ -26,19 +33,62 @@ document.addEventListener('contextmenu', e => e.preventDefault());
   width: 100%;
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 </style>
 
 <style scoped lang="scss">
+header {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  background-color: white;
+  z-index: 100;
+}
+
+.main-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+}
+
+.nav-wrapper {
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.desktop-only {
+  @include breakpoint('mobile') {
+    display: none;
+  }
+}
+
+.mobile-only {
+  display: none;
+  @include breakpoint('mobile') {
+    display: block;
+  }
+}
 
 .container {
   flex: 1;
-  // this fixes Weather overflowing, if removed double check dashboard
-  overflow-x: auto;
   width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
+  min-width: 0;
+  overflow-y: auto;
 
+  // using this instead of margin auto so that the scroll bar shows on the far right
+  padding: 0 max((100% - 1440px) / 2, 0px);
+  
   .view {
     margin: 2rem 1rem;
 
@@ -46,17 +96,9 @@ document.addEventListener('contextmenu', e => e.preventDefault());
       margin: 1rem;
     }
   }
-}
 
-header {
-  font-size: 1.2rem;
-  flex: 0;
-}
-
-.menubar-wrapper {
-  padding: 0;
-  justify-content: center;
-  border-top: none;
-  border: none;
+  @include breakpoint('mobile') {
+    padding-bottom: 60px;
+  }
 }
 </style>

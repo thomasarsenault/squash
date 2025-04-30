@@ -25,6 +25,7 @@ const props = defineProps<{
     readOnly?: boolean;
     year?: number;
     month?: number;
+    compact?: boolean;
 }>();
 
 // default to current year & month, might use these props later for switching months
@@ -110,12 +111,12 @@ const openAddModal = () => {
 <template>
     <Card>
         <template #title>
-            <div class="title">
+            <div class="title" :class="{ 'compact': props.compact }">
                 <span><i class="pi pi-fw pi-calendar" /> {{ dayjs().month(month).format('MMMM') }}</span>
             </div>
         </template>
         <template #content>
-            <div class="calendar">
+            <div class="calendar" :class="{ 'compact': props.compact }">
                 <div class="header">
                     <div class="day-cell" v-for="day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']" :key="day">
                         {{ day }}
@@ -194,6 +195,10 @@ const openAddModal = () => {
         grid-auto-rows: minmax(50px, auto);
     }
 
+    .compact & {
+        grid-auto-rows: minmax(50px, auto);
+    }
+
     .week {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
@@ -209,6 +214,10 @@ const openAddModal = () => {
             cursor: pointer;
 
             @include breakpoint('mobile') {
+                flex-direction: column;
+            }
+
+            .compact & {
                 flex-direction: column;
             }
 
@@ -242,6 +251,10 @@ const openAddModal = () => {
         flex-direction: row;
     }
 
+    .compact & {
+        flex-direction: row;
+    }
+
     .workout {
         display: flex;
         align-items: center;
@@ -251,6 +264,10 @@ const openAddModal = () => {
 
         .type {
             @include breakpoint('mobile') {
+                display: none;
+            }
+
+            .compact & {
                 display: none;
             }
         }

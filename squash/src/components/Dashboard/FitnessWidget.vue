@@ -59,7 +59,7 @@ const workoutsPerDay = computed(() => {
 <template>
 	<DashboardWidget title="Fitness" to="/fitness" icon="wave-pulse">
 		<div class="calendar">
-			<WorkoutCalendar :workouts="store.workouts" :readOnly="true"/>
+			<WorkoutCalendar :workouts="store.workouts" :readOnly="true" compact/>
 		</div>
 	</DashboardWidget>
 </template>

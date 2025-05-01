@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { onMounted, ref, computed } from 'vue';
-import { useTasksStore } from '@/stores/tasks';
+import { useTasksStore } from '@/stores/tasks.legacy';
 import Task from '@/components/Agenda/Task.vue';
 import type { Task as TaskType } from '@/types';
 import DashboardWidget from './DashboardWidget.vue';

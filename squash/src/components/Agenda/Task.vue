@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTasksStore } from '@/stores/tasks';
+import { useTasksStore } from '@/stores/tasks.legacy';
 import type { Task } from '@/types';
 import { ref, watch } from 'vue';
 

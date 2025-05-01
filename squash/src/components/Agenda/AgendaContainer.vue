@@ -2,7 +2,7 @@
 import Task from '../Agenda/Task.vue';
 import { ref, computed } from 'vue';
 import type { Task as TaskType } from '../../types';
-import { useTasksStore } from '../../stores/tasks';
+import { useTasksStore } from '../../stores/tasks.legacy';
 import { getDateByZone } from '../../utils/date';
 import { AgendaZones } from '../../utils/constants';
 

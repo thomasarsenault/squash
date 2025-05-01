@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-import handleTasksRoute from "@routes/tasks.route";
+import handleTasksRoute from "@routes/tasks.legacy.route";
 import handleTransactionsRoute from "@routes/transactions.route";
 import handleAuthRoute from "@routes/auth.route";
 import handleDashboardRoute from "@routes/dashboard.route";

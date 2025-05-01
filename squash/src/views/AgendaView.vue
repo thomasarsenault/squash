@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import { useTasksStore } from '../stores/tasks';
+import { useTasksStore } from '../stores/tasks.legacy';
 import { onMounted, ref, computed } from 'vue';
 import AgendaContainer from '../components/Agenda/AgendaContainer.vue';
 import { AgendaZones } from '../utils/constants'

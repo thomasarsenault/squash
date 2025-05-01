@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import { computed } from 'vue';
-import { useTasksStore } from '../../stores/tasks';
+import { useTasksStore } from '../../stores/tasks.legacy';
 import { Times } from '../../utils/constants'
 import advancedFormat from 'dayjs/plugin/advancedFormat';;
 import AgendaTimeslot from './AgendaTimeslot.vue';

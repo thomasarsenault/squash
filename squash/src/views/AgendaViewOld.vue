@@ -2,7 +2,7 @@
 //make call to get all tasks, load into pinia store
 import AgendaDay from '../components/AgendaOld/AgendaDay.vue';
 import dayjs from 'dayjs';
-import { useTasksStore } from '../stores/tasks';
+import { useTasksStore } from '../stores/tasks.legacy';
 import { onMounted } from 'vue';
 import AgendaBacklog from '../components/AgendaOld/AgendaBacklog.vue';
 import AgendaGrid from '../components/AgendaOld/AgendaGrid.vue';

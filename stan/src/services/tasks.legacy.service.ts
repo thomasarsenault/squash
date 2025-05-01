@@ -8,7 +8,7 @@ interface TaskQueryParams {
 
 const getTasks = async (params: TaskQueryParams): Promise<Task[]> => {
 	
-	const { data, error } = await db.from('tasks').select('*');
+	const { data, error } = await db.from('tasks_legacy').select('*');
 	// const start = dayjs(params.start || dayjs().day(1).format('YYYY-MM-DD')).startOf('day').format('YYYY-MM-DDTHH:mm:ss');
 	// const end = dayjs(params.end || dayjs().day(7).format('YYYY-MM-DD')).endOf('day').format('YYYY-MM-DDTHH:mm:ss');
 
@@ -44,7 +44,7 @@ const createTask = async (newTask: TaskInput): Promise<Task> => {
 
 	// newTask.rank = dataRank[0]?.rank + 1 || 1;
 
-	const { data, error } = await db.from('tasks').insert(newTask).select();
+	const { data, error } = await db.from('tasks_legacy').insert(newTask).select();
 
 	if (error) {
 		throw error;
@@ -56,7 +56,7 @@ const createTask = async (newTask: TaskInput): Promise<Task> => {
 
 const deleteTask = async (taskId: string, date: string): Promise<number> => {
 	console.log('deleting task')
-	let { error } = await db.from('tasks').delete().eq('id', taskId);
+	let { error } = await db.from('tasks_legacy').delete().eq('id', taskId);
 
 	// const {data, error: taskRanksError } = await db.from('task_ranks').select('*').eq('date', date)
 
@@ -83,7 +83,7 @@ const deleteTask = async (taskId: string, date: string): Promise<number> => {
 const updateTask = async (updatedTask: Task): Promise<Task> => {
 	console.log(updatedTask);
 
-	const { data, error } = await db.from('tasks').update(updatedTask).eq('id', updatedTask.id).select();
+	const { data, error } = await db.from('tasks_legacy').update(updatedTask).eq('id', updatedTask.id).select();
 	console.log('updating task')
 	console.log(updatedTask)
 	console.log('updated data', data)
@@ -100,7 +100,7 @@ const updateTask = async (updatedTask: Task): Promise<Task> => {
 
 const getTaskRanks = async (params: TaskQueryParams): Promise<TaskRanksDB[]> => {
 	
-	const { data, error } = await db.from('task_ranks').select('*');
+	const { data, error } = await db.from('task_ranks_legacy').select('*');
 
 	if (error) {
 		throw error;
@@ -110,7 +110,7 @@ const getTaskRanks = async (params: TaskQueryParams): Promise<TaskRanksDB[]> => 
 }
 
 const updateTaskRanks = async(newRanks: any, key: string): Promise<TaskRanksDB> => {
-	const { data, error } = await db.from('task_ranks').upsert({ ranks: newRanks, date: key}, { onConflict: 'date'}).eq('date', key).select();
+	const { data, error } = await db.from('task_ranks_legacy').upsert({ ranks: newRanks, date: key}, { onConflict: 'date'}).eq('date', key).select();
 	
 	if(error) {
 		throw error;

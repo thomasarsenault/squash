@@ -2,7 +2,7 @@
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat';;
 import { computed, toRaw } from 'vue';
-import { useTasksStore } from '../../stores/tasks';
+import { useTasksStore } from '../../stores/tasks.legacy';
 import AgendaTask from './AgendaTask.vue';
 import type { Task } from '../../types';
 import { Times } from '../../utils/constants'

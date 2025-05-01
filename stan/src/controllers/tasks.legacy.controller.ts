@@ -1,5 +1,5 @@
 import ClientResponse from '@middleware/clientResponse';
-import taskService from '@services/tasks.service';
+import taskService from '@services/tasks.legacy.service';
 import { Task, TaskRanks, TaskRanksDB } from '@types';
 import dayjs from 'dayjs';
 

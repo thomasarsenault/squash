@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import type { Task } from '../../types';
 import Draggable from 'vuedraggable';
 import dayjs from 'dayjs';
-import { useTasksStore } from '../../stores/tasks';
+import { useTasksStore } from '../../stores/tasks.legacy';
 import AgendaTask from './AgendaTask.vue';
 import isBetween from 'dayjs/plugin/isBetween';;
 

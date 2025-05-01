@@ -6,7 +6,7 @@ const migrateTasks = async () => {
     const today = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
     const tomorrow = dayjs().format('YYYY-MM-DD');
 
-    const { data, error } = await db.from('tasks').select('*').eq('date', today);
+    const { data, error } = await db.from('tasks_legacy').select('*').eq('date', today);
 
     if (error) {
         throw error;
@@ -17,7 +17,7 @@ const migrateTasks = async () => {
     }
 
     //get task_ranks
-    const { data: taskRanks, error: taskRanksError } = await db.from('task_ranks').select('*').or(`date.eq.${today},date.eq.${tomorrow}`);
+    const { data: taskRanks, error: taskRanksError } = await db.from('task_ranks_legacy').select('*').or(`date.eq.${today},date.eq.${tomorrow}`);
 
     if(taskRanksError) {
         throw taskRanksError;
@@ -45,9 +45,9 @@ const migrateTasks = async () => {
         taskRanksTomorrow.push(task.id);
 
         console.log(updatedTask);
-        const { data: taskData, error: taskError } = await db.from('tasks').update(updatedTask).eq('id', task.id);
-        const { data: taskRanksData, error: taskRanksError } = await db.from('task_ranks').upsert({ ranks: taskRanksToday, date: today}, { onConflict: 'date'}).eq('date', today).select();
-        const { data: taskRanksDataTomorrow, error: taskRanksErrorTomorrow } = await db.from('task_ranks').upsert({ ranks: taskRanksTomorrow, date: tomorrow}, { onConflict: 'date'}).eq('date', tomorrow).select();
+        const { data: taskData, error: taskError } = await db.from('tasks_legacy').update(updatedTask).eq('id', task.id);
+        const { data: taskRanksData, error: taskRanksError } = await db.from('task_ranks_legacy').upsert({ ranks: taskRanksToday, date: today}, { onConflict: 'date'}).eq('date', today).select();
+        const { data: taskRanksDataTomorrow, error: taskRanksErrorTomorrow } = await db.from('task_ranks_legacy').upsert({ ranks: taskRanksTomorrow, date: tomorrow}, { onConflict: 'date'}).eq('date', tomorrow).select();
 
         if(taskError) {
             throw taskError;
@@ -65,7 +65,7 @@ const moveBacklogBack = async () => {
     const movedBacklogDate = dayjs().add(1, 'week').subtract(1, 'day').format('YYYY-MM-DD');
     const correctBacklogDate = dayjs().add(1, 'week').format('YYYY-MM-DD');
 
-    const { data, error } = await db.from('tasks').select('*').eq('date', movedBacklogDate);
+    const { data, error } = await db.from('tasks_legacy').select('*').eq('date', movedBacklogDate);
 
     if (error) {
         throw error;
@@ -75,7 +75,7 @@ const moveBacklogBack = async () => {
         return;
     }
 
-    const { data: taskRanks, error: taskRanksError } = await db.from('task_ranks').select('*').eq('date', movedBacklogDate);
+    const { data: taskRanks, error: taskRanksError } = await db.from('task_ranks_legacy').select('*').eq('date', movedBacklogDate);
 
     if(taskRanksError) {
         throw taskRanksError;
@@ -89,7 +89,7 @@ const moveBacklogBack = async () => {
             date: correctBacklogDate
         }
 
-        const { data: taskData, error: taskError } = await db.from('tasks').update(updatedTask).eq('id', task.id);
+        const { data: taskData, error: taskError } = await db.from('tasks_legacy').update(updatedTask).eq('id', task.id);
 
         if(taskError) {
             throw taskError;
@@ -98,7 +98,7 @@ const moveBacklogBack = async () => {
 
     const taskRank = taskRanks[0];
 
-    const { data: taskRankData, error: taskRankError } = await db.from('task_ranks').upsert({ ranks: taskRank.ranks, date: correctBacklogDate}, { onConflict: 'date'}).eq('date', correctBacklogDate).select();
+    const { data: taskRankData, error: taskRankError } = await db.from('task_ranks_legacy').upsert({ ranks: taskRank.ranks, date: correctBacklogDate}, { onConflict: 'date'}).eq('date', correctBacklogDate).select();
     await db.from('task_ranks').update({ ranks: [] }).eq('date', movedBacklogDate);
 
     if(taskRankError) {

@@ -22,11 +22,11 @@ export const useTasksStore = defineStore('tasks', {
                 const start = dayjs().day(1).format('YYYY-MM-DD');
                 const end = dayjs().day(7).format('YYYY-MM-DD');
 
-                const data = await Stan(`tasks?start=${start}&end=${end}`);
+                const data = await Stan(`tasks_legacy?start=${start}&end=${end}`);
 
                 this.tasks = groupTasksByDate(data);
 
-                const dataRanks = await Stan(`tasks_ranks?start=${start}&end=${end}`)
+                const dataRanks = await Stan(`tasks_ranks_legacy?start=${start}&end=${end}`)
 
                 this.taskRanks = dataRanks
             } catch (error) {
@@ -36,7 +36,7 @@ export const useTasksStore = defineStore('tasks', {
         async updateTaskRanks(newRanks: any, key: string) {
             this.taskRanks[key] = newRanks;
             try {
-                const response = await Stan(`tasks_ranks`, {
+                const response = await Stan(`tasks_ranks_legacy`, {
                     method: 'PUT',
                     body: JSON.stringify({ newRanks: newRanks, key: key })
                 })
@@ -51,7 +51,7 @@ export const useTasksStore = defineStore('tasks', {
             try {
                 const date = (newTask.date ? dayjs(newTask.date) : dayjs()).format('YYYY-MM-DD');
 
-                const response = await Stan(`tasks`, {
+                const response = await Stan(`tasks_legacy`, {
                     method: 'POST',
                     body: JSON.stringify({
                       task: {
@@ -75,7 +75,7 @@ export const useTasksStore = defineStore('tasks', {
         },
         async updateTask(updatedTask: Task) {
             try {
-                Stan(`tasks`, {
+                Stan(`tasks_legacy`, {
                     method: 'PUT',
                     body: JSON.stringify({
                       task: updatedTask,
@@ -106,7 +106,7 @@ export const useTasksStore = defineStore('tasks', {
         },
         async deleteTask(taskId: number, date: string) {
             try {
-                const response = await Stan(`/tasks?id=${taskId}&date=${date}`, {
+                const response = await Stan(`/tasks_legacy?id=${taskId}&date=${date}`, {
                     method: 'DELETE',
                 });
 

@@ -10,6 +10,8 @@ const handleTasksRoute = async (req: Request): Promise<Response> => {
       return tasksController.getTasks(req);
     } else if (req.method === 'POST') {
       return tasksController.createTask(req);
+    } else if (req.method === 'PUT') {
+      return tasksController.updateTask(req);
     } else if (req.method === 'DELETE') {
       return tasksController.deleteTask(req);
     }

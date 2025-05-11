@@ -104,7 +104,7 @@ onBeforeUnmount(() => {
 }
 
 .dialog-container {
-    background-color: var(--p-surface-0);
+    background-color: var(--p-card-background);
     border-radius: var(--p-overlay-modal-border-radius);
     width: 500px;
     max-width: 90%;

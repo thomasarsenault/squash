@@ -158,7 +158,7 @@ watch(isCompleted, () => {
 
 .placeholder {
     border-radius: 8px;
-    background-color: white;
+    background-color: var(--p-card-background);
     padding: 0.5rem 1rem;
     display: none;
 

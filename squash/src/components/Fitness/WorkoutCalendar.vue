@@ -188,7 +188,7 @@ const openAddModal = () => {
     grid-auto-rows: minmax(80px, auto);
     grid-gap: 1px;
     padding: 1px;
-    background-color: rgb(255, 255, 255);
+    background-color: var(--p-card-background);
     border-radius: 8px;
 
     @include breakpoint('mobile') {
@@ -222,11 +222,11 @@ const openAddModal = () => {
             }
 
             &.current-month {
-                background-color: #ffffff;
+                background-color: var(--p-card-background);
             }
 
             &:not(.current-month) {
-                background-color: #fcfcfc;
+                background-color: var(--p-card-background);
             }
 
             .date-number {

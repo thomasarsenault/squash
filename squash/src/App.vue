@@ -28,6 +28,21 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 </template>
 
 <style lang="scss">
+// ugly dark mode overrides for primevue colors that didnt have a nice conversion
+html.dark-mode {
+  #app {
+    background-color: black;
+  }
+
+  .search-bar {
+    border-bottom: 2px solid black;
+  }
+
+  .mobile-nav {
+    border-top: 2px solid black;
+  }
+}
+
 #app {
   background-color: var(--p-surface-100);
   width: 100%;
@@ -42,7 +57,7 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 header {
   font-size: 1.2rem;
   flex-shrink: 0;
-  background-color: white;
+  background-color: var(--p-card-background);
   z-index: 100;
 }
 

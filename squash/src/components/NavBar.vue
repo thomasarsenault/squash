@@ -44,8 +44,7 @@ const items = ref([
   flex-direction: column;
   height: 100%;
   padding: 2rem;
-  background-color: white;
-  border-top: 1px solid var(--p-surface-100);
+  background-color: var(--p-card-background);
 }
 
 .nav-item {

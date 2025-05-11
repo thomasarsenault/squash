@@ -101,11 +101,17 @@ header {
   min-width: 0;
   overflow-y: auto;
 
+  // 1440px is what I want the content width to be
+  // 200px is the width of the nav on the left
+  // 64px is the padding of the .view below
+  $container-padding: calc(100% - 1440px - 200px - 64px);
+
+
   // using this instead of margin auto so that the scroll bar shows on the far right
-  padding: 0 max((100% - 1440px) / 2, 0px);
+  padding: 0 max($container-padding / 2, 0px);
   
   .view {
-    margin: 2rem 1rem;
+    margin: 2rem;
 
     @include breakpoint('mobile') {
       margin: 1rem;

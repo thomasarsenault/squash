@@ -3,7 +3,8 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "bun run index.ts"
+    "start": "bun run index.ts",
+    "fake-prod": "NODE_ENV=production bun run index.ts"
   },
   "devDependencies": {
     "bun-types": "latest"

@@ -99,7 +99,7 @@ const moveBacklogBack = async () => {
     const taskRank = taskRanks[0];
 
     const { data: taskRankData, error: taskRankError } = await db.from('task_ranks_legacy').upsert({ ranks: taskRank.ranks, date: correctBacklogDate}, { onConflict: 'date'}).eq('date', correctBacklogDate).select();
-    await db.from('task_ranks').update({ ranks: [] }).eq('date', movedBacklogDate);
+    await db.from('task_ranks_legacy').update({ ranks: [] }).eq('date', movedBacklogDate);
 
     if(taskRankError) {
         throw taskRankError;

@@ -22,7 +22,7 @@ document.addEventListener('contextmenu', e => e.preventDefault());
       </div>
     </div>
   </div>
-  <div class="mobile-nav mobile-only">
+  <div class="mobile-nav-wrapper mobile-only">
     <MobileNav />
   </div>
 </template>
@@ -80,8 +80,10 @@ header {
   flex-shrink: 0;
 }
 
-.mobile-nav {
+.mobile-nav-wrapper {
   position: fixed;
+  padding-bottom: env(safe-area-inset-bottom, 45px);
+  background-color: var(--p-card-background);
   bottom: 0;
   left: 0;
   right: 0;

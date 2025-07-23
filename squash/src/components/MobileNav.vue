@@ -44,7 +44,6 @@ const items = ref([
   align-items: center;
   height: 60px;
   padding: 0 1rem;
-  background-color: var(--p-card-background);
   border-top: 2px solid var(--p-surface-100);
 }
 

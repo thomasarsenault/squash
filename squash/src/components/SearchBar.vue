@@ -66,7 +66,7 @@ initializeDarkMode();
     border-bottom: 2px solid var(--p-surface-100);
 
     @include breakpoint('mobile') {
-        padding: 1rem;
+        padding: 0.75rem 1rem;
     }
 }
 

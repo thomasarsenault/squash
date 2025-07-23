@@ -41,6 +41,12 @@ html.dark-mode {
   .mobile-nav {
     border-top: 2px solid black;
   }
+
+  .dark-mode-toggle {
+    &:hover {
+      background-color: var(--p-surface-600);
+    }
+  }
 }
 
 #app {

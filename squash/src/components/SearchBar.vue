@@ -1,16 +1,28 @@
 <script setup lang="ts">
-import Logo from '@/assets/logo_white.png';
+// import Logo from '@/assets/logo_white.png';
 
-// Add dark mode toggle functionality
 const toggleDarkMode = () => {
-    document.documentElement.classList.toggle('dark-mode');
+    const isDarkMode = document.documentElement.classList.toggle('dark-mode');
+
+    localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
 };
+
+const initializeDarkMode = () => {
+    const savedDarkMode = localStorage.getItem('darkMode');
+
+    if (savedDarkMode === 'true') {
+        document.documentElement.classList.add('dark-mode');
+    }
+};
+
+// Initialize dark mode on component mount
+initializeDarkMode();
 </script>
 
 <template>
     <div class="search-bar">
         <div class="title">
-            <img :src="Logo" />
+            <!-- <img :src="Logo" /> -->
             <h2>Squash</h2>
         </div>
         <div class="controls">
@@ -70,6 +82,7 @@ const toggleDarkMode = () => {
     padding: 0.5rem;
     font-size: 1.2rem;
     border-radius: 50%;
+    width: 41px;
     
     &:hover {
         background-color: var(--p-surface-100);

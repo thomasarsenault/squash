@@ -10,38 +10,52 @@ const WORKOUTS = [
     {
         name: 'Push A',
         type: TYPES.PUSH,
+        icon: 'lifting.svg'
     },
     {
         name: 'Push B',
         type: TYPES.PUSH,
+        icon: 'lifting.svg'
     },
     {
-        name: 'Pull A',
+        name: 'Pull',
         type: TYPES.PULL,
+        icon: 'lifting.svg'
     },
     {
-        name: 'Pull B',
-        type: TYPES.PULL,
-    },
-    {
-        name: 'Legs A',
+        name: 'Legs',
         type: TYPES.LEGS,
+        icon: 'lifting.svg'
     },
     {
-        name: 'Legs B',
-        type: TYPES.LEGS,
-    },
-    {
-        name: 'Climbing',
-        type: TYPES.PULL,
+        name: 'Core',
+        type: TYPES.LEGS,   
+        icon: 'mats.svg'
     },
     {
         name: 'Run',
         type: TYPES.CARDIO,
+        icon: 'running.svg'
+    },
+    {
+        name: 'Bike',
+        type: TYPES.CARDIO,
+        icon: 'biking.svg'
+    },
+    {
+        name: 'Climbing',
+        type: TYPES.PULL,
+        icon: 'climbing.svg'
+    },
+    {
+        name: 'Sports',
+        type: TYPES.CARDIO,
+        icon: 'sports.svg'
     },
     {
         name: 'Other',
         type: TYPES.OTHER,
+        icon: 'lifting.svg'
     }
 ]
 

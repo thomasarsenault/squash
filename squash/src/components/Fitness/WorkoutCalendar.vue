@@ -32,6 +32,7 @@ const props = defineProps<{
 const year = props.year ?? dayjs().year();
 const month = props.month ?? dayjs().month();
 
+
 const dayModalOpen = ref(false);
 const selectedDay = ref<CalendarDay | undefined>();
 
@@ -53,7 +54,7 @@ const weeks = computed(() => {
 
     const today = dayjs();
 
-    const startOfCurrentWeek = today.startOf('isoWeek');
+    const startOfCurrentWeek = today.startOf('week');
 
     const startDate = startOfCurrentWeek.subtract(5, 'weeks');
 
@@ -118,7 +119,7 @@ const openAddModal = () => {
         <template #content>
             <div class="calendar" :class="{ 'compact': props.compact }">
                 <div class="header">
-                    <div class="day-cell" v-for="day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']" :key="day">
+                    <div class="day-cell" v-for="day in ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']" :key="day">
                         {{ day }}
                     </div>
                 </div>
@@ -247,12 +248,18 @@ const openAddModal = () => {
     flex-direction: column;
     gap: 0.25rem;
 
-    @include breakpoint('mobile') {
-        flex-direction: row;
-    }
-
     .compact & {
         flex-direction: row;
+
+        @include breakpoint('mobile') {
+            flex-direction: column;
+        }
+    }
+
+    @include breakpoint('mobile') {
+        flex-direction: column;
+        height: 100%;
+        gap: 1px;
     }
 
     .workout {

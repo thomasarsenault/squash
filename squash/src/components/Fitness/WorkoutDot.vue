@@ -1,50 +1,68 @@
 <script setup lang="ts">
+import WORKOUTS from '@/data/workoutTypes';
+
 const props = defineProps<{
     type?: string,
     size?: 'small' | 'small-on-mobile'
 }>()
 
+const workoutType = WORKOUTS.find(type => type.name === props.type)
+const icon = `/src/assets/workouts/${workoutType?.icon || 'lifting.svg'}`
 
 </script>
-
 <template>
-    <div :class="`dot ${type} ${props.size || ''}`" />
+    <img :class="`dot ${type} ${props.size || ''}`" :src="icon" />
 </template>
 
 <style scoped lang="scss">
 .dot {
-    width: 0.75rem;
-    height: 0.75rem;
-    border-radius: 50%;
+    width: 1.25rem;
+    height: 1.25rem;
+    padding: 2px;
+    border-radius: 4px;
     background-color: #bfbfbf;
 
     &.small {
-        width: 0.5rem;
-        height: 0.5rem;
+        width: 1.25rem;
+        height: 1.25rem;
     }
 
     &.small-on-mobile {
         @include breakpoint('mobile') {
-            width: 0.5rem;
-            height: 0.5rem;
+            width: 1rem;
+            height: 1rem;
         }
     }
 }
 
 // TODO: colors as vars
 .Push {
-    background-color: #ef8d8d;
+    &.A {
+        background-color: #ef8d8d;
+    }
+
+    &.B {
+        background-color: #efae8d;
+    }
 }
 
 .Pull, .Climbing {
     background-color: rgb(201, 145, 228);
 }
 
-.Legs {
+.Legs, .Sports {
     background-color: #87d8f8;
 }
 
-.Run, .Other {
+.Core {
+    background-color: rgb(153, 144, 210);
+}
+
+.Run, .Bike {
     background-color: rgb(129, 206, 134);
+}
+
+.Other {
+    background-color: #bfbfbf;
 }
 </style>

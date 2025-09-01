@@ -8,6 +8,7 @@ interface TaskQueryParams {
 
 const getTransactions = async (params: TaskQueryParams): Promise<Task[]> => {
 	
+	// const { data, error } = await db.from('transactions').select('*').gte('date', params.start).lte('date', params.end);
 	const { data, error } = await db.from('transactions').select('*');
 	
 	if(error) {

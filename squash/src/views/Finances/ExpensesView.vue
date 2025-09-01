@@ -97,7 +97,9 @@ const selectedTransactions = computed(() => {
 	}
 
 	return transactions.value.filter((transaction) => {
-		return dayjs(transaction.date).month() === selectedMonth.value.value;
+		const transactionDate = dayjs(transaction.date);
+		
+		return transactionDate.month() === selectedMonth.value.value && transactionDate.year() === 2025;
 	}) || [];
 });
 

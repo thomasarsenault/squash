@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import WORKOUTS from '@/data/workoutTypes';
+import { getWorkoutIcon } from '@/utils/workoutIconMapping';
 
 const props = defineProps<{
     type?: string,
@@ -7,7 +9,12 @@ const props = defineProps<{
 }>()
 
 const workoutType = WORKOUTS.find(type => type.name === props.type)
-const icon = `/src/assets/workouts/${workoutType?.icon || 'lifting.svg'}`
+const icon = ref<string>('')
+
+onMounted(async () => {
+    const iconName = workoutType?.icon || 'lifting.svg'
+    icon.value = await getWorkoutIcon(iconName)
+})
 
 </script>
 <template>

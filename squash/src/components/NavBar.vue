@@ -55,12 +55,16 @@ const items = ref([
   font-size: 1rem;
   gap: 0.5rem;
   padding: 0.5rem 0;
+  transition: color 0.1s ease-in-out;
   
   i {
     font-size: 1.2rem;
     margin-bottom: 0.25rem;
   }
-  
+  &:hover {
+    color: var(--p-primary-color);
+  }
+
   &.router-link-active {
     color: var(--p-primary-color);
   }

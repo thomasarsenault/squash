@@ -121,13 +121,13 @@ watch(isCompleted, () => {
     }
     
     :deep(.p-checkbox-box) {
-        border-color: var(--p-violet-200);
-        background: var(--p-violet-200);
+        border-color: var(--p-sky-100);
+        background: var(--p-sky-100);
     }
 
     :deep(.p-checkbox-checked .p-checkbox-box) {
-        border-color: var(--p-violet-300);
-        background: var(--p-violet-300);
+        border-color: var(--p-sky-300);
+        background: var(--p-sky-300);
     }
 }
 

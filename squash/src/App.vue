@@ -18,7 +18,13 @@ document.addEventListener('contextmenu', e => e.preventDefault());
     </div>
     <div class="container">
       <div class="view">
-        <RouterView />
+        <RouterView v-slot="{ Component, route }">
+          <Transition name="fade" mode="out-in">
+            <div :key="route.name ?? route.fullPath">
+              <Component :is="Component" />
+            </div>
+          </Transition>
+        </RouterView>
       </div>
     </div>
   </div>
@@ -60,6 +66,16 @@ html.dark-mode {
 </style>
 
 <style scoped lang="scss">
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.1s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 header {
   font-size: 1.2rem;
   flex-shrink: 0;

@@ -32,8 +32,6 @@ const props = defineProps<{
 const year = props.year ?? dayjs().year();
 const month = props.month ?? dayjs().month();
 
-
-const dayModalOpen = ref(false);
 const selectedDay = ref<CalendarDay | undefined>();
 
 const workoutsMap = computed((): Map<string, Workout[]> => {
@@ -81,15 +79,24 @@ const weeks = computed(() => {
 });
 
 const openDayModal = (day: CalendarDay) => {
-    if(!props.readOnly) {
-        dayModalOpen.value = true;
-        selectedDay.value = day;
+    if(props.readOnly) {
+        return;
     }
+
+    if(!day.workouts.length) {
+        store.dayModal.date = day.date;
+
+        openAddModal();
+        return;
+    }
+
+    store.dayModal.date = day.date;
+    store.dayModal.open = true;
+    selectedDay.value = day;
 }
 
 const closeDayModal = () => {
-    dayModalOpen.value = false;
-    selectedDay.value = undefined;
+    store.dayModal.open = false;
 }
 
 const openEditModal = (workout: any) => {
@@ -99,7 +106,6 @@ const openEditModal = (workout: any) => {
     closeDayModal();
 }
 
-// TODO: this should auto set the date to whatever was in selectedDay.date
 const openAddModal = () => {
 	store.modalOpen = true;
 	store.editModal.open = false;
@@ -143,7 +149,7 @@ const openAddModal = () => {
             </div>
         </template>
     </Card>
-    <InputDialog v-model:visible="dayModalOpen" :header="selectedDay?.date.format('YYYY-MM-DD')">
+    <InputDialog v-model:visible="store.dayModal.open" :header="selectedDay?.date.format('dddd, MMMM D')">
         <div class="workout-dialog">
             <WorkoutCard v-for="workout in selectedDay?.workouts" :key="workout.id"
                 :workout="workout" 

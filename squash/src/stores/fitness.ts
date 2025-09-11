@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import Stan from '../utils/stan';
 import WORKOUT_TYPES from '@/data/workoutTypes';
 import type { Workout, WorkoutInput } from '@/types/Fitness';
+import type { Dayjs } from 'dayjs';
 
 export const useFitnessStore = defineStore('fitness', {
     state: () => ({
@@ -11,6 +12,10 @@ export const useFitnessStore = defineStore('fitness', {
         editModal: {
             open: false,
             workout: {} as Workout
+        },
+        dayModal: {
+            open: false,
+            date: null as Dayjs | null,
         }
     }),
     actions: {

@@ -5,7 +5,6 @@ import { onMounted, computed } from 'vue';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import WorkoutCalendar from '@/components/Fitness/WorkoutCalendar.vue';
-import WorkoutCard from '../components/Fitness/WorkoutCard.vue';
 import type { Workout } from '@/types/Fitness';
 
 dayjs.extend(advancedFormat);
@@ -36,35 +35,12 @@ onMounted(async () => {
 	})
 })
 
-const workoutsPerDay = computed(() => {
-		const workouts:  { [key: string]: Workout[] } = {};
-
-		last14Days.forEach(day => {
-				workouts[day.date] = []
-		})
-
-		store.workouts.forEach((workout) => {
-				if(workouts[workout.date] && workout.end) {
-						workouts[workout.date].push(workout)
-				}
-		})
-
-		return workouts;
-})
-
 const openAddModal = () => {
+	store.dayModal.date = dayjs();
 	store.modalOpen = true;
 	store.editModal.open = false;
 	store.editModal.workout = {} as Workout;
 }
-
-const openEditModal = (workout: any) => {
-	store.editModal.workout = workout;
-	store.editModal.open = true;
-	store.modalOpen = true;
-}
-
-const currentWorkouts = computed(() => store.workouts.filter(workout => !workout.end));
 </script>
 
 <template>
@@ -73,16 +49,6 @@ const currentWorkouts = computed(() => store.workouts.filter(workout => !workout
 			<div class="calendar">
 				<WorkoutCalendar :workouts="store.workouts"/>
 			</div>
-			<!-- <div class="workout-list">
-				<div v-if="currentWorkouts && currentWorkouts.length" class="day current">
-					<div class="label">Current workout</div>
-					<WorkoutCard :key="workout.id" v-for="workout in currentWorkouts" :workout="workout" @click="() => openEditModal(workout)"/>
-				</div>
-				<div v-for="(day, date) in workoutsPerDay" :key="date" class="day">
-					<div class='label'>{{ dayjs(date).format('dddd, Do') }}</div>
-					<WorkoutCard v-for="workout in day" :key="workout.id" :workout="workout" @click="() => openEditModal(workout)"/>
-				</div>
-			</div> -->
 		</div>
 		<div class="actions">
 			<Button severity="secondary" label="Add Workout" @click="openAddModal"/>

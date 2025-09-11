@@ -16,15 +16,11 @@ const editMode = computed(() => store.editModal.open)
 
 const date = ref<any>('');
 const type = ref<{ label: string, value: string }>();
-const start = ref<Date>()
-const end = ref<Date | null>();
 const notes = ref();
 
 const setDefaults = () => {
-    date.value = dayjs().format('MM/DD/YYYY');
+    date.value = (store.dayModal.date ? store.dayModal.date : dayjs()).format('MM/DD/YYYY');
     type.value = { label: 'Choose workout', value: ''};
-    start.value = new Date();
-    end.value = undefined;
     notes.value = undefined;
 }
 
@@ -32,8 +28,6 @@ const getWorkoutObj = (): WorkoutInput => {
     return {
         date: date.value,
         type: type.value?.value,
-        start: dayjs(start.value).format('HH:mm:ss'),
-        end: end.value ? dayjs(end.value).format('HH:mm:ss') : undefined,
         notes: notes.value
     }
 }
@@ -75,8 +69,6 @@ watch(workout, (value) => {
 
         date.value = value.date;
         type.value = typeObject;
-        start.value = dayjs(value.start, 'HH:mm:ss').toDate();
-        end.value = value.end ? dayjs(value.end, 'HH:mm:ss').toDate() : null;
         notes.value = value.notes
     } else {
         setDefaults();
@@ -119,18 +111,6 @@ watch(workout, (value) => {
                         <label for="category">Type</label>
                     </FloatLabel>
                 </div>
-                <div class="half">
-                    <FloatLabel variant="in">
-                        <label for="start">Start time</label>
-                        <DatePicker id="start" v-model="start" timeOnly fluid />
-                    </FloatLabel>
-                </div>
-                <div class="half">
-                    <FloatLabel variant="in">
-                        <DatePicker id="end" v-model="end" timeOnly />
-                        <label for="end">End time</label>
-                    </FloatLabel>
-                </div>
                 <div class="full">
                     <FloatLabel variant="in">
                         <InputText id="notes" v-model="notes"/>
@@ -145,12 +125,7 @@ watch(workout, (value) => {
                         <Button label="Edit" @click="editWorkout" />
                     </template>
                     <template v-else>
-                        <template v-if="end">
-                            <Button label="Add" @click="addWorkout" />
-                        </template>
-                        <template v-else>
-                            <Button label="Start" @click="addWorkout" />
-                        </template>
+                        <Button label="Add" @click="addWorkout" />
                     </template>
                 </div>
             </template>

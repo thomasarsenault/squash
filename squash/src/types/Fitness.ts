@@ -1,7 +1,5 @@
 export interface Workout {
     id: number,
-    start: string,
-    end?: string,
     type: string,
     date: string,
     notes?: string,
@@ -9,8 +7,6 @@ export interface Workout {
 }
 
 export interface WorkoutInput {
-    start: string,
-    end?: string,
     type?: string,
     date: string,
     notes?: string

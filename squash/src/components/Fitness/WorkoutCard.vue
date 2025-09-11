@@ -21,7 +21,6 @@ watch(props.workout, () => {
                 <WorkoutDot :type="workout.type" />
                 <span>{{ workout.type }}</span>
             </div>
-            <span class="time">({{ workout.end ? timeDifference(workout.start, workout.end) : dayjs(workout.start, 'HH:mm:ss').format('HH:mm') }})</span>
         </div>
     </Button>
 </template>

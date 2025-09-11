@@ -26,6 +26,7 @@
       "@controllers/*": ["./src/controllers/*"],
       "@db/*": ["./src/db/*"],
       "@utils/*": ["./src/utils/*"],
+      "@clients/*": ["./src/clients/*"],
     }
   }
 }

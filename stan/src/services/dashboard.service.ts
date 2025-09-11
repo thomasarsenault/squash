@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import cache from '@clients/cache';
 
 const getWeather = async (): Promise<any> => {
     const baseUrl = "https://api.open-meteo.com/v1/forecast";
@@ -26,15 +27,17 @@ const getWeather = async (): Promise<any> => {
     const url = `${baseUrl}?${params.toString()}`;
   
     try {
-      const response = await fetch(url);
+      const data = await cache.get('weather', 1000 * 60 * 5, async () => {
+        const response = await fetch(url);
 
-      if (!response.ok) {
-        throw new Error(`Error fetching weather data: ${response.statusText}`);
-      }
+        if (!response.ok) {
+            throw new Error(`Error fetching weather data: ${response.statusText}`);
+        }
 
-      const data = await response.json();
+        const data = await response.json();
 
-
+        return data;
+      });
 
       return { weather: transformWeatherData(data) };
     } catch (error) {

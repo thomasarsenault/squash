@@ -1,21 +1,30 @@
 <script setup lang="ts">
 const props = defineProps<{
   items: {
-    label: string,
-    icon: string,
-    to: string
-  }[]
-}>()
+    label: string;
+    icon: string;
+    to: string;
+  }[];
+}>();
 </script>
 
 <template>
   <div class="sub-header">
-    <div class='sub-menu'>
-      <RouterLink v-for="item in props.items" v-slot="{ href, navigate, isActive }" :to="item.to" custom>
-          <a class="p-menubar-item-link" :class="{ active: isActive }" :href="href" @click="navigate" v-ripple>
-              <span :class="item.icon" />
-              <div class="label">{{ item.label }}</div>
-          </a>
+    <div class="sub-menu">
+      <RouterLink
+        v-for="item in props.items"
+        v-slot="{ href, navigate, isActive }"
+        :to="item.to"
+        custom>
+        <a
+          class="p-menubar-item-link"
+          :class="{ active: isActive }"
+          :href="href"
+          @click="navigate"
+          v-ripple>
+          <span :class="item.icon" />
+          <div class="label">{{ item.label }}</div>
+        </a>
       </RouterLink>
     </div>
   </div>

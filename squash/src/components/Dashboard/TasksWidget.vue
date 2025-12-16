@@ -14,41 +14,42 @@ dayjs.extend(advancedFormat);
 const store = useTasksStore();
 
 onMounted(async () => {
-	store.getTasks().then(() => {
-		console.log('tasks', store.taskRanks);
-	})
-})
+  store.getTasks().then(() => {
+    console.log('tasks', store.taskRanks);
+  });
+});
 
 const today = computed(() => {
-	const tasks = store.tasks[dayjs().format('YYYY-MM-DD')];
+  const tasks = store.tasks[dayjs().format('YYYY-MM-DD')];
 
-	if(!tasks) {
-		return [];
-	}
+  if (!tasks) {
+    return [];
+  }
 
-	return (store.taskRanks[dayjs().format('YYYY-MM-DD')] || []).map((taskId: number) => tasks.find((task: TaskType) => task.id === taskId) || {})
-	// .sort((a, b) => a.rank - b.rank)
-})
+  return (store.taskRanks[dayjs().format('YYYY-MM-DD')] || []).map(
+    (taskId: number) => tasks.find((task: TaskType) => task.id === taskId) || {},
+  );
+  // .sort((a, b) => a.rank - b.rank)
+});
 
 const loading = computed(() => !Object.keys(store.tasks).length);
 </script>
 
 <template>
-	<DashboardWidget title="Today's Items" to="/agenda" icon="check-circle">
-		<div class="task-list" v-if="!loading">
-			<Task v-for="task in today" :task="task" disableEditing/>
-		</div>
-		<div class="task-list" v-else>
-			<Skeleton height="30px" width="100%" v-for="i in 3" :key="i"/>
-		</div>
-	</DashboardWidget>
+  <DashboardWidget title="Today's Items" to="/agenda" icon="check-circle">
+    <div class="task-list" v-if="!loading">
+      <Task v-for="task in today" :task="task" disableEditing />
+    </div>
+    <div class="task-list" v-else>
+      <Skeleton height="30px" width="100%" v-for="i in 3" :key="i" />
+    </div>
+  </DashboardWidget>
 </template>
 
 <style lang="scss" scoped>
 .task-list {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
-
 </style>

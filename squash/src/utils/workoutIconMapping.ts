@@ -5,12 +5,12 @@ export const workoutIconMapping: Record<string, () => Promise<{ default: string 
   'mats.svg': () => import('@/assets/workouts/mats.svg'),
   'running.svg': () => import('@/assets/workouts/running.svg'),
   'sports.svg': () => import('@/assets/workouts/sports.svg'),
-}
+};
 
 export async function getWorkoutIcon(iconName: string): Promise<string> {
-  const iconLoader = workoutIconMapping[iconName] || workoutIconMapping['lifting.svg']
-  const module = await iconLoader()
-  return module.default
+  const iconLoader = workoutIconMapping[iconName] || workoutIconMapping['lifting.svg'];
+  const module = await iconLoader();
+  return module.default;
 }
 
-export default workoutIconMapping
+export default workoutIconMapping;

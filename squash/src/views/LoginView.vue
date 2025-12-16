@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { ref } from 'vue';
 import router from '../router/index';
 
@@ -9,35 +8,35 @@ const email = ref('');
 const password = ref('');
 
 const login = async () => {
-    console.log('logging in')
-    console.log(email);
-    console.log(password);
+  console.log('logging in');
+  console.log(email);
+  console.log(password);
 
-    const res = await fetch(`${apiUrl}/api/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: email.value,
-        password: password.value
-      })
-    })
+  const res = await fetch(`${apiUrl}/api/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value,
+    }),
+  });
 
-    if (res.ok) {
-        const { session } = await res.json(); // Assuming accessToken is sent back
-        const accessToken = session.access_token;
-        const refreshToken = session.refresh_token;
+  if (res.ok) {
+    const { session } = await res.json(); // Assuming accessToken is sent back
+    const accessToken = session.access_token;
+    const refreshToken = session.refresh_token;
 
-        console.log('got the access token', accessToken);
-        localStorage.setItem('accessToken', accessToken); // Store the token
-        localStorage.setItem('refreshToken', refreshToken);
+    console.log('got the access token', accessToken);
+    localStorage.setItem('accessToken', accessToken); // Store the token
+    localStorage.setItem('refreshToken', refreshToken);
 
-        router.push('/')
-    } else {
-        console.error('Login failed');
-    }
-}
+    router.push('/');
+  } else {
+    console.error('Login failed');
+  }
+};
 </script>
 
 <template>
@@ -47,7 +46,7 @@ const login = async () => {
       <div class="subtitle">Your best friend</div>
       <div class="login-form">
         <!-- with primevue -->
-        <InputText v-model="email" placeholder="email" class="login-input"/>
+        <InputText v-model="email" placeholder="email" class="login-input" />
         <InputText v-model="password" placeholder="password" class="login-input" type="password" />
         <Button @click="login">Login</Button>
         <!-- <md-filled-text-field
@@ -68,7 +67,6 @@ const login = async () => {
 </template>
 
 <style scoped lang="scss">
-
 .login-container {
   display: flex;
   justify-content: center;
@@ -106,5 +104,4 @@ const login = async () => {
 .login-input {
   width: 100%;
 }
-
 </style>

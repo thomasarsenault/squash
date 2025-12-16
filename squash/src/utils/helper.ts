@@ -1,14 +1,14 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 
 dayjs.extend(duration);
 
 export const formatAmount = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(amount);
-}
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(amount);
+};
 
 export const timeDifference = (startTime: string, endTime: string) => {
   const today = dayjs().format('YYYY-MM-DD');
@@ -31,4 +31,4 @@ export const timeDifference = (startTime: string, endTime: string) => {
   } else {
     return `${minutes} min`;
   }
-}
+};

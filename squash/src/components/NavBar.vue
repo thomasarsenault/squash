@@ -2,42 +2,40 @@
 import { ref } from 'vue';
 
 const items = ref([
-    {
-        label: 'Dashboard',
-        icon: 'pi pi-fw pi-home',
-        to: '/'
-    },
-    {
-        label: 'Agenda',
-        icon: 'pi pi-fw pi-calendar',
-        to: '/agenda'
-    },
-    {
-        label: 'Expenses',
-        icon: 'pi pi-fw pi-money-bill',
-        to: '/expenses'
-    },
-    {
-        label: 'Fitness',
-        icon: 'pi pi-fw pi-wave-pulse',
-        to: '/fitness'
-    }
-])
+  {
+    label: 'Dashboard',
+    icon: 'pi pi-fw pi-home',
+    to: '/',
+  },
+  {
+    label: 'Agenda',
+    icon: 'pi pi-fw pi-calendar',
+    to: '/agenda',
+  },
+  {
+    label: 'Expenses',
+    icon: 'pi pi-fw pi-money-bill',
+    to: '/expenses',
+  },
+  {
+    label: 'Fitness',
+    icon: 'pi pi-fw pi-wave-pulse',
+    to: '/fitness',
+  },
+]);
 </script>
 
 <template>
-    <nav class="desktop-nav">
-        <div v-for="item in items" :key="item.label">
-            <RouterLink :to="item.to" class="nav-item">
-                <i :class="item.icon"></i>
-                <span>{{ item.label }}</span>
-            </RouterLink>
-        </div>
-    </nav>
+  <nav class="desktop-nav">
+    <div v-for="item in items" :key="item.label">
+      <RouterLink :to="item.to" class="nav-item">
+        <i :class="item.icon"></i>
+        <span>{{ item.label }}</span>
+      </RouterLink>
+    </div>
+  </nav>
 </template>
-  
-  
-  
+
 <style scoped lang="scss">
 .desktop-nav {
   display: flex;
@@ -56,7 +54,7 @@ const items = ref([
   gap: 0.5rem;
   padding: 0.5rem 0;
   transition: color 0.1s ease-in-out;
-  
+
   i {
     font-size: 1.2rem;
     margin-bottom: 0.25rem;

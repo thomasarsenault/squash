@@ -12,40 +12,38 @@ const store = useExpensesStore();
 onMounted(async () => {
   store.getExpenses().then(() => {
     console.log('expenses', store.expenses);
-  })
-})
+  });
+});
 
 const openEditModal = (expense) => {
-  console.log('hello')
+  console.log('hello');
   store.editModal.expense = expense;
   store.editModal.open = true;
-}
-
+};
 
 const items = ref([
   {
     label: 'Transactions',
     icon: 'pi pi-fw pi-money-bill',
-    to: '/expenses'
+    to: '/expenses',
   },
   {
     label: 'Budget',
     icon: 'pi pi-fw pi-chart-bar',
-    to: '/expenses/budget'
-  }
-])
+    to: '/expenses/budget',
+  },
+]);
 
 const total = computed(() => {
   return formatAmount(store.expenses.reduce((acc, expense) => acc + expense.amount, 0));
 });
-
 </script>
 
 <template>
-  <SubMenu :items="items"/>
+  <SubMenu :items="items" />
   <main>
     <div class="action-bar">
-      <Button label="Add Expense" @click="() => store.addModalOpen = true"/>
+      <Button label="Add Expense" @click="() => (store.addModalOpen = true)" />
     </div>
     <div class="expenses">
       <Card>
@@ -56,7 +54,7 @@ const total = computed(() => {
       </Card>
       <Card>
         <template #content>
-          <ExpensesList :expenses="store.expenses" @rowSelect="(e) => openEditModal(e)"/>
+          <ExpensesList :expenses="store.expenses" @rowSelect="(e) => openEditModal(e)" />
         </template>
       </Card>
       <!-- <Card>
@@ -68,8 +66,8 @@ const total = computed(() => {
         </template>
       </Card> -->
     </div>
-    <AddExpense id="add-expense-dialog"/>
-    <EditExpense id="edit-expense-dialog"/>
+    <AddExpense id="add-expense-dialog" />
+    <EditExpense id="edit-expense-dialog" />
   </main>
 </template>
 
@@ -85,7 +83,7 @@ main {
 .p-menubar {
   padding: 0;
   background: none;
-  
+
   // :deep(.p-menubar-item-link), :deep(.p-menubar-item-icon) {
   //   color: var(--p-primary-color);
   // }

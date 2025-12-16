@@ -1,38 +1,39 @@
 <script setup lang="ts">
-import dayjs from 'dayjs'
-import advancedFormat from 'dayjs/plugin/advancedFormat';;
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { computed, toRaw } from 'vue';
 import { useTasksStore } from '../../stores/tasks.legacy';
 import AgendaTask from './AgendaTask.vue';
 import type { Task } from '../../types';
-import { Times } from '../../utils/constants'
+import { Times } from '../../utils/constants';
 import AgendaTimeslot from './AgendaTimeslot.vue';
 
 dayjs.extend(advancedFormat);
 
 const props = defineProps<{
-  date: dayjs.Dayjs
-}>()
+  date: dayjs.Dayjs;
+}>();
 
 const store = useTasksStore();
 
 const tasks = computed(() => {
-
-  if(!store.tasks || Object.keys(store.tasks).length === 0) {
+  if (!store.tasks || Object.keys(store.tasks).length === 0) {
     return [];
   }
 
   const tasksByDate = store.tasks[props.date.format('YYYY-MM-DD')];
 
-  if(!tasksByDate) {
+  if (!tasksByDate) {
     return [];
   }
 
-  return tasksByDate
-})
+  return tasksByDate;
+});
 
-const hours = computed(() => [...Array.from({ length: Times.MORNING_END - 7 }, (v, k) => 7 + k), ...Array.from({ length: 23 - Times.EVENING_START }, (v, k) => Times.EVENING_START + k)])
-
+const hours = computed(() => [
+  ...Array.from({ length: Times.MORNING_END - 7 }, (v, k) => 7 + k),
+  ...Array.from({ length: 23 - Times.EVENING_START }, (v, k) => Times.EVENING_START + k),
+]);
 </script>
 
 <template>
@@ -74,12 +75,14 @@ const hours = computed(() => [...Array.from({ length: Times.MORNING_END - 7 }, (
             :showTime="date.day() === 1" />
         </div>
       </div>
-      <div class="period afternoon">
-      </div>
+      <div class="period afternoon"></div>
       <div class="period evening">
         <div class="timeslots">
           <AgendaTimeslot
-            v-for="number in Array.from({ length: 23 - Times.EVENING_START }, (v, k) => Times.EVENING_START + k)"
+            v-for="number in Array.from(
+              { length: 23 - Times.EVENING_START },
+              (v, k) => Times.EVENING_START + k,
+            )"
             :tasks="tasks"
             :time="number"
             :date="date"
@@ -123,17 +126,17 @@ const hours = computed(() => [...Array.from({ length: Times.MORNING_END - 7 }, (
 }
 
 .period {
-    height: 30%;
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
+  height: 30%;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
 
-    h4 {
-      font-size: 12px;
-      border-radius: 12px 12px 0 0;
-      padding: 0 1rem;
-    }
+  h4 {
+    font-size: 12px;
+    border-radius: 12px 12px 0 0;
+    padding: 0 1rem;
   }
+}
 
 .tasks {
   padding: 0.5rem;

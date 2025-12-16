@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { RouterView } from 'vue-router';
 import NavBar from './components/NavBar.vue';
 import SearchBar from './components/SearchBar.vue';
 import MobileNav from './components/MobileNav.vue';
 
-document.addEventListener('contextmenu', e => e.preventDefault());
-
+document.addEventListener('contextmenu', (e) => e.preventDefault());
 </script>
 
 <template>
@@ -130,10 +129,9 @@ header {
   // 64px is the padding of the .view below
   $container-padding: calc(100% - 1440px - 200px - 64px);
 
-
   // using this instead of margin auto so that the scroll bar shows on the far right
   padding: 0 max($container-padding / 2, 0px);
-  
+
   .view {
     margin: 2rem;
 

@@ -10,8 +10,7 @@ const store = useTasksStore();
 
 onMounted(async () => {
   store.getTasks();
-})
-
+});
 </script>
 
 <template>
@@ -57,6 +56,6 @@ main {
   gap: 1rem;
   padding: 1rem;
   padding-left: 4rem;
-  background-color: var(--md-sys-color-surface)
+  background-color: var(--md-sys-color-surface);
 }
 </style>

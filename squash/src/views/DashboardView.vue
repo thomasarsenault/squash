@@ -11,17 +11,17 @@ const isMobile = window.innerWidth < 768;
 <template>
   <main>
     <div class="dashboard">
-        <div class="widgets">
-            <div class="col">
-                <WeatherWidget />
-                <TasksWidget v-if="isMobile" />
-                <ExpensesWidget />
-            </div>
-            <div class="col">
-                <TasksWidget v-if="!isMobile" />
-                <FitnessWidget />
-            </div>
+      <div class="widgets">
+        <div class="col">
+          <WeatherWidget />
+          <TasksWidget v-if="isMobile" />
+          <ExpensesWidget />
         </div>
+        <div class="col">
+          <TasksWidget v-if="!isMobile" />
+          <FitnessWidget />
+        </div>
+      </div>
     </div>
   </main>
 </template>
@@ -36,29 +36,29 @@ main {
 }
 
 .dashboard {
-    .col {
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-        width: calc(50% - 1rem);
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: calc(50% - 1rem);
 
-        @include breakpoint('mobile') {
-            width: 100%;
-            gap: 1rem;
-        }
+    @include breakpoint('mobile') {
+      width: 100%;
+      gap: 1rem;
     }
+  }
 }
 
 .widgets {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 100%;
-    gap: 2rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 2rem;
 
-    @include breakpoint('mobile') {
-        flex-direction: column;
-        gap: 1rem;
-    }
+  @include breakpoint('mobile') {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 </style>

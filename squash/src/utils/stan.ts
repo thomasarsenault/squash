@@ -25,39 +25,41 @@
 
 //         return fetch(`${apiUrl}${url}`, {...this._getHeaders, ...params})
 //             .then(response => response.json())
-//     } 
+//     }
 // }
 
 import router from '@/router';
 
 const _getHeaders = (method: string | undefined) => {
-    const accessToken = localStorage.getItem('accessToken');
+  const accessToken = localStorage.getItem('accessToken');
 
-    const headers: any = {
-        'Authorization': `Bearer ${accessToken}`,
+  const headers: any = {
+    Authorization: `Bearer ${accessToken}`,
+  };
+
+  return headers;
+};
+
+// // Method to update headers
+// updateHeaders(newHeaders) {
+//     this.headers = { ...this.headers, ...newHeaders };
+// }
+
+//make network request
+const Stan = async (url: string, params: Record<string, any> = {}): Promise<any> => {
+  const apiUrl = import.meta.env.VITE_STAN_API_URL || '';
+
+  return fetch(`${apiUrl}/api/${url}`, {
+    ...params,
+    headers: { ..._getHeaders(params.method), ...params?.headers },
+  }).then(async (response: any) => {
+    if (response.status === 401) {
+      console.log('redirecting to login page');
+      router.push('/login');
     }
 
-    return headers;
-}
-
-    // // Method to update headers
-    // updateHeaders(newHeaders) {
-    //     this.headers = { ...this.headers, ...newHeaders };
-    // }
-
-    //make network request
-const Stan = async (url: string, params: Record<string, any> = {}): Promise<any> => {
-    const apiUrl = import.meta.env.VITE_STAN_API_URL || '';
-
-    return fetch(`${apiUrl}/api/${url}`, { ...params, headers: {..._getHeaders(params.method), ...params?.headers }})
-        .then(async (response: any) => {
-            if(response.status === 401) {
-                console.log('redirecting to login page')
-                router.push('/login')
-            }
-            
-            return response.json();            
-        })
-} 
+    return response.json();
+  });
+};
 
 export default Stan;

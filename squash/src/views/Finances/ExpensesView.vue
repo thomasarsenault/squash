@@ -16,383 +16,429 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
 const store = useTransactionStore();
-const MONTHS: Array<{label: string, value: number, index: number}> = [];
+const MONTHS: Array<{ label: string; value: number; index: number }> = [];
 
 // populate last 6 months including current one at the end of the array
-for(let i = NUM_MONTHS_TO_SHOW - 1; i >= 0; i--) {
-	const monthNumber = dayjs().month() - i;
+for (let i = NUM_MONTHS_TO_SHOW - 1; i >= 0; i--) {
+  const monthNumber = dayjs().month() - i;
 
-	MONTHS.push({ label: dayjs().month(monthNumber).format('MMMM'), value: monthNumber < 0 ? monthNumber + 12 : monthNumber, index: NUM_MONTHS_TO_SHOW - i - 1 })
+  MONTHS.push({
+    label: dayjs().month(monthNumber).format('MMMM'),
+    value: monthNumber < 0 ? monthNumber + 12 : monthNumber,
+    index: NUM_MONTHS_TO_SHOW - i - 1,
+  });
 }
 
 onMounted(async () => {
-	store.getTransactions().then(() => {
-		console.log('transactions', store.transactions);
-	})
-})
+  store.getTransactions().then(() => {
+    console.log('transactions', store.transactions);
+  });
+});
 
 const showFilters = ref(false);
 
 const selectedMonth = ref(MONTHS[MONTHS.length - 1]);
 
 const pendingTransactions = computed(() => {
-	return store.transactions.filter((transaction) => transaction.pending);
+  return store.transactions.filter((transaction) => transaction.pending);
 });
 
 const transactions = computed(() => {
-	return store.transactions.filter((transaction) => !transaction.pending);
+  return store.transactions.filter((transaction) => !transaction.pending);
 });
 
-
 const openEditModal = (transaction: Transaction) => {
-	store.editModal.transaction = transaction;
-	store.editModal.open = true;
-}
+  store.editModal.transaction = transaction;
+  store.editModal.open = true;
+};
 
 const items = ref([
-	{
-		label: 'Transactions',
-		icon: 'pi pi-fw pi-money-bill',
-		to: '/expenses'
-	},
-	{
-		label: 'Budget',
-		icon: 'pi pi-fw pi-chart-bar',
-		to: '/expenses/budget'
-	}
-])
+  {
+    label: 'Transactions',
+    icon: 'pi pi-fw pi-money-bill',
+    to: '/expenses',
+  },
+  {
+    label: 'Budget',
+    icon: 'pi pi-fw pi-chart-bar',
+    to: '/expenses/budget',
+  },
+]);
 
 const selectedViewOptions = ref([
-	{ label: 'Week', value: 'week' },
-	{ label: 'Month', value: 'month' }
+  { label: 'Week', value: 'week' },
+  { label: 'Month', value: 'month' },
 ]);
 const selectedView = ref(selectedViewOptions.value[0]);
 
 // last 8 weeks as selection options
 // range from Monday to Sunday inclusive
-const weekOptions = ref(Array.from({ length: 8 }, (_, i) => {
-	const startOfWeek = dayjs()
-		.subtract(1, 'day') // offset week if on a sunday - dayjs weeks start on sundays (weird and wrong)
-		.startOf('week') // get the sunday
-		.add(1, 'day') // make it monday (the correct start to the week)
-		.subtract(i, 'week'); // go i weeks in the past
+const weekOptions = ref(
+  Array.from({ length: 8 }, (_, i) => {
+    const startOfWeek = dayjs()
+      .subtract(1, 'day') // offset week if on a sunday - dayjs weeks start on sundays (weird and wrong)
+      .startOf('week') // get the sunday
+      .add(1, 'day') // make it monday (the correct start to the week)
+      .subtract(i, 'week'); // go i weeks in the past
 
-	const endOfWeek = startOfWeek
-		.add(1, 'week') // next monday
-		.subtract(1, 'day'); // sunday (the end of the inclusive range)
+    const endOfWeek = startOfWeek
+      .add(1, 'week') // next monday
+      .subtract(1, 'day'); // sunday (the end of the inclusive range)
 
-	return {
-		label: `${startOfWeek.format('MMMM D')} - ${endOfWeek.format('D')}`,
-		value: i,
-		dateRange: [startOfWeek, endOfWeek]
-	}
-}));
+    return {
+      label: `${startOfWeek.format('MMMM D')} - ${endOfWeek.format('D')}`,
+      value: i,
+      dateRange: [startOfWeek, endOfWeek],
+    };
+  }),
+);
 const selectedWeekDateRange = ref(weekOptions.value[0]);
 
 const selectedTransactions = computed(() => {
-	if(selectedView.value.value === 'week') {
-		return transactions.value.filter((transaction) => {
-			return dayjs(transaction.date).isSameOrAfter(selectedWeekDateRange.value.dateRange[0]) && dayjs(transaction.date).isSameOrBefore(selectedWeekDateRange.value.dateRange[1]);
-		}) || [];
-	}
+  if (selectedView.value.value === 'week') {
+    return (
+      transactions.value.filter((transaction) => {
+        return (
+          dayjs(transaction.date).isSameOrAfter(selectedWeekDateRange.value.dateRange[0]) &&
+          dayjs(transaction.date).isSameOrBefore(selectedWeekDateRange.value.dateRange[1])
+        );
+      }) || []
+    );
+  }
 
-	return transactions.value.filter((transaction) => {
-		const transactionDate = dayjs(transaction.date);
-		
-		return transactionDate.month() === selectedMonth.value.value && transactionDate.year() === 2025;
-	}) || [];
+  return (
+    transactions.value.filter((transaction) => {
+      const transactionDate = dayjs(transaction.date);
+
+      return (
+        transactionDate.month() === selectedMonth.value.value && transactionDate.year() === 2025
+      );
+    }) || []
+  );
 });
 
 const summary = computed(() => {
-	const totalAmount = selectedTransactions.value.reduce((acc, transaction) => acc + transaction.amount, 0);
-	return {
-		totalAmount: totalAmount,
-		totalAmountFormatted: formatAmount(totalAmount),
-		count: selectedTransactions.value.length
-	}
-})
-
+  const totalAmount = selectedTransactions.value.reduce(
+    (acc, transaction) => acc + transaction.amount,
+    0,
+  );
+  return {
+    totalAmount: totalAmount,
+    totalAmountFormatted: formatAmount(totalAmount),
+    count: selectedTransactions.value.length,
+  };
+});
 </script>
 
 <template>
-	<!-- <SubMenu :items="items"/> -->
-	<main>
-		<div class="expenses">
-			<div class="top">
-				<Card class="controls-wrapper">
-					<template #title><i class="pi pi-fw pi-cog"/> Controls</template>
-					<template #content>
-						<div class="controls">
-							<div class="range">
-								<div class="top-controls">
-									<SelectButton :options="selectedViewOptions" v-model="selectedView" optionLabel="label" :allowEmpty="false"/>
-									<Button id='add-transaction-mobile' severity="secondary" icon="pi pi-fw pi-plus" label=" New" @click="() => store.addModalOpen = true"/>
-								</div>
-								<div class="selector" v-if="selectedView.value === 'week'">
-									<Button severity="secondary" icon="pi pi-fw pi-arrow-left"
-										@click="() => selectedWeekDateRange = weekOptions[selectedWeekDateRange.value + 1]"
-										:disabled="!weekOptions[selectedWeekDateRange.value + 1]"
-										/>
-									<Select v-model="selectedWeekDateRange"
-										:options="weekOptions"
-										optionLabel="label"/>
-									<Button severity="secondary" icon="pi pi-fw pi-arrow-right"
-										@click="() => selectedWeekDateRange = weekOptions[selectedWeekDateRange.value - 1]"
-										:disabled="!weekOptions[selectedWeekDateRange.value - 1]"
-										/>
-								</div>
-								<div class="selector" v-else>
-									<Button severity="secondary" icon="pi pi-fw pi-arrow-left"
-										@click="() => selectedMonth = MONTHS[selectedMonth.index - 1]"
-										:disabled="!MONTHS[selectedMonth.index - 1]"
-										/>
-									<Select v-model="selectedMonth"
-										:options="MONTHS"
-										optionLabel="label"/>
-									<Button severity="secondary" icon="pi pi-fw pi-arrow-right"
-										@click="() => selectedMonth = MONTHS[selectedMonth.index + 1]"
-										:disabled="!MONTHS[selectedMonth.index + 1]"
-										/>
-								</div>
-							</div>
-							<Button id='add-transaction-desktop' severity="secondary" icon="pi pi-fw pi-plus" label="Add Transaction" @click="() => store.addModalOpen = true"/>
-						</div>
-					</template>
-				</Card>
+  <!-- <SubMenu :items="items"/> -->
+  <main>
+    <div class="expenses">
+      <div class="top">
+        <Card class="controls-wrapper">
+          <template #title><i class="pi pi-fw pi-cog" /> Controls</template>
+          <template #content>
+            <div class="controls">
+              <div class="range">
+                <div class="top-controls">
+                  <SelectButton
+                    :options="selectedViewOptions"
+                    v-model="selectedView"
+                    optionLabel="label"
+                    :allowEmpty="false" />
+                  <Button
+                    id="add-transaction-mobile"
+                    severity="secondary"
+                    icon="pi pi-fw pi-plus"
+                    label=" New"
+                    @click="() => (store.addModalOpen = true)" />
+                </div>
+                <div class="selector" v-if="selectedView.value === 'week'">
+                  <Button
+                    severity="secondary"
+                    icon="pi pi-fw pi-arrow-left"
+                    @click="
+                      () => (selectedWeekDateRange = weekOptions[selectedWeekDateRange.value + 1])
+                    "
+                    :disabled="!weekOptions[selectedWeekDateRange.value + 1]" />
+                  <Select
+                    v-model="selectedWeekDateRange"
+                    :options="weekOptions"
+                    optionLabel="label" />
+                  <Button
+                    severity="secondary"
+                    icon="pi pi-fw pi-arrow-right"
+                    @click="
+                      () => (selectedWeekDateRange = weekOptions[selectedWeekDateRange.value - 1])
+                    "
+                    :disabled="!weekOptions[selectedWeekDateRange.value - 1]" />
+                </div>
+                <div class="selector" v-else>
+                  <Button
+                    severity="secondary"
+                    icon="pi pi-fw pi-arrow-left"
+                    @click="() => (selectedMonth = MONTHS[selectedMonth.index - 1])"
+                    :disabled="!MONTHS[selectedMonth.index - 1]" />
+                  <Select v-model="selectedMonth" :options="MONTHS" optionLabel="label" />
+                  <Button
+                    severity="secondary"
+                    icon="pi pi-fw pi-arrow-right"
+                    @click="() => (selectedMonth = MONTHS[selectedMonth.index + 1])"
+                    :disabled="!MONTHS[selectedMonth.index + 1]" />
+                </div>
+              </div>
+              <Button
+                id="add-transaction-desktop"
+                severity="secondary"
+                icon="pi pi-fw pi-plus"
+                label="Add Transaction"
+                @click="() => (store.addModalOpen = true)" />
+            </div>
+          </template>
+        </Card>
 
-				<div class="summary">
-					<Card>
-						<template #title><i class="pi pi-fw pi-chart-bar"/> Summary</template>
-						<template #content>
-							<div class="summary-content">
-								<div class="stats">
-									<div class="section">
-										<div class="stat-group">
-											<div class="stat">
-												<div class="label">Spent</div>
-												<div class="value">{{ summary.totalAmountFormatted }}</div>
-											</div>
-											<div class="stat">
-												<div class="label">Transactions</div>
-												<div class="value">{{ summary.count }}</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<CategoryMeterGroups
-									:categoryList="store.categories"
-									:transactions="selectedTransactions"
-									:summary="summary"/>
-							</div>
-						</template>
-					</Card>
-				</div>
-			</div>
-			<div class="transactions">
-				<Card class="table">
-						<template #title>
-							<div class="title">
-								<span><i class="pi pi-fw pi-money-bill"/> Transaction History</span>
-								<Button @click="showFilters = !showFilters" severity="secondary" icon="pi pi-filter"/>
-							</div>
-						</template>
-						<template #content>
-							<TransactionHistory :transactions="selectedTransactions" :showFilters="showFilters" @rowSelect="(e) => openEditModal(e)"/>
-						</template>
-				</Card>
-			</div>
-			<div class="pending">
-				<Card>
-					<template #title><i class="pi pi-fw pi-clock"/> Pending Transactions</template>
-					<template #content>
-						<TransactionHistory :transactions="pendingTransactions" @rowSelect="(e) => openEditModal(e)"/>
-					</template>
-				</Card>
-			</div>
-		</div>
-		<AddTransaction id="add-transaction-dialog"/>
-		<EditTransaction id="edit-transaction-dialog"/>
-	</main>
+        <div class="summary">
+          <Card>
+            <template #title><i class="pi pi-fw pi-chart-bar" /> Summary</template>
+            <template #content>
+              <div class="summary-content">
+                <div class="stats">
+                  <div class="section">
+                    <div class="stat-group">
+                      <div class="stat">
+                        <div class="label">Spent</div>
+                        <div class="value">
+                          {{ summary.totalAmountFormatted }}
+                        </div>
+                      </div>
+                      <div class="stat">
+                        <div class="label">Transactions</div>
+                        <div class="value">{{ summary.count }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <CategoryMeterGroups
+                  :categoryList="store.categories"
+                  :transactions="selectedTransactions"
+                  :summary="summary" />
+              </div>
+            </template>
+          </Card>
+        </div>
+      </div>
+      <div class="transactions">
+        <Card class="table">
+          <template #title>
+            <div class="title">
+              <span><i class="pi pi-fw pi-money-bill" /> Transaction History</span>
+              <Button
+                @click="showFilters = !showFilters"
+                severity="secondary"
+                icon="pi pi-filter" />
+            </div>
+          </template>
+          <template #content>
+            <TransactionHistory
+              :transactions="selectedTransactions"
+              :showFilters="showFilters"
+              @rowSelect="(e) => openEditModal(e)" />
+          </template>
+        </Card>
+      </div>
+      <div class="pending">
+        <Card>
+          <template #title><i class="pi pi-fw pi-clock" /> Pending Transactions</template>
+          <template #content>
+            <TransactionHistory
+              :transactions="pendingTransactions"
+              @rowSelect="(e) => openEditModal(e)" />
+          </template>
+        </Card>
+      </div>
+    </div>
+    <AddTransaction id="add-transaction-dialog" />
+    <EditTransaction id="edit-transaction-dialog" />
+  </main>
 </template>
 
 <style scoped lang="scss">
 main {
-	width: 100%;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .action-bar {
-	display: flex;
-	gap: 1rem;
-	justify-content: space-between;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
 }
 
 .controls {
-	display: flex;
-	margin-top: 1rem;
-	gap: 1rem;
-	align-items: center;
-	width: 100%;
-	justify-content: space-between;
-	flex-wrap: wrap;
+  display: flex;
+  margin-top: 1rem;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  flex-wrap: wrap;
 
-	@include breakpoint('mobile') {
-		flex-direction: column;
-	}
+  @include breakpoint('mobile') {
+    flex-direction: column;
+  }
 
-	.top-controls {
-		display: flex;
-		gap: 1rem;
-		align-items: center;
+  .top-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
 
-		@include breakpoint('mobile') {
-			width: 100%;
-			justify-content: space-between;
-		}
-	}
-	
-	.range {
-		display: flex;
-		gap: 1rem;
-		align-items: center;
-		flex-wrap: wrap;
+    @include breakpoint('mobile') {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
 
-		@include breakpoint('mobile') {
-			justify-content: center;
-		}
-	}
+  .range {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
 
-	.selector {
-		display: flex;
-		gap: 0.25rem;
+    @include breakpoint('mobile') {
+      justify-content: center;
+    }
+  }
 
-		.p-select {
-			width: 200px;
-		}
+  .selector {
+    display: flex;
+    gap: 0.25rem;
 
-		@include breakpoint('mobile') {
-			width: 100%;
+    .p-select {
+      width: 200px;
+    }
 
-			.p-select {
-				width: 100%;
-			}
-		}
-	}
+    @include breakpoint('mobile') {
+      width: 100%;
 
-	#add-transaction-mobile {
-		display: none;
+      .p-select {
+        width: 100%;
+      }
+    }
+  }
 
-		@include breakpoint('mobile') {
-			display: block;
-		}
-	}
+  #add-transaction-mobile {
+    display: none;
 
-	#add-transaction-desktop {
-		@include breakpoint('mobile') {
-			display: none;
-		}
-	}
-	
+    @include breakpoint('mobile') {
+      display: block;
+    }
+  }
+
+  #add-transaction-desktop {
+    @include breakpoint('mobile') {
+      display: none;
+    }
+  }
 }
 
 .expenses {
-	display: flex;
-	flex-direction: column;
-	gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 
-	@include breakpoint('mobile') {
-		gap: 1rem;
-	}
+  @include breakpoint('mobile') {
+    gap: 1rem;
+  }
 
-	.top {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 1rem;
+  .top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
 
-		.controls-wrapper {
-			width: 100%;
-		}
+    .controls-wrapper {
+      width: 100%;
+    }
 
-		// .statistics {
-		//   flex: 1 1 auto;
-		//   .p-card {
-		//     height: 100%;
-		//   }
-		// }
-	}
+    // .statistics {
+    //   flex: 1 1 auto;
+    //   .p-card {
+    //     height: 100%;
+    //   }
+    // }
+  }
 }
 
 .summary {
-	width: 100%;
-	flex: 1 1 auto;
+  width: 100%;
+  flex: 1 1 auto;
 
-	.summary-content {
-		display: flex;
-		flex-direction: column;
-		gap: 2rem;
-	}
+  .summary-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
 }
 
 .stats {
-	display: flex;
-	gap: 5rem;
-	margin-top: 1rem;
-	flex-wrap: wrap;
+  display: flex;
+  gap: 5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
 
-	@include breakpoint('mobile') {
-		gap: 2rem;
-	}
+  @include breakpoint('mobile') {
+    gap: 2rem;
+  }
 
-	.section {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 
-		@include breakpoint('mobile') {
-			width: 100%;
-		}
+    @include breakpoint('mobile') {
+      width: 100%;
+    }
 
-		.title {
-			font-size: 1rem;
-		}
+    .title {
+      font-size: 1rem;
+    }
 
-		.stat-group {
-			display: flex;
-			gap: 3rem;
+    .stat-group {
+      display: flex;
+      gap: 3rem;
 
-			@include breakpoint('mobile') {
-				justify-content: space-between;
-			}
+      @include breakpoint('mobile') {
+        justify-content: space-between;
+      }
 
-			.stat {
-				display: flex;
-				flex-direction: column;
-				gap: 0.5rem;
+      .stat {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
 
-				@include breakpoint('mobile') {
-					align-items: center;
-				}
+        @include breakpoint('mobile') {
+          align-items: center;
+        }
 
-				.label {
-					font-size: 0.75rem;
-					color: var(--p-text-muted-color);
-				}
+        .label {
+          font-size: 0.75rem;
+          color: var(--p-text-muted-color);
+        }
 
-				.value {
-					font-size: 1.2rem;
-					font-weight: bold;
-				}
-			}
-		}
-	}
+        .value {
+          font-size: 1.2rem;
+          font-weight: bold;
+        }
+      }
+    }
+  }
 }
 
 .title {
-	display: flex;
-	width: 100%;
-	justify-content: space-between;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 }
 </style>

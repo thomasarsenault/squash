@@ -7,10 +7,10 @@ import { getDateByZone } from '../../utils/date';
 import { AgendaZones } from '../../utils/constants';
 
 const props = defineProps<{
-  tasks: TaskType[],
-  hovered: boolean,
-  zone: AgendaZones
-}>()
+  tasks: TaskType[];
+  hovered: boolean;
+  zone: AgendaZones;
+}>();
 
 const store = useTasksStore();
 const emit = defineEmits(['dragEnd', 'drag']);
@@ -25,42 +25,51 @@ const addTask = async () => {
     date: date.value,
   });
   newTaskText.value = '';
-}
+};
 
 const zoneToLabel = {
   [AgendaZones.TODAY]: 'Today',
   [AgendaZones.TOMORROW]: 'Tomorrow',
   [AgendaZones.THIS_WEEK]: 'Backlog',
-}
+};
 </script>
 
 <template>
   <Card class="agenda-container">
     <template #content>
-        <div class="header">
-              <div class="title">{{ zoneToLabel[zone] }}</div>
-              <Button severity="secondary" @click="newTaskPromptOpen = !newTaskPromptOpen">{{ newTaskPromptOpen ? 'Close' : 'New Task' }}</Button>
-          </div>
-          <div :class="`new-task ${newTaskPromptOpen ? 'open' : ''}`">
-              <!-- primevue text field -->
-              <InputText autofocus v-model="newTaskText" class="new-task-input" placeholder="New Task" @keydown.enter="addTask"/>
-          </div>
-          <div :class="`drag-zone ${hovered ? 'hovered' : ''}`" :id="zone">
-              <div class="tasks">
-                  <Task v-for="(task, index) in tasks" :key="task.id" :task="task"
-                      @dragEnd="emit('dragEnd')"
-                      @drag="e => emit('drag', e)"/>
-                  <!-- <div class="placement-indicator-wrapper">
+      <div class="header">
+        <div class="title">{{ zoneToLabel[zone] }}</div>
+        <Button severity="secondary" @click="newTaskPromptOpen = !newTaskPromptOpen">{{
+          newTaskPromptOpen ? 'Close' : 'New Task'
+        }}</Button>
+      </div>
+      <div :class="`new-task ${newTaskPromptOpen ? 'open' : ''}`">
+        <!-- primevue text field -->
+        <InputText
+          autofocus
+          v-model="newTaskText"
+          class="new-task-input"
+          placeholder="New Task"
+          @keydown.enter="addTask" />
+      </div>
+      <div :class="`drag-zone ${hovered ? 'hovered' : ''}`" :id="zone">
+        <div class="tasks">
+          <Task
+            v-for="(task, index) in tasks"
+            :key="task.id"
+            :task="task"
+            @dragEnd="emit('dragEnd')"
+            @drag="(e) => emit('drag', e)" />
+          <!-- <div class="placement-indicator-wrapper">
                     <div id="placement-indicator" class="placement-indicator" />
                   </div> -->
-              </div>
-          </div>
+        </div>
+      </div>
     </template>
   </Card>
 </template>
 
 <style scoped>
-
 /* .placement-indicator-wrapper {
   height: 1rem;
   width: 100%;
@@ -75,14 +84,12 @@ const zoneToLabel = {
   }
 } */
 
-
-
 .agenda-container {
   flex: 1;
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  
+
   .header {
     display: flex;
     justify-content: space-between;
@@ -125,5 +132,4 @@ const zoneToLabel = {
   align-items: start;
   gap: 0.5rem;
 }
-
 </style>

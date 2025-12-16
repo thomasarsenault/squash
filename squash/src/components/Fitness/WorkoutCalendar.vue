@@ -13,19 +13,19 @@ dayjs.extend(isoWeek);
 const store = useFitnessStore();
 
 interface CalendarDay {
-    date: Dayjs;
-    isCurrentMonth: boolean;
-    workouts: Workout[];
+  date: Dayjs;
+  isCurrentMonth: boolean;
+  workouts: Workout[];
 }
 
 // TODO: show the last x weeks instead of current month
 
 const props = defineProps<{
-    workouts: Workout[];
-    readOnly?: boolean;
-    year?: number;
-    month?: number;
-    compact?: boolean;
+  workouts: Workout[];
+  readOnly?: boolean;
+  year?: number;
+  month?: number;
+  compact?: boolean;
 }>();
 
 // default to current year & month, might use these props later for switching months
@@ -35,270 +35,280 @@ const month = props.month ?? dayjs().month();
 const selectedDay = ref<CalendarDay | undefined>();
 
 const workoutsMap = computed((): Map<string, Workout[]> => {
-    const map = new Map();
+  const map = new Map();
 
-    props.workouts.forEach((workout) => {
-        if (!map.has(workout.date)) {
-            map.set(workout.date, []);
-        }
-        map.get(workout.date)?.push(workout);
-    });
+  props.workouts.forEach((workout) => {
+    if (!map.has(workout.date)) {
+      map.set(workout.date, []);
+    }
+    map.get(workout.date)?.push(workout);
+  });
 
-    return map;
-})
+  return map;
+});
 
 const weeks = computed(() => {
-    const weeksArray: CalendarDay[][] = [];
+  const weeksArray: CalendarDay[][] = [];
 
-    const today = dayjs();
+  const today = dayjs();
 
-    const startOfCurrentWeek = today.startOf('week');
+  const startOfCurrentWeek = today.startOf('week');
 
-    const startDate = startOfCurrentWeek.subtract(5, 'weeks');
+  const startDate = startOfCurrentWeek.subtract(5, 'weeks');
 
-    // 6 rows (weeks), 7 columns (days)
-    const totalDays = 42;
-    const days: CalendarDay[] = [];
+  // 6 rows (weeks), 7 columns (days)
+  const totalDays = 42;
+  const days: CalendarDay[] = [];
 
-    for (let i = 0; i < totalDays; i++) {
-        const currentDate = startDate.add(i, 'day');
-        const dateStr = currentDate.format('YYYY-MM-DD');
+  for (let i = 0; i < totalDays; i++) {
+    const currentDate = startDate.add(i, 'day');
+    const dateStr = currentDate.format('YYYY-MM-DD');
 
-        days.push({
-            date: currentDate,
-            isCurrentMonth: currentDate.month() === today.month(),
-            workouts: workoutsMap.value.get(dateStr) ?? [],
-        });
-    }
+    days.push({
+      date: currentDate,
+      isCurrentMonth: currentDate.month() === today.month(),
+      workouts: workoutsMap.value.get(dateStr) ?? [],
+    });
+  }
 
-    for (let i = 0; i < totalDays; i += 7) {
-        weeksArray.push(days.slice(i, i + 7));
-    }
+  for (let i = 0; i < totalDays; i += 7) {
+    weeksArray.push(days.slice(i, i + 7));
+  }
 
-    return weeksArray;
+  return weeksArray;
 });
 
 const openDayModal = (day: CalendarDay) => {
-    if(props.readOnly) {
-        return;
-    }
+  if (props.readOnly) {
+    return;
+  }
 
-    if(!day.workouts.length) {
-        store.dayModal.date = day.date;
-
-        openAddModal();
-        return;
-    }
-
+  if (!day.workouts.length) {
     store.dayModal.date = day.date;
-    store.dayModal.open = true;
-    selectedDay.value = day;
-}
+
+    openAddModal();
+    return;
+  }
+
+  store.dayModal.date = day.date;
+  store.dayModal.open = true;
+  selectedDay.value = day;
+};
 
 const closeDayModal = () => {
-    store.dayModal.open = false;
-}
+  store.dayModal.open = false;
+};
 
 const openEditModal = (workout: any) => {
-    store.editModal.workout = workout;
-    store.editModal.open = true;
-    store.modalOpen = true;
-    closeDayModal();
-}
+  store.editModal.workout = workout;
+  store.editModal.open = true;
+  store.modalOpen = true;
+  closeDayModal();
+};
 
 const openAddModal = () => {
-	store.modalOpen = true;
-	store.editModal.open = false;
-	store.editModal.workout = {} as Workout;
-    closeDayModal();
-}
-
+  store.modalOpen = true;
+  store.editModal.open = false;
+  store.editModal.workout = {} as Workout;
+  closeDayModal();
+};
 </script>
 
 <template>
-    <Card>
-        <template #title>
-            <div class="title" :class="{ 'compact': props.compact }">
-                <span><i class="pi pi-fw pi-calendar" /> {{ dayjs().month(month).format('MMMM') }}</span>
-            </div>
-        </template>
-        <template #content>
-            <div class="calendar" :class="{ 'compact': props.compact }">
-                <div class="header">
-                    <div class="day-cell" v-for="day in ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']" :key="day">
-                        {{ day }}
-                    </div>
-                </div>
-                <div class="grid">
-                    <div class="week" v-for="(week, weekIndex) in weeks" :key="weekIndex">
-                        <div class="day-cell" v-for="(day, dayIndex) in week" :key="dayIndex"
-                            @click="() => openDayModal(day)"
-                            :class="{ 'current-month': day.isCurrentMonth }">
-                            <div class="date-number">{{ day.date.date() }}</div>
-                            <div class="workouts" v-if="day.workouts.length">
-                                <div class="workout" v-for="(workout, labelIndex) in day.workouts" :key="labelIndex">
-                                    <WorkoutDot :type="workout.type" size="small-on-mobile"/>
-                                    <div class="type">
-                                        {{ workout.type }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-    </Card>
-    <InputDialog v-model:visible="store.dayModal.open" :header="selectedDay?.date.format('dddd, MMMM D')">
-        <div class="workout-dialog">
-            <WorkoutCard v-for="workout in selectedDay?.workouts" :key="workout.id"
-                :workout="workout" 
-                @click="() => openEditModal(workout)" />
+  <Card>
+    <template #title>
+      <div class="title" :class="{ compact: props.compact }">
+        <span><i class="pi pi-fw pi-calendar" /> {{ dayjs().month(month).format('MMMM') }}</span>
+      </div>
+    </template>
+    <template #content>
+      <div class="calendar" :class="{ compact: props.compact }">
+        <div class="header">
+          <div
+            class="day-cell"
+            v-for="day in ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']"
+            :key="day">
+            {{ day }}
+          </div>
         </div>
-        <template #footer>
-                <div class="footer">
-                    <Button label="Add New" @click="openAddModal" />
-                    <Button label="Close" severity="secondary" @click="closeDayModal" />
+        <div class="grid">
+          <div class="week" v-for="(week, weekIndex) in weeks" :key="weekIndex">
+            <div
+              class="day-cell"
+              v-for="(day, dayIndex) in week"
+              :key="dayIndex"
+              @click="() => openDayModal(day)"
+              :class="{ 'current-month': day.isCurrentMonth }">
+              <div class="date-number">{{ day.date.date() }}</div>
+              <div class="workouts" v-if="day.workouts.length">
+                <div
+                  class="workout"
+                  v-for="(workout, labelIndex) in day.workouts"
+                  :key="labelIndex">
+                  <WorkoutDot :type="workout.type" size="small-on-mobile" />
+                  <div class="type">
+                    {{ workout.type }}
+                  </div>
                 </div>
-            </template>
-    </InputDialog>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </Card>
+  <InputDialog
+    v-model:visible="store.dayModal.open"
+    :header="selectedDay?.date.format('dddd, MMMM D')">
+    <div class="workout-dialog">
+      <WorkoutCard
+        v-for="workout in selectedDay?.workouts"
+        :key="workout.id"
+        :workout="workout"
+        @click="() => openEditModal(workout)" />
+    </div>
+    <template #footer>
+      <div class="footer">
+        <Button label="Add New" @click="openAddModal" />
+        <Button label="Close" severity="secondary" @click="closeDayModal" />
+      </div>
+    </template>
+  </InputDialog>
 </template>
 
 <style lang="scss" scoped>
 // TODO: tweak grays and use vars
 
 .title {
-    span {
-        font-size: 1.2rem;
-        font-weight: bold;
-    }
+  span {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
 }
 .calendar {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    text-align: center;
-    font-weight: 800;
-    padding: 0.5rem 0;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: 800;
+  padding: 0.5rem 0;
 
-    .day-cell {
-        font-size: 0.8rem;
-    }
+  .day-cell {
+    font-size: 0.8rem;
+  }
 }
 
 .grid {
+  display: grid;
+  grid-auto-rows: minmax(80px, auto);
+  grid-gap: 1px;
+  padding: 1px;
+  background-color: var(--p-card-background);
+  border-radius: 8px;
+
+  @include breakpoint('mobile') {
+    grid-auto-rows: minmax(50px, auto);
+  }
+
+  .compact & {
+    grid-auto-rows: minmax(50px, auto);
+  }
+
+  .week {
     display: grid;
-    grid-auto-rows: minmax(80px, auto);
+    grid-template-columns: repeat(7, 1fr);
     grid-gap: 1px;
-    padding: 1px;
-    background-color: var(--p-card-background);
-    border-radius: 8px;
 
-    @include breakpoint('mobile') {
-        grid-auto-rows: minmax(50px, auto);
-    }
+    .day-cell {
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      width: 100%;
+      gap: 0.5rem;
+      cursor: pointer;
 
-    .compact & {
-        grid-auto-rows: minmax(50px, auto);
-    }
+      @include breakpoint('mobile') {
+        flex-direction: column;
+      }
 
-    .week {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        grid-gap: 1px;
-        
-        .day-cell {
-            padding: 0.5rem;
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: space-between;
-            width: 100%;
-            gap: 0.5rem;
-            cursor: pointer;
+      .compact & {
+        flex-direction: column;
+      }
 
-            @include breakpoint('mobile') {
-                flex-direction: column;
-            }
+      &.current-month {
+        background-color: var(--p-card-background);
+      }
 
-            .compact & {
-                flex-direction: column;
-            }
+      &:not(.current-month) {
+        background-color: var(--p-card-background);
+      }
 
-            &.current-month {
-                background-color: var(--p-card-background);
-            }
+      .date-number {
+        font-size: 0.7rem;
+        color: #878787;
+        justify-self: flex-end;
 
-            &:not(.current-month) {
-                background-color: var(--p-card-background);
-            }
-
-            .date-number {
-                font-size: 0.7rem;
-                color: #878787;
-                justify-self: flex-end;
-
-                @include breakpoint('mobile') {
-                    display: flex;
-                }
-            }
+        @include breakpoint('mobile') {
+          display: flex;
         }
+      }
     }
+  }
 }
 
 .workouts {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 
-    .compact & {
-        flex-direction: row;
-
-        @include breakpoint('mobile') {
-            flex-direction: column;
-        }
-    }
+  .compact & {
+    flex-direction: row;
 
     @include breakpoint('mobile') {
-        flex-direction: column;
-        height: 100%;
-        gap: 1px;
+      flex-direction: column;
     }
+  }
 
-    .workout {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #878787;
-        font-size: 0.8rem;
+  @include breakpoint('mobile') {
+    flex-direction: column;
+    height: 100%;
+    gap: 1px;
+  }
 
-        .type {
-            @include breakpoint('mobile') {
-                display: none;
-            }
+  .workout {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #878787;
+    font-size: 0.8rem;
 
-            .compact & {
-                display: none;
-            }
-        }
+    .type {
+      @include breakpoint('mobile') {
+        display: none;
+      }
+
+      .compact & {
+        display: none;
+      }
     }
+  }
 }
 
 // dialog when you open a day
 .workout-dialog {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
-
 
 .footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
-
 </style>

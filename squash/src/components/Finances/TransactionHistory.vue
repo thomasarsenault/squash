@@ -10,16 +10,19 @@ import type { Transaction } from '@/types';
 
 dayjs.extend(advancedFormat);
 
-const props = withDefaults(defineProps<{
-  transactions: Transaction[],
-  showFilters?: boolean
-}>(), {
-  showFilters: false
-});
+const props = withDefaults(
+  defineProps<{
+    transactions: Transaction[];
+    showFilters?: boolean;
+  }>(),
+  {
+    showFilters: false,
+  },
+);
 
 const attrs = useAttrs();
 
-const emit = defineEmits(['rowSelect'])
+const emit = defineEmits(['rowSelect']);
 
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -33,11 +36,17 @@ const filters = ref({
 const formatDate = (date: string) => dayjs(date).format('ddd, Do');
 
 // spread to avoid sorting prop in place
-const transactions = computed(() => [ ...props.transactions].sort((a, b) => dayjs(b.date).unix() - dayjs(a.date).unix()));
+const transactions = computed(() =>
+  [...props.transactions].sort((a, b) => dayjs(b.date).unix() - dayjs(a.date).unix()),
+);
 </script>
 
 <template>
-  <DataTable size="large" stripedRows removableSort v-bind="attrs"
+  <DataTable
+    size="large"
+    stripedRows
+    removableSort
+    v-bind="attrs"
     :value="transactions"
     v-model:filters="filters"
     :filterDisplay="showFilters ? 'row' : undefined"
@@ -45,13 +54,17 @@ const transactions = computed(() => [ ...props.transactions].sort((a, b) => dayj
     :metaKeySelection="false"
     @rowSelect="(e: any) => emit('rowSelect', e.data)"
     dataKey="id">
-  <template #empty> No transactions found.</template>
-  <Column field="date" header="Date">
+    <template #empty> No transactions found.</template>
+    <Column field="date" header="Date">
       <template #body="{ data }">
         <span class="no-break">{{ formatDate(data.date) }}</span>
       </template>
       <template #filter="{ filterModel, filterCallback }">
-          <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by date" />
+        <InputText
+          v-model="filterModel.value"
+          type="text"
+          @input="filterCallback()"
+          placeholder="Search by date" />
       </template>
     </Column>
     <Column field="name" header="Name">
@@ -59,12 +72,16 @@ const transactions = computed(() => [ ...props.transactions].sort((a, b) => dayj
         <span class="no-break">{{ data.name }}</span>
       </template>
       <template #filter="{ filterModel, filterCallback }">
-          <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by name" />
+        <InputText
+          v-model="filterModel.value"
+          type="text"
+          @input="filterCallback()"
+          placeholder="Search by name" />
       </template>
     </Column>
     <Column field="amount" header="Amount" sortable>
       <template #body="{ data }">
-          {{ formatAmount(data.amount) }}
+        {{ formatAmount(data.amount) }}
       </template>
     </Column>
     <Column field="category" header="Category">
@@ -72,15 +89,23 @@ const transactions = computed(() => [ ...props.transactions].sort((a, b) => dayj
         <span class="no-break">{{ data.category }}</span>
       </template>
       <template #filter="{ filterModel, filterCallback }">
-          <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by category" />
+        <InputText
+          v-model="filterModel.value"
+          type="text"
+          @input="filterCallback()"
+          placeholder="Search by category" />
       </template>
     </Column>
     <Column field="subcategory" header="Subcategory">
       <template #body="{ data }">
-          {{ data.subcategory }}
+        {{ data.subcategory }}
       </template>
       <template #filter="{ filterModel, filterCallback }">
-          <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by subcategory" />
+        <InputText
+          v-model="filterModel.value"
+          type="text"
+          @input="filterCallback()"
+          placeholder="Search by subcategory" />
       </template>
     </Column>
   </DataTable>
@@ -88,7 +113,7 @@ const transactions = computed(() => [ ...props.transactions].sort((a, b) => dayj
 
 <style scoped lang="scss">
 :deep(.p-datatable-wrapper) {
-  border-radius: var(--border-radius)
+  border-radius: var(--border-radius);
 }
 
 :deep(.p-datatable-header) {
@@ -101,6 +126,6 @@ const transactions = computed(() => [ ...props.transactions].sort((a, b) => dayj
 }
 
 .no-break {
-  white-space: nowrap;  
+  white-space: nowrap;
 }
 </style>

@@ -19,10 +19,10 @@ interface DateObject {
 const store = useFitnessStore();
 
 onMounted(async () => {
-	store.getWorkouts().then(() => {
-		console.log('tasks', store.workouts);
-	})
-})
+  store.getWorkouts().then(() => {
+    console.log('tasks', store.workouts);
+  });
+});
 
 // TODO: could be shared w/ FitnessView
 const last5Days: DateObject[] = [];
@@ -39,43 +39,42 @@ for (let i = 0; i < 5; i++) {
 }
 
 const workoutsPerDay = computed(() => {
-    const workouts: { [key: string]: Workout[] } = {};
+  const workouts: { [key: string]: Workout[] } = {};
 
-    last5Days.forEach(day => {
-        workouts[day.date] = [];
-    })
+  last5Days.forEach((day) => {
+    workouts[day.date] = [];
+  });
 
-    store.workouts.forEach((workout) => {
-        if(workouts[workout.date] && workout.end) {
-            workouts[workout.date].push(workout)
-        }
-    })
+  store.workouts.forEach((workout) => {
+    if (workouts[workout.date] && workout.end) {
+      workouts[workout.date].push(workout);
+    }
+  });
 
-    return workouts;
-})
-
+  return workouts;
+});
 </script>
 
 <template>
-	<DashboardWidget title="Fitness" to="/fitness" icon="wave-pulse">
-		<div class="calendar">
-			<WorkoutCalendar :workouts="store.workouts" :readOnly="true" compact/>
-		</div>
-	</DashboardWidget>
+  <DashboardWidget title="Fitness" to="/fitness" icon="wave-pulse">
+    <div class="calendar">
+      <WorkoutCalendar :workouts="store.workouts" :readOnly="true" compact />
+    </div>
+  </DashboardWidget>
 </template>
 
 <style lang="scss" scoped>
 .calendar {
-    :deep(.p-card) {
-        box-shadow: none;
-    }
+  :deep(.p-card) {
+    box-shadow: none;
+  }
 
-    :deep(.p-card-body) {
-        padding: 1rem 0 0 0;
-    }
+  :deep(.p-card-body) {
+    padding: 1rem 0 0 0;
+  }
 
-    :deep(.p-card-caption) {
-        display: none;
-    }
+  :deep(.p-card-caption) {
+    display: none;
+  }
 }
 </style>

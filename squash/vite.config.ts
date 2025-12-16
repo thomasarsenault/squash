@@ -1,8 +1,8 @@
-import { fileURLToPath, URL } from 'node:url'
+import { fileURLToPath, URL } from 'node:url';
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import vueJsx from '@vitejs/plugin-vue-jsx'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import vueJsx from '@vitejs/plugin-vue-jsx';
 
 import Components from 'unplugin-vue-components/vite';
 import { PrimeVueResolver } from '@primevue/auto-import-resolver';
@@ -16,22 +16,22 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => tag.includes('-')
-        }
-      }
+          isCustomElement: (tag) => tag.includes('-'),
+        },
+      },
     }),
     vueJsx(),
     Components({
-      resolvers: [PrimeVueResolver()]
+      resolvers: [PrimeVueResolver()],
     }),
-    VitePWA({ 
+    VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico'],
       manifest: {
         name: 'Squash',
         short_name: 'Squash',
         description: 'Squash App',
-        theme_color: '#ffffff',
+        theme_color: '#1a1a1a',
         icons: [
           {
             src: 'web-app-manifest-192x192', // Path to your icon file
@@ -52,31 +52,31 @@ export default defineConfig({
         ],
       },
       devOptions: {
-        enabled: true
+        enabled: true,
       },
-    })
+    }),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
   },
   server: {
     proxy: {
       '/api': {
         target: 'http://localhost:3000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
-      }
-    }
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
   },
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "@/assets/scss/global.scss";`
-      }
-    }
-  }
-})
+        additionalData: `@import "@/assets/scss/global.scss";`,
+      },
+    },
+  },
+});
 
 // target: 'http://159.203.18.242:3000',

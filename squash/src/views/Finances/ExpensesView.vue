@@ -12,7 +12,7 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import type { Transaction } from '@/types';
 
-const NUM_MONTHS_TO_SHOW = 6;
+const NUM_MONTHS_TO_SHOW = 12;
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 

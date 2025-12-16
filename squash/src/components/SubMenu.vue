@@ -17,13 +17,13 @@ const props = defineProps<{
         :to="item.to"
         custom>
         <a
-          class="p-menubar-item-link"
+          class="sub-menu-item"
           :class="{ active: isActive }"
           :href="href"
           @click="navigate"
           v-ripple>
           <span :class="item.icon" />
-          <div class="label">{{ item.label }}</div>
+          <span class="label">{{ item.label }}</span>
         </a>
       </RouterLink>
     </div>
@@ -35,26 +35,51 @@ const props = defineProps<{
   width: 1440px;
   margin: auto;
 
-  .sub-menu {
-    display: flex;
-    margin: 1rem 0;
-    gap: 1rem;
-  }
-
   @include breakpoint('mobile') {
     width: 100%;
-
-    .sub-menu {
-      justify-content: center;
-    }
   }
 }
 
-:deep(.p-menubar-item-link) {
-  border: 1px solid var(--p-menubar-border-color);
-  border-radius: var(--p-menubar-border-radius);
+.sub-menu {
+  display: inline-flex;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--p-surface-border);
+  border-radius: var(--p-border-radius-lg);
+
+  @include breakpoint('mobile') {
+    display: flex;
+    justify-content: center;
+    margin: 1rem;
+  }
+}
+
+.sub-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: var(--p-text-muted-color);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--p-border-radius-md);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    color: var(--p-text-color);
+  }
+
   &.active {
-    background-color: white;
+    color: var(--p-primary-color);
+    background-color: var(--p-card-background);
+  }
+
+  .label {
+    white-space: nowrap;
   }
 }
 </style>

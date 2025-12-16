@@ -7,6 +7,7 @@ import EditTransaction from '@/components/Finances/EditTransaction.vue';
 import TransactionHistory from '@/components/Finances/TransactionHistory.vue';
 import { formatAmount } from '@/utils/helper';
 import CategoryMeterGroups from '@/components/Finances/CategoryMeterGroups.vue';
+import SubMenu from '@/components/SubMenu.vue';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import type { Transaction } from '@/types';
@@ -131,7 +132,7 @@ const summary = computed(() => {
 </script>
 
 <template>
-  <!-- <SubMenu :items="items"/> -->
+  <SubMenu :items="items" />
   <main>
     <div class="expenses">
       <div class="top">

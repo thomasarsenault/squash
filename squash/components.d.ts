@@ -16,6 +16,7 @@ declare module 'vue' {
     AgendaGrid: typeof import('./src/components/AgendaOld/AgendaGrid.vue')['default']
     AgendaTask: typeof import('./src/components/AgendaOld/AgendaTask.vue')['default']
     AgendaTimeslot: typeof import('./src/components/AgendaOld/AgendaTimeslot.vue')['default']
+    BudgetList: typeof import('./src/components/Finances/BudgetList.vue')['default']
     Button: typeof import('primevue/button')['default']
     Calendar: typeof import('primevue/calendar')['default']
     Card: typeof import('primevue/card')['default']

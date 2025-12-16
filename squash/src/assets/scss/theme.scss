@@ -1,3 +1,8 @@
+// Disable blue tap highlight on Android Chrome WebView
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 .p-card {
   box-shadow: none;
 }

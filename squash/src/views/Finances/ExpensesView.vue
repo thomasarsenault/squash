@@ -97,6 +97,7 @@ const selectedWeekDateRange = ref(weekOptions.value[0]);
 
 const selectedTransactions = computed(() => {
   if (selectedView.value.value === 'week') {
+    console.log('transactions', transactions.value)
     return (
       transactions.value.filter((transaction) => {
         return (
@@ -112,7 +113,7 @@ const selectedTransactions = computed(() => {
       const transactionDate = dayjs(transaction.date);
 
       return (
-        transactionDate.month() === selectedMonth.value.value && transactionDate.year() === 2025
+        transactionDate.month() === selectedMonth.value.value && transactionDate.year() === dayjs().year()
       );
     }) || []
   );
